@@ -1,6 +1,5 @@
 import pickle
-from class_definitions import Course, Section, A_Class, Course_Tree
-from graph import get_course_tree
+from class_definitions import Course, Section, A_Class
 
 # SEMESTER INDEXES
 F = 0

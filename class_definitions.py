@@ -7,7 +7,7 @@ IGNORE_COURSES = [
 ]
 
 IGNORE_PREREQS = [
-
+    'MATH0135'
 ]
 
 IGNORE_DEPTS = [
@@ -46,7 +46,7 @@ class Course:
         self.dept = dept
         self.description = description
         self.semester = semester
-        self.prereqs = []
+        self.prereqs = [] # nested lists of classes, separated by AND
         self.sections = {}  # dict so that we can add from the csv easily
 
     def __str__(self):

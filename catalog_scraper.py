@@ -1,11 +1,5 @@
 '''
 Scrapes the courses, adds each as its own Course object, and then adds the prereqs to each course object (NOT linked to other courses yet)
-
-TODO:
-    - Have the objects link to each other right from the start
-        - make courses a dict of {course_name: Course}
-            - for each course, if course doesn't exist, create it, else get it from dict
-            - for each prereq, if course doesn't exist, create it, else get it from dict
 '''
 
 import pickle
