@@ -1,7 +1,7 @@
 import pickle
 import csv
 from class_definitions import Course, Section, A_Class, IGNORE_COURSES, IGNORE_PREREQS, IGNORE_DEPTS
-
+from student import Student
 # CSV COLUMN INDEXES
 DEPT = 0
 COURSE = 1
@@ -162,6 +162,16 @@ if __name__ == '__main__':
     # fill the course data and remove courses with no sections for the given semester
     fill_course_data(courses[F], course_dict[F], 'F')
     fill_course_data(courses[W], course_dict[W], 'W')
+
+
+    student = Student(name="Soren Edwards",semester="Fall",courses_taken = ["COMP1631","COMP1633"],chosen_sen_options =["COMP4555","COMP5690","COMP4630"],
+        chosen_jun_options = ["COMP3533","COMP3625","COMP2521"],
+        cognate_choice = ["GEOG"],
+        chosen_grad_year =  2030)
+
+    anwser = student_eligible(course_dict[W]["COMP2659"],student)
+    print(anwser)
+
 
     # check if the csv and pickle methods are the same
     # courses_csv = [[], []]
