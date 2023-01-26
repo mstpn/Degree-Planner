@@ -130,11 +130,20 @@ def student_eligible(course, student):
 
     Returns True if the student is eligible, False otherwise
     '''
-    for prereq_list in course.prereqs:
-        for prereq in prereq_list:
-            if prereq.name not in student.completed_courses:
-                return False
-    return True
+    for rows_of_prereqs_connected_by_ands in course.prereqs:
+
+        eligible = False
+
+        for or_prereq in rows_of_prereqs_connected_by_ands:
+            
+                if or_prereq.name in student.completed_courses:
+                    eligible = True
+                    continue
+
+    return eligible
+
+
+    
 
 
 if __name__ == '__main__':
@@ -146,6 +155,11 @@ if __name__ == '__main__':
     # PICKLE METHOD
     course_pickle_name = 'courses_no_semester.pkl'
     pickle_path = pickle_folder + course_pickle_name
+    courses_to_dict = pickle.load(open(pickle_path, 'rb'))
+    all_courses_dict = {}
+    for course in courses_to_dict:
+        all_courses_dict[course.name] = course
+
     courses[F] = pickle.load(open(pickle_path, 'rb'))
     courses[W] = pickle.load(open(pickle_path, 'rb'))
     for course in courses[F]:
@@ -164,12 +178,12 @@ if __name__ == '__main__':
     fill_course_data(courses[W], course_dict[W], 'W')
 
 
-    student = Student(name="Soren Edwards",semester="Fall",courses_taken = ["COMP1631","COMP1633"],chosen_sen_options =["COMP4555","COMP5690","COMP4630"],
+    student = Student(name="Soren Edwards",semester="Fall",courses_taken = ["ACCN5501"],chosen_sen_options =["COMP4555","COMP5690","COMP4630"],
         chosen_jun_options = ["COMP3533","COMP3625","COMP2521"],
         cognate_choice = ["GEOG"],
         chosen_grad_year =  2030)
 
-    anwser = student_eligible(course_dict[W]["COMP2659"],student)
+    anwser = student_eligible(course_dict[W]["ACCN5505"],student)
     print(anwser)
 
 
@@ -202,5 +216,7 @@ if __name__ == '__main__':
     # pickle the two courses lists
     fall_pickle_name = 'fall_courses.pkl'
     winter_pickle_name = 'winter_courses.pkl'
+    all_courses_dict_name = 'all_courses_dict.pkl'
+    pickle.dump(all_courses_dict, open(pickle_folder + all_courses_dict_name, 'wb'))
     pickle.dump(courses[F], open(pickle_folder + fall_pickle_name, 'wb'))
     pickle.dump(courses[W], open(pickle_folder + winter_pickle_name, 'wb'))

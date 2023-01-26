@@ -16,6 +16,18 @@ IGNORE_DEPTS = [
     'XPFT'
 ]
 
+class Course_Node():
+    
+    def __init__(self,name) -> None:
+        self.name = name
+        self.pre = []
+        self.next = []
+
+
+
+    
+
+
 
 class A_Class:
     def __init__(self, id, start_time, duration, day, prof, room):
