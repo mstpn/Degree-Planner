@@ -105,7 +105,7 @@ def fill_course_data(courses, course_dict, semester):
 
             section = course.sections.get(row[SECTION], None)
             if section is None:
-                section = Section(row[SECTION])
+                section = Section(course_name, row[SECTION])
                 course.sections[section.id] = section
             id = row[COMP] + '-' + row[DEL]
             start_time = row[CLASS_HOUR]

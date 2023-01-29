@@ -1,34 +1,39 @@
 import pickle
 import random
 from class_definitions import Course_Node
-CORE = ["PHIL1179","MATH1200","MATH1203","MATH1271","MATH2334","COMP1631","COMP1633","COMP2613",
+CORE = ["PHIL1179","MATH1200","MATH1203","MATH1271","MATH2234","COMP1631","COMP1633","COMP2613",
         "COMP2631","COMP2633","COMP2655","COMP2659","COMP3309","COMP3614","COMP3649","COMP3659"]
+
+# SEMESTER INDEXES
+F = 0
+W = 1
 
 class Student:
     def __init__(self,**kwargs):
         self.name = kwargs.get("name","N\A")
-        self.semester = kwargs.get("semester","N\A")
+        self.semester = kwargs.get("semester",0)
         self.courses_taken = kwargs.get("courses_taken",[])
         self.chosen_sen_options = kwargs.get("chosen_sen_options",[])
         self.chosen_jun_options = kwargs.get("chosen_jun_options",[])
         self.cognate_choice = kwargs.get("cognate_choice",[])
-        self.chosen_grad_year = kwargs.get("chosen_grad_year",2025)
+        self.years_to_grad = kwargs.get("years_to_grad",4)
+        self.maxCoursesPerSemester = kwargs.get("maxCoursesPerSemester", 6)
 
     def __str__(self) -> str:
-        str_fmt = "NAME:{}\nSEMESTER: {}\nCOURSE_TAKEN{}\nSEN_OPS{}\nJUN_OPS{}\nCOG{}\nPREFERED_GRAD_YEAR: {}".format(self.name,self.semester,self.courses_taken,self.chosen_sen_options,self.chosen_jun_options,self.cognate_choice,self.chosen_grad_year)
+        str_fmt = "NAME:{}\nSEMESTER: {}\nCOURSE_TAKEN{}\nSEN_OPS{}\nJUN_OPS{}\nCOG{}\nPREFERED_GRAD_YEAR: {}".format(self.name,self.semester,self.courses_taken,self.chosen_sen_options,self.chosen_jun_options,self.cognate_choice,self.years_to_grad)
         return str_fmt
 
     def __repr__(self) -> str:
         return self.__str__()
 
-    def from_args(cls,name,semester,courses_taken,chosen_sen_options,chosen_jun_options,cognate_choice,chosen_grad_year):
+    def from_args(cls,name,semester,courses_taken,chosen_sen_options,chosen_jun_options,cognate_choice,years_to_grad):
         name = name
         semester = semester
         courses_taken = courses_taken
         chosen_sen_options =chosen_sen_options
         chosen_jun_options = chosen_jun_options
         cognate_choice = cognate_choice 
-        chosen_grad_year = chosen_grad_year
+        years_to_grad = years_to_grad
 
     
     def make_graph(self):
@@ -41,6 +46,7 @@ class Student:
             node = Course_Node(prereq)
             node_list.append(node)
             node_dict[prereq] = node
+       
         for node in node_list:
             temp_course = courses.get(node.name,None)
             if temp_course is None:
@@ -64,24 +70,26 @@ class Student:
 
     def all_required_courses(self):
 
-        all_required_courses = []
-        
-        all_required_courses.extend( self.get_sen_ops() )
-        all_required_courses.extend( self.get_jun_ops() )
-        all_required_courses.extend( self.get_cognate_choice() )
-        all_required_courses.extend( CORE )
+        all_req_courses = []
+    
+        all_req_courses.extend( CORE )        
+        all_req_courses.extend( self.get_cognate_choice() )        
+        all_req_courses.extend( self.get_jun_ops() )        
+        all_req_courses.extend( self.get_sen_ops() )
 
-        print(all_required_courses)
+        print(all_req_courses)
 
-        #remove taken courses``
-        all_required_courses = list(set(all_required_courses).difference(student.get_courses()))
+        #remove taken courses
+        all_req_courses = list(set(all_req_courses).difference(self.get_courses()))
+
+        #all_required_courses = sort_courses_lowest_prereq_count( all_required_courses )
 
 
-        print(student.get_courses())
+        print(self.get_courses())
 
-        print(all_required_courses)
+        print(all_req_courses)
 
-        return all_required_courses
+        return all_req_courses
 
 
 
@@ -149,7 +157,8 @@ def build_student_test():
         chosen_sen_options =["COMP4555","COMP5690","COMP4630"],
         chosen_jun_options = ["COMP3533","COMP3625","COMP2521"],
         cognate_choice = ["GEOG1101","GEOG1105","GEOG2553","GEOG3553"],
-        chosen_grad_year =  2030)
+        years_to_grad = 8,
+        maxCoursesPerSemester = 6)
 
 if __name__ == '__main__':
 
@@ -159,5 +168,5 @@ if __name__ == '__main__':
 
     node_list, node_dict = student.make_graph()
 
-    print(done)
+    #print("done")
 

@@ -1,5 +1,7 @@
 import pickle
 from class_definitions import Course, Section, A_Class
+import student as std
+import scheduler as shed
 
 # SEMESTER INDEXES
 F = 0
@@ -19,8 +21,14 @@ if __name__ == '__main__':
     for course in courses[W]:
         course_dict[W][course.name] = course
 
-    test_course_name = 'ENTR4433'
-    test_course = course_dict[F].get(test_course_name, None)
-    if test_course is not None:
-        print('print course')
-        print(repr(test_course))
+    student = std.build_student_test()
+
+    program = shed.create_schedule(student, courses, course_dict)
+
+    print('done.fun')
+
+    # test_course_name = 'ENTR4433'
+    # test_course = course_dict[F].get(test_course_name, None)
+    # if test_course is not None:
+    #     print('print course')
+    #     print(repr(test_course))

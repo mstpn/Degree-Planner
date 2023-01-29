@@ -16,17 +16,30 @@ IGNORE_DEPTS = [
     'XPFT'
 ]
 
+class Regi():
+
+    def __init__(self, semesters = []) -> None:
+        self.semesters = semesters
+
+class Semester():
+
+    def __init__(self,year,worf, maxCourses, courses = []) -> None:
+        self.year = year
+        self.worf = worf
+        self.courses = courses
+        self.maxCourses = maxCourses
+ 
 class Course_Node():
     
     def __init__(self,name) -> None:
         self.name = name
         self.pre = []
         self.next = []
-
-
-
-    
-
+        self.prereqTreeCount = None
+        self.taken = False
+        
+    def findPrereqCount(self):
+        pass
 
 
 class A_Class:
@@ -47,7 +60,8 @@ class A_Class:
 
 
 class Section:
-    def __init__(self, id):
+    def __init__(self, course_name, id):
+        self.course_name = course_name
         self.id = id  # Section from CSV (col D)
         self.classes = []
 
