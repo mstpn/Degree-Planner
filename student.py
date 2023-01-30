@@ -17,7 +17,7 @@ class Student:
         self.chosen_jun_options = kwargs.get("chosen_jun_options",[])
         self.cognate_choice = kwargs.get("cognate_choice",[])
         self.years_to_grad = kwargs.get("years_to_grad",4)
-        self.maxCoursesPerSemester = kwargs.get("maxCoursesPerSemester", 6)
+        self.max_courses_per_semester = kwargs.get("max_courses_per_semester", 6)
 
     def __str__(self) -> str:
         str_fmt = "NAME:{}\nSEMESTER: {}\nCOURSE_TAKEN{}\nSEN_OPS{}\nJUN_OPS{}\nCOG{}\nPREFERED_GRAD_YEAR: {}".format(self.name,self.semester,self.courses_taken,self.chosen_sen_options,self.chosen_jun_options,self.cognate_choice,self.years_to_grad)
@@ -77,7 +77,7 @@ class Student:
         all_req_courses.extend( self.get_jun_ops() )        
         all_req_courses.extend( self.get_sen_ops() )
 
-        print(all_req_courses)
+        # print(all_req_courses)
 
         #remove taken courses
         all_req_courses = list(set(all_req_courses).difference(self.get_courses()))
@@ -85,9 +85,9 @@ class Student:
         #all_required_courses = sort_courses_lowest_prereq_count( all_required_courses )
 
 
-        print(self.get_courses())
+        # print(self.get_courses())
 
-        print(all_req_courses)
+        # print(all_req_courses)
 
         return all_req_courses
 
@@ -152,13 +152,13 @@ class Student:
 def build_student_test():
     return Student(
         name="Soren Edwards",
-        semester="Fall",
+        semester=F,
         courses_taken = ["COMP1633"],
         chosen_sen_options =["COMP4555","COMP5690","COMP4630"],
         chosen_jun_options = ["COMP3533","COMP3625","COMP2521"],
         cognate_choice = ["GEOG1101","GEOG1105","GEOG2553","GEOG3553"],
         years_to_grad = 8,
-        maxCoursesPerSemester = 6)
+        max_courses_per_semester = 6)
 
 if __name__ == '__main__':
 

@@ -16,6 +16,9 @@ IGNORE_DEPTS = [
     'XPFT'
 ]
 
+F = 0
+W = 1
+
 class Regi():
 
     def __init__(self, semesters = []) -> None:
@@ -23,11 +26,26 @@ class Regi():
 
 class Semester():
 
-    def __init__(self,year,worf, maxCourses, courses = []) -> None:
+    # ! The se
+    def __init__(self,year,worf, max_courses, sections=None) -> None:
         self.year = year
         self.worf = worf
-        self.courses = courses
-        self.maxCourses = maxCourses
+        self.max_courses = max_courses
+        if sections is None:
+            self.sections = []
+        else:
+            self.sections = sections
+
+    def __str__(self) -> str:
+        courses = ''
+        for section in self.sections:
+            courses += section.course_name + '\n'
+        if self.worf == F:
+            semester = 'Fall'
+        else:
+            semester = 'Winter'
+            
+        return f'Year: {self.year} {semester}:\n{courses}'
  
 class Course_Node():
     
