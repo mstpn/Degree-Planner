@@ -1,6 +1,8 @@
 '''
 This file is essentialy a header file for the other files in this project.
 '''
+import csv
+import math
 
 IGNORE_COURSES = [
 
@@ -19,43 +21,56 @@ IGNORE_DEPTS = [
 F = 0
 W = 1
 
+
 class Regi():
 
-    def __init__(self, semesters = []) -> None:
+    def __init__(self, semesters=[]) -> None:
         self.semesters = semesters
 
-class Semester():
+    def get_years(self):
+        return math.ceil(len(self.semesters) / 2)
 
-    # ! The se
-    def __init__(self,year,worf, max_courses, sections=None) -> None:
+
+class Semester():
+    def __init__(self, year, worf, max_courses, sections=None) -> None:
         self.year = year
         self.worf = worf
         self.max_courses = max_courses
         if sections is None:
-            self.sections = []
+            self.courses = []
         else:
-            self.sections = sections
+            self.courses = sections
 
     def __str__(self) -> str:
         courses = ''
-        for section in self.sections:
+        for section in self.courses:
             courses += section.course_name + '\n'
         if self.worf == F:
             semester = 'Fall'
         else:
             semester = 'Winter'
-            
+
         return f'Year: {self.year} {semester}:\n{courses}'
- 
+
+    def worf_string(self):
+        if self.worf == F:
+            return 'F'
+        else:
+            return 'W'
+
+    def get_year_and_worf(self):
+        return f'Year: {self.year} Semester: {self.worf_string()}'
+
+
 class Course_Node():
-    
-    def __init__(self,name) -> None:
+
+    def __init__(self, name) -> None:
         self.name = name
         self.pre = []
         self.next = []
         self.prereqTreeCount = None
         self.taken = False
-        
+
     def findPrereqCount(self):
         pass
 
@@ -78,9 +93,10 @@ class A_Class:
 
 
 class Section:
-    def __init__(self, course_name, id):
+    def __init__(self, course_name, id, description=None):
         self.course_name = course_name
         self.id = id  # Section from CSV (col D)
+        self.description = description
         self.classes = []
 
 
@@ -90,7 +106,7 @@ class Course:
         self.dept = dept
         self.description = description
         self.semester = semester
-        self.prereqs = [] # nested lists of classes, separated by AND
+        self.prereqs = []  # nested lists of classes, separated by AND
         self.sections = {}  # dict so that we can add from the csv easily
 
     def __str__(self):

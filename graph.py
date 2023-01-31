@@ -105,7 +105,7 @@ def fill_course_data(courses, course_dict, semester):
 
             section = course.sections.get(row[SECTION], None)
             if section is None:
-                section = Section(course_name, row[SECTION])
+                section = Section(course_name, row[SECTION], course.description)
                 course.sections[section.id] = section
             id = row[COMP] + '-' + row[DEL]
             start_time = row[CLASS_HOUR]
@@ -144,9 +144,7 @@ def student_eligible(course, student):
 
 
     
-
-
-if __name__ == '__main__':
+def build_graph():
     courses = [[], []]
     course_dict = [{}, {}]
     data_folder = 'data/'
@@ -168,55 +166,25 @@ if __name__ == '__main__':
         course_dict[W][course.name] = course
 
     # # CSV METHOD
-    csv_name = 'courses.csv'
-    csv_path = data_folder + csv_name
-    courses[F], course_dict[F] = prereq_from_csv(csv_path)
-    courses[W], course_dict[W] = prereq_from_csv(csv_path)
+    # csv_name = 'courses.csv'
+    # csv_path = data_folder + csv_name
+    # courses[F], course_dict[F] = prereq_from_csv(csv_path)
+    # courses[W], course_dict[W] = prereq_from_csv(csv_path)
 
     # fill the course data and remove courses with no sections for the given semester
     fill_course_data(courses[F], course_dict[F], 'F')
     fill_course_data(courses[W], course_dict[W], 'W')
 
-
-    student = Student(name="Soren Edwards",semester="Fall",courses_taken = ["ACCN5501"],chosen_sen_options =["COMP4555","COMP5690","COMP4630"],
-        chosen_jun_options = ["COMP3533","COMP3625","COMP2521"],
-        cognate_choice = ["GEOG"],
-        chosen_grad_year =  2030)
-
-    anwser = student_eligible(course_dict[W]["ACCN5505"],student)
-    print(anwser)
-
-
-    # check if the csv and pickle methods are the same
-    # courses_csv = [[], []]
-    # course_dict_csv = [{}, {}]
-    # courses_csv[F], course_dict_csv[F] = prereq_from_csv(csv_path)
-    # courses_csv[W], course_dict_csv[W] = prereq_from_csv(csv_path)
-    # fill_course_data(courses_csv[F], course_dict_csv[F], 'F')
-    # fill_course_data(courses_csv[W], course_dict_csv[W], 'W')
-    # f_equal = 'FALL EQUAL'
-    # for i in range(len(courses[F])):
-    #     eq = courses[F][i] == courses_csv[F][i]
-    #     if eq:
-    #         continue
-    #     else:
-    #         f_equal = 'FALL NOT EQUAL'
-    #         break
-    # print(f_equal)
-    # w_equal = 'WINTER EQUAL'
-    # for i in range(len(courses[W])):
-    #     eq = courses[W][i] == courses_csv[W][i]
-    #     if eq:
-    #         continue
-    #     else:
-    #         w_equal = 'WINTER NOT EQUAL'
-    #         break
-    # print(w_equal)
-
-    # pickle the two courses lists
+    # pickle the two semester lists & master course list
     fall_pickle_name = 'fall_courses.pkl'
     winter_pickle_name = 'winter_courses.pkl'
     all_courses_dict_name = 'all_courses_dict.pkl'
     pickle.dump(all_courses_dict, open(pickle_folder + all_courses_dict_name, 'wb'))
     pickle.dump(courses[F], open(pickle_folder + fall_pickle_name, 'wb'))
     pickle.dump(courses[W], open(pickle_folder + winter_pickle_name, 'wb'))
+
+
+if __name__ == '__main__':
+    print("Building Graph")
+    build_graph()
+    print("Done")

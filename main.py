@@ -1,5 +1,6 @@
 import pickle
 from class_definitions import Course, Section, A_Class
+from graph import build_graph
 import student as std
 import scheduler as shed
 
@@ -8,7 +9,10 @@ F = 0
 W = 1
 
 if __name__ == '__main__':
-    # Load courses from pickle
+    # Build graphs (only need to do this once)
+    # build_graph()
+
+    print('loading data structures')
     courses = [[], []]
     course_dict = [{}, {}]
     pickle_folder = 'pickles/'
@@ -23,12 +27,10 @@ if __name__ == '__main__':
 
     student = std.build_student_test()
 
+    print('building graph')
     program = shed.create_schedule(student, courses, course_dict)
 
-    print('done.fun')
+    print('writing to csv')
+    student.program_to_csv(program)
 
-    # test_course_name = 'ENTR4433'
-    # test_course = course_dict[F].get(test_course_name, None)
-    # if test_course is not None:
-    #     print('print course')
-    #     print(repr(test_course))
+    print('done.fun')
