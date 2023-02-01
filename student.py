@@ -1,13 +1,10 @@
+import datetime
 import pickle
 import random
 import csv
-from class_definitions import Course_Node, Regi
+from class_definitions import Course_Node, Regi, F, W
 CORE = ["PHIL1179", "MATH1200", "MATH1203", "MATH1271", "MATH2234", "COMP1631", "COMP1633", "COMP2613",
         "COMP2631", "COMP2633", "COMP2655", "COMP2659", "COMP3309", "COMP3614", "COMP3649", "COMP3659"]
-
-# SEMESTER INDEXES
-F = 0
-W = 1
 
 
 class Student:
@@ -87,7 +84,8 @@ class Student:
         csv_folder = 'data/out/'
         file_desc = self.name + '-' + self.cognate_name + \
             '-' + str(program.get_years()) + '_years'
-        file_name = file_desc + '.csv'
+        curr_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        file_name = curr_time + '-' + file_desc + '.csv'
         schedule_file = csv_folder + file_name
         print('Writing to file...')
         csv_header = ['Course', 'Section', 'Description',
@@ -101,11 +99,13 @@ class Student:
                 writer.writerow(['START ' + semester_str])
                 writer.writerow(csv_header)
                 for section in semester.courses:
-                    for a_class in section.classes:
+                    for a_class in section.get_all_classes():
                         writer.writerow([section.course_name, str(a_class.id.split(
                             '-')[0]), section.description, a_class.day, a_class.start_time, a_class.duration, a_class.room, a_class.prof])
                 writer.writerow(['END ' + semester_str])
                 writer.writerow([''])
+
+    # TODO go through and remove these if they are not being used
 
     @classmethod
     def from_file(cls, filename):

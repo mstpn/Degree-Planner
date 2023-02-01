@@ -1,16 +1,12 @@
 import pickle
-from class_definitions import Course, Section, A_Class
+from class_definitions import F, W
 from graph import build_graph
 import student as std
 import scheduler as shed
 
-# SEMESTER INDEXES
-F = 0
-W = 1
-
 if __name__ == '__main__':
     # Build graphs (only need to do this once)
-    # build_graph()
+    build_graph()
 
     print('loading data structures')
     courses = [[], []]
@@ -27,8 +23,18 @@ if __name__ == '__main__':
 
     student = std.build_student_test()
 
+    # Single
     print('building graph')
-    program = shed.create_schedule(student, courses, course_dict)
+    program = shed.create_schedule(student, course_dict)
+
+    # shortest time 1k loops
+    best_program = [10000,None]
+    for i in range(1000):
+        print(i+1, 'of 1000')
+        program = shed.create_schedule(student, course_dict)
+        if program.num_semesters < best_program[0]:
+            best_program = [program.num_semesters, program]
+    program = best_program[1]
 
     print('writing to csv')
     student.program_to_csv(program)

@@ -1,6 +1,6 @@
 import pickle
 import csv
-from class_definitions import Course, Section, A_Class, IGNORE_COURSES, IGNORE_PREREQS, IGNORE_DEPTS
+from class_definitions import Course, Section, A_Class, IGNORE_COURSES, IGNORE_PREREQS, IGNORE_DEPTS, F, W, LEC, LAB, TUT
 from student import Student
 # CSV COLUMN INDEXES
 DEPT = 0
@@ -19,10 +19,6 @@ CLASS_DURATION = 12
 ROOM = 13
 PROF_FIRST = 14
 PROF_LAST = 15
-
-# SEMESTER INDEXES
-F = 0
-W = 1
 
 
 def prereq_from_csv(csv_path):
@@ -105,22 +101,47 @@ def fill_course_data(courses, course_dict, semester):
 
             section = course.sections.get(row[SECTION], None)
             if section is None:
-                section = Section(course_name, row[SECTION], course.description)
+                section = Section(
+                    course_name, row[SECTION], course.description)
                 course.sections[section.id] = section
-            id = row[COMP] + '-' + row[DEL]
+            # id = row[COMP] + '-' + row[DEL]
+            id = row[COMP]
+            occurence = row[DEL]
             start_time = row[CLASS_HOUR]
             duration = row[CLASS_DURATION]
             day = row[CLASS_DAY_OF_WEEK]
             prof = row[PROF_FIRST] + ' ' + row[PROF_LAST]
             room = row[ROOM]
-            a_class = A_Class(id, start_time, duration, day, prof, room)
-            section.classes.append(a_class)
+            a_class = A_Class(id, occurence, start_time,
+                              duration, day, prof, room)
+            # TODO check the type of the class
+            # section.class_types[get_class_type(row[COMP])].append(a_class)
+            # type_section_id = row[COMP]
+            type_section = section.class_types[int(get_class_type(id))]
+            type_section_class = type_section.get(id, None)
 
-    # Prune courses with no sections
+            # debug
+            # if course_name == 'MATH2234':
+            #     print('debug')
+
+            if type_section_class is None:
+                type_section[id] = [a_class]
+            else:
+                type_section[id].append(a_class)
+            # debug
+            #! STILL HAPPENING ?? WHY?? CHeck COMP1631
+            if len(section.class_types) > 3:
+                print('big no good')
+
+    # Prune courses with no lecture sections
+    # IF ERRORS, add for loop to check all class_types
     for course in courses:
+        has_sections = False
         for section in course.sections:
-            if len(course.sections[section].classes) == 0:
-                courses.remove(course)
+            if len(course.sections[section].class_types[0]) != 0:
+                has_sections = True
+        if not has_sections:
+            courses.remove(course)
     return
 
 
@@ -135,16 +156,18 @@ def student_eligible(course, student):
         eligible = False
 
         for or_prereq in rows_of_prereqs_connected_by_ands:
-            
-                if or_prereq.name in student.completed_courses:
-                    eligible = True
-                    continue
+
+            if or_prereq.name in student.completed_courses:
+                eligible = True
+                continue
 
     return eligible
 
 
-    
 def build_graph():
+    '''
+    This function builds the graphs of courses and stores them in pickle objects
+    '''
     courses = [[], []]
     course_dict = [{}, {}]
     data_folder = 'data/'
@@ -179,9 +202,24 @@ def build_graph():
     fall_pickle_name = 'fall_courses.pkl'
     winter_pickle_name = 'winter_courses.pkl'
     all_courses_dict_name = 'all_courses_dict.pkl'
-    pickle.dump(all_courses_dict, open(pickle_folder + all_courses_dict_name, 'wb'))
+    pickle.dump(all_courses_dict, open(
+        pickle_folder + all_courses_dict_name, 'wb'))
     pickle.dump(courses[F], open(pickle_folder + fall_pickle_name, 'wb'))
     pickle.dump(courses[W], open(pickle_folder + winter_pickle_name, 'wb'))
+
+
+def get_class_type(id):
+    if len(id) >= 3:
+        if id[0] == '5':
+            type_ = LAB
+        elif id[0] == '4':
+            type_ = TUT
+        else:
+            type_ = LEC
+    else:
+        type_ = LEC
+
+    return int(type_)
 
 
 if __name__ == '__main__':

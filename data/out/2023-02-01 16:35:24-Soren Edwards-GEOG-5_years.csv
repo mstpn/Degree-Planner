@@ -1,0 +1,114 @@
+Soren Edwards-GEOG-5_years
+""
+START Year: 1 Semester: F
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+COMP3309,1,Information Technology & Society,Tuesday,10,1.5,T225,Patrick Perri
+COMP3309,1,Information Technology & Society,Thursday,10,1.5,T225,Patrick Perri
+COMP3309,1,Information Technology & Society,Tuesday,10,1.5,T225,TBA005 COMP
+COMP3309,1,Information Technology & Society,Thursday,10,1.5,T225,TBA005 COMP
+MATH1200,1,Calculus for Scientists I,Tuesday,14.5,1.5,EB1102,Ganesh Bhandari
+MATH1200,1,Calculus for Scientists I,Thursday,14.5,1.5,EB1102,Ganesh Bhandari
+MATH1200,1,Calculus for Scientists I,Wednesday,14.5,1,EB1102,Ganesh Bhandari
+MATH1200,401,Calculus for Scientists I,Friday,8.5,1,B222,Ganesh Bhandari
+COMP1631,1,Intro Computer Science I,Monday,11.5,1,EA1050,Paul Pospisil
+COMP1631,1,Intro Computer Science I,Tuesday,11.5,1,EA1050,Paul Pospisil
+COMP1631,1,Intro Computer Science I,Thursday,11.5,1,EA1050,Paul Pospisil
+COMP1631,401,Intro Computer Science I,Wednesday,9,1,B107,Paul Pospisil
+COMP1631,401,Intro Computer Science I,Friday,9,1,B107,Paul Pospisil
+COMP2521,1,Database I: Data Modeling & Query,Tuesday,16,1.5,T137,Shoba Ittyipe
+COMP2521,1,Database I: Data Modeling & Query,Thursday,16,1.5,T137,Shoba Ittyipe
+COMP2521,401,Database I: Data Modeling & Query,Wednesday,16,1,B107,Shoba Ittyipe
+COMP5690,1,CS Project,0,0,0,,Alan Fedoruk
+END Year: 1 Semester: F
+""
+START Year: 1 Semester: W
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+MATH2234,1,Concepts of Math Statistics,Monday,10.5,2,Y316, 
+MATH2234,1,Concepts of Math Statistics,Wednesday,10.5,2,Y316, 
+MATH2234,501,Concepts of Math Statistics,Tuesday,11.5,1,E203, 
+COMP2631,1,Information Structures I,Monday,16,1.5,E131,Charles Hepler
+COMP2631,1,Information Structures I,Wednesday,16,1.5,E131,Charles Hepler
+COMP2631,401,Information Structures I,Tuesday,12.5,2,E203,Charles Hepler
+MATH1203,1,Algebra for Scientists & Engr,Wednesday,14.5,1.5,Y314, 
+MATH1203,1,Algebra for Scientists & Engr,Friday,14.5,1.5,Y314, 
+MATH1203,401,Algebra for Scientists & Engr,Thursday,14.5,1,EA1014, 
+COMP2633,1,Foundations of Software Engineering,Tuesday,8.5,1.5,E206,Faith-Michael Uzoka
+COMP2633,1,Foundations of Software Engineering,Thursday,8.5,1.5,E206,Faith-Michael Uzoka
+COMP2633,401,Foundations of Software Engineering,Thursday,10.5,2,B162,Faith-Michael Uzoka
+PHIL1179,1,Introduction-Symbolic Logic,Monday,8.5,1.5,EA1026,Mark Gardiner
+PHIL1179,1,Introduction-Symbolic Logic,Wednesday,8.5,1.5,EA1026,Mark Gardiner
+PHIL1179,401,Introduction-Symbolic Logic,Thursday,9,1,EA1026,Mark Gardiner
+END Year: 1 Semester: W
+""
+START Year: 2 Semester: F
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+MATH1271,1,Discrete Mathematics,Monday,8.5,1.5,B217,Eric Roettger
+MATH1271,1,Discrete Mathematics,Wednesday,8.5,1.5,B217,Eric Roettger
+MATH1271,401,Discrete Mathematics,Monday,11.5,1,T230,Eric Roettger
+COMP2655,1,Computing Machinery I,Monday,14.5,1,E123,Paul Pospisil
+COMP2655,1,Computing Machinery I,Tuesday,14.5,1,E123,Paul Pospisil
+COMP2655,1,Computing Machinery I,Thursday,14.5,1,E123,Paul Pospisil
+COMP2655,401,Computing Machinery I,Wednesday,15,1,E203,Paul Pospisil
+COMP2655,401,Computing Machinery I,Friday,15,1,E203,Paul Pospisil
+END Year: 2 Semester: F
+""
+START Year: 2 Semester: W
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+COMP2659,1,Computing Machinery II,Monday,15.5,1,EA2070,Paul Pospisil
+COMP2659,1,Computing Machinery II,Tuesday,15.5,1,EA2070,Paul Pospisil
+COMP2659,1,Computing Machinery II,Thursday,15.5,1,EA2070,Paul Pospisil
+COMP2659,501,Computing Machinery II,Friday,8.5,1,E203,Paul Pospisil
+COMP2659,401,Computing Machinery II,Wednesday,14.5,1,E203,Paul Pospisil
+COMP3533,1,Network Infrastructure & Security,Monday,8.5,1.5,B220,Mingwei Gong
+COMP3533,1,Network Infrastructure & Security,Wednesday,8.5,1.5,B220,Mingwei Gong
+COMP3533,501,Network Infrastructure & Security,Tuesday,16,1,B162,Mingwei Gong
+END Year: 2 Semester: W
+""
+START Year: 3 Semester: F
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+COMP4555,1,Games Development,Monday,10,1.5,E123,Mingwei Gong
+COMP4555,1,Games Development,Wednesday,10,1.5,E123,Mingwei Gong
+COMP4555,401,Games Development,Monday,11.5,1,E203,TBA002 COMP
+COMP3659,1,Operating Systems,Monday,8.5,1.5,T231,Marc Schroeder
+COMP3659,1,Operating Systems,Wednesday,8.5,1.5,T231,Marc Schroeder
+COMP3659,501,Operating Systems,Tuesday,14,1,E203,Marc Schroeder
+END Year: 3 Semester: F
+""
+START Year: 3 Semester: W
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+END Year: 3 Semester: W
+""
+START Year: 4 Semester: F
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+COMP2613,1,Introduction to Computability,Tuesday,14.5,1.5,E206,TBA005 COMP
+COMP2613,1,Introduction to Computability,Thursday,14.5,1.5,E206,TBA005 COMP
+COMP2613,401,Introduction to Computability,Monday,12,1,B162,Marc Schroeder
+COMP2613,401,Introduction to Computability,Wednesday,12,1,B162,Marc Schroeder
+COMP2613,401,Introduction to Computability,Monday,12,1,B162,TBA005 COMP
+COMP2613,401,Introduction to Computability,Wednesday,12,1,B162,TBA005 COMP
+END Year: 4 Semester: F
+""
+START Year: 4 Semester: W
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+COMP3649,1,Programming Paradigms,Tuesday,16,1.5,E131,Marc Schroeder
+COMP3649,1,Programming Paradigms,Thursday,16,1.5,E131,Marc Schroeder
+COMP3649,401,Programming Paradigms,Thursday,10.5,2,E203,Marc Schroeder
+COMP3614,1,Algorithms & Complexity,Tuesday,14.5,1.5,B231,Charles Hepler
+COMP3614,1,Algorithms & Complexity,Thursday,14.5,1.5,B231,Charles Hepler
+COMP3614,401,Algorithms & Complexity,Friday,8.5,1,E123,Charles Hepler
+END Year: 4 Semester: W
+""
+START Year: 5 Semester: F
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+COMP3625,1,Artificial Intelligence,Tuesday,8.5,1.5,E203,TBA003 COMP
+COMP3625,1,Artificial Intelligence,Thursday,8.5,1.5,E203,TBA003 COMP
+COMP3625,401,Artificial Intelligence,Monday,17,1,E203,TBA003 COMP
+END Year: 5 Semester: F
+""
+START Year: 5 Semester: W
+Course,Section,Description,DayOfWeek,ClassHour,ClassDuration,Room,Prof
+COMP4630,1,Machine Learning,Monday,11.5,1.5,T231,Charlotte Curtis
+COMP4630,1,Machine Learning,Wednesday,11.5,1.5,T231,Charlotte Curtis
+COMP4630,401,Machine Learning,Tuesday,8.5,1,E203,Charlotte Curtis
+END Year: 5 Semester: W
+""

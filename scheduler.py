@@ -1,12 +1,9 @@
 import student as std
 import class_definitions as cd
-
-# SEMESTER INDEXES
-F = 0
-W = 1
+from class_definitions import F, W
 
 
-def create_schedule(stud, courses, course_dict):
+def create_schedule(stud, course_dict):
 
     all_courses = stud.all_required_courses()
     courses_left = all_courses.copy()
@@ -28,6 +25,8 @@ def create_schedule(stud, courses, course_dict):
         if not semester_full:
             #! right now we have all possible core/required courses scheduled, but still room for electives
             # TODO schedule_gned()
+            # -> schedule_gned() will need courses to specify what GNED they specify
+            # ->-> requires catalog_scraper update
             pass
         num_semesters += 1
         program.semesters.append(semester_object)
@@ -42,6 +41,9 @@ def create_schedule(stud, courses, course_dict):
             semester_worf = F
         if num_semesters % 2 == 0:
             year += 1
+
+    program.years = program.get_years()
+    program.num_semesters = len(program.semesters)
 
     return program
 
@@ -74,9 +76,6 @@ def schedule_semester(all_courses, course_dict, graph_nodes_dict, semester, prog
                 if not prereq.taken:
                     has_prereqs = False
                     break
-                    # super_safe_double_check = schedule_semester(
-                    #     all_courses, course_dict, graph_nodes_dict, semester, program)
-                    # all_courses.append(course_name)
             if not has_prereqs:
                 continue
             course_details = course_dict[semester.worf].get(course_name, None)
@@ -85,18 +84,15 @@ def schedule_semester(all_courses, course_dict, graph_nodes_dict, semester, prog
             if schedule_course(course_details, semester):
                 course_node.taken = True
                 continue
-                # for prereq in course_node.pre:
-                #     prereq.taken = True
             else:
                 schedule_slots_available = schedule_semester(
                     all_courses, course_dict, graph_nodes_dict, semester, program)
         if not course_node.taken:
             all_courses.append(course_name)
     if len(semester.courses) < semester.max_courses or schedule_slots_available is False:
-        # still courses slots available to schedule
-        return False
-    # all courses scheduled
-    return True
+        return False  # still course slots available to schedule
+
+    return True  # all courses scheduled
 
 
 def schedule_course(course, semester):
@@ -117,14 +113,43 @@ def can_schedule(course, semester):
     Returns a section of a course that can be scheduled in the semester
     Returns None if no section can be scheduled
     '''
+    cant_scheudule = -1
+    no_sections = -2
+    new_section = None
+
+    #debug
+    if course.name == "MATH2234":
+        print("debug")
+
     for section in course.sections.values():
         time_available = True
-        for a_class in section.classes:
-            if time_conflict(a_class, semester):
-                time_available = False
-                break
+        types = [cant_scheudule,cant_scheudule,cant_scheudule]
+        for i in range(len(section.class_types)):
+            if len(section.class_types[i]) == 0:
+                types[i] = no_sections
+                continue
+            for type_section in section.class_types[i].values():
+                section_available = True
+                for a_class in type_section:
+                    if time_conflict(a_class, semester):
+                        section_available = False
+                        break
+                if section_available:
+                    types[i] = type_section[0].id
+                    break
+        if cant_scheudule in types:
+            time_available = False
+            break
         if time_available:
-            return section
+            new_section = cd.Section(section.course_name, section.id, section.description)
+            for index, value in enumerate(types):
+                if value != no_sections:
+                    #!!!!! THIS LINE NEEDS FIXING TO SET TO THE CORRECT SECTION PER TYPE
+                    new_section.class_types[index][value] = section.class_types[index][value]
+            return new_section
+
+    #! STILL SCHEDULING EXTRA SECTIONS....................
+
     return None
 
 
@@ -133,7 +158,8 @@ def time_conflict(a_class, semester):
     Returns True if the class to be scheduled conflicts with any class in the semester
     '''
     for section in semester.courses:
-        for section_class in section.classes:
+        all_classes = section.get_all_classes()
+        for section_class in all_classes:
             if a_class.day == section_class.day:
                 if overlap(a_class.start_time, a_class.duration, section_class.start_time, section_class.duration):
                     return True

@@ -18,28 +18,33 @@ IGNORE_DEPTS = [
     'XPFT'
 ]
 
+# Semester indices
 F = 0
 W = 1
+
+# A_Class type
+LEC = 0
+LAB = 1
+TUT = 2
 
 
 class Regi():
 
-    def __init__(self, semesters=[]) -> None:
-        self.semesters = semesters
+    def __init__(self) -> None:
+        self.semesters = []
+        self.num_semesters = 0
+        self.years = 0
 
     def get_years(self):
         return math.ceil(len(self.semesters) / 2)
 
 
 class Semester():
-    def __init__(self, year, worf, max_courses, sections=None) -> None:
+    def __init__(self, year, worf, max_courses) -> None:
         self.year = year
         self.worf = worf
         self.max_courses = max_courses
-        if sections is None:
-            self.courses = []
-        else:
-            self.courses = sections
+        self.courses = []
 
     def __str__(self) -> str:
         courses = ''
@@ -76,15 +81,9 @@ class Course_Node():
 
 
 class A_Class:
-    def __init__(self, id, start_time, duration, day, prof, room):
-        self.id = id  # Comp-Del from CSV (concat cols E-F)
-        if len(id) >= 3:
-            if id[0] == '4':
-                self.type = 'LAB'
-            elif id[0] == '5':
-                self.type = 'TUT'
-        else:
-            self.type = 'LEC'
+    def __init__(self, id, occurence, start_time, duration, day, prof, room):
+        self.id = id  # csv col E
+        self.occurence = occurence # csv col F, time this id occurs
         self.start_time = start_time
         self.duration = duration
         self.day = day
@@ -97,8 +96,17 @@ class Section:
         self.course_name = course_name
         self.id = id  # Section from CSV (col D)
         self.description = description
-        self.classes = []
+        # self.classes = []
+        self.class_types = [{},{},{}] # LEC, LAB, TUT
+        #TODO rework anything with .classes to .class_types
 
+    def get_all_classes(self):
+        all_classes = []
+        for class_type in self.class_types:
+            for classes in class_type.values():
+                for class_ in classes:
+                    all_classes.append(class_)
+        return all_classes
 
 class Course:
     def __init__(self, name, dept=None, course=None, description=None, semester=None):
