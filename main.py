@@ -3,7 +3,7 @@ from class_definitions import F, W
 from graph import build_graph
 import student as std
 import scheduler as shed
-
+import os
 if __name__ == '__main__':
     # Build graphs (only need to do this once)
     build_graph()
@@ -14,6 +14,8 @@ if __name__ == '__main__':
     pickle_folder = 'pickles/'
     fall_pickle_path = pickle_folder + 'fall_courses.pkl'
     winter_pickle_path = pickle_folder + 'winter_courses.pkl'
+    student_input_file = "data/input/soren.json"
+
     courses[F] = pickle.load(open(fall_pickle_path, 'rb'))
     courses[W] = pickle.load(open(winter_pickle_path, 'rb'))
     for course in courses[F]:
@@ -21,11 +23,12 @@ if __name__ == '__main__':
     for course in courses[W]:
         course_dict[W][course.name] = course
 
-    student = std.build_student_test()
+    student = std.Student(filename=student_input_file)
 
     # Single
     print('building graph')
     program = shed.create_schedule(student, course_dict)
+
 
     # shortest time 1k loops
     best_program = [10000,None]
