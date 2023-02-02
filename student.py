@@ -2,13 +2,21 @@ import datetime
 import pickle
 import random
 import csv
+import json
 from class_definitions import Course_Node, Regi, F, W
 CORE = ["PHIL1179", "MATH1200", "MATH1203", "MATH1271", "MATH2234", "COMP1631", "COMP1633", "COMP2613",
         "COMP2631", "COMP2633", "COMP2655", "COMP2659", "COMP3309", "COMP3614", "COMP3649", "COMP3659"]
 
 
 class Student:
-    def __init__(self, **kwargs):
+    def __init__(self,filename=None, **kwargs):
+        if filename:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+            if data:
+                print(data)
+                kwargs = data
+        
         self.name = kwargs.get("name", "N\A")
         self.semester = kwargs.get("semester", 0)
         self.courses_taken = kwargs.get("courses_taken", [])
@@ -20,6 +28,7 @@ class Student:
         self.max_courses_per_semester = kwargs.get(
             "max_courses_per_semester", 6)
 
+
     def __str__(self) -> str:
         str_fmt = "NAME:{}\nSEMESTER: {}\nCOURSE_TAKEN{}\nSEN_OPS{}\nJUN_OPS{}\nCOG{}\nPREFERED_GRAD_YEAR: {}".format(
             self.name, self.semester, self.courses_taken, self.chosen_sen_options, self.chosen_jun_options, self.cognate_choice, self.years_to_grad)
@@ -27,6 +36,7 @@ class Student:
 
     def __repr__(self) -> str:
         return self.__str__()
+
 
     def from_args(cls, name, semester, courses_taken, chosen_sen_options, chosen_jun_options, cognate_choice, years_to_grad):
         name = name
@@ -36,6 +46,15 @@ class Student:
         chosen_jun_options = chosen_jun_options
         cognate_choice = cognate_choice
         years_to_grad = years_to_grad
+
+    def from_file(cls,filename):
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            
+        print(data)
+        if data:
+            return Student(**{'type':'Event'})
+        return None
 
     def make_graph(self):
         reqs = self.all_required_courses()
