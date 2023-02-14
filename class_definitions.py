@@ -28,7 +28,8 @@ LAB = 1
 TUT = 2
 
 
-class Regi():
+# A students registration
+class Registration():
 
     def __init__(self) -> None:
         self.semesters = []
@@ -37,6 +38,10 @@ class Regi():
 
     def get_years(self):
         return math.ceil(len(self.semesters) / 2)
+    
+    def __str__(self) -> str:
+        for semester in self.semesters:
+            print(semester)
 
 
 class Semester():
@@ -44,7 +49,7 @@ class Semester():
         self.year = year
         self.worf = worf
         self.max_courses = max_courses
-        self.courses = []
+        self.courses = [] # contains Section objects
 
     def __str__(self) -> str:
         courses = ''
@@ -83,7 +88,7 @@ class Course_Node():
 class A_Class:
     def __init__(self, id, occurence, start_time, duration, day, prof, room):
         self.id = id  # csv col E
-        self.occurence = occurence # csv col F, time this id occurs
+        self.occurence = occurence  # csv col F, time this id occurs
         self.start_time = start_time
         self.duration = duration
         self.day = day
@@ -97,8 +102,8 @@ class Section:
         self.id = id  # Section from CSV (col D)
         self.description = description
         # self.classes = []
-        self.class_types = [{},{},{}] # LEC, LAB, TUT
-        #TODO rework anything with .classes to .class_types
+        self.class_types = [{}, {}, {}]  # LEC, LAB, TUT
+        # TODO rework anything with .classes to .class_types
 
     def get_all_classes(self):
         all_classes = []
@@ -107,6 +112,7 @@ class Section:
                 for class_ in classes:
                     all_classes.append(class_)
         return all_classes
+
 
 class Course:
     def __init__(self, name, dept=None, course=None, description=None, semester=None):

@@ -3,7 +3,7 @@ import pickle
 import random
 import csv
 import json
-from class_definitions import Course_Node, Regi, F, W
+from class_definitions import Course_Node, Registration, F, W
 CORE = ["PHIL1179", "MATH1200", "MATH1203", "MATH1271", "MATH2234", "COMP1631", "COMP1633", "COMP2613",
         "COMP2631", "COMP2633", "COMP2655", "COMP2659", "COMP3309", "COMP3614", "COMP3649", "COMP3659"]
 
@@ -95,11 +95,12 @@ class Student:
         all_req_courses = list(
             set(all_req_courses).difference(self.get_courses()))
 
+        random.shuffle(all_req_courses)
         # all_required_courses = sort_courses_lowest_prereq_count( all_required_courses )
 
         return all_req_courses
 
-    def program_to_csv(self, program: Regi):
+    def program_to_csv(self, program: Registration):
         csv_folder = 'data/out/'
         file_desc = self.name + '-' + self.cognate_name + \
             '-' + str(program.get_years()) + '_years'
@@ -185,7 +186,7 @@ def build_student_test():
     return Student(
         name="Soren Edwards",
         semester=F,
-        courses_taken=["COMP1633"],
+        courses_taken=["COMP1631"],
         chosen_sen_options=["COMP4555", "COMP5690", "COMP4630"],
         chosen_jun_options=["COMP3533", "COMP3625", "COMP2521"],
         cognate_name="GEOG",

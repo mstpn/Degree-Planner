@@ -6,6 +6,7 @@ import scheduler as shed
 import os
 if __name__ == '__main__':
     # Build graphs (only need to do this once)
+    print('building graph')
     build_graph()
 
     print('loading data structures')
@@ -25,19 +26,19 @@ if __name__ == '__main__':
 
     student = std.Student(filename=student_input_file)
 
+    print('creating schedule')
     # Single
-    print('building graph')
-    program = shed.create_schedule(student, course_dict)
-
+    # program = shed.create_schedule(student, course_dict)
 
     # shortest time 1k loops
     best_program = [10000,None]
     for i in range(1000):
-        print(i+1, 'of 1000')
+        # print(i+1, 'of 1000')
         program = shed.create_schedule(student, course_dict)
         if program.num_semesters < best_program[0]:
             best_program = [program.num_semesters, program]
     program = best_program[1]
+    print('best program: ', program.num_semesters, ' semesters')
 
     print('writing to csv')
     student.program_to_csv(program)

@@ -104,7 +104,6 @@ def fill_course_data(courses, course_dict, semester):
                 section = Section(
                     course_name, row[SECTION], course.description)
                 course.sections[section.id] = section
-            # id = row[COMP] + '-' + row[DEL]
             id = row[COMP]
             occurence = row[DEL]
             start_time = row[CLASS_HOUR]
@@ -114,27 +113,17 @@ def fill_course_data(courses, course_dict, semester):
             room = row[ROOM]
             a_class = A_Class(id, occurence, start_time,
                               duration, day, prof, room)
-            # TODO check the type of the class
-            # section.class_types[get_class_type(row[COMP])].append(a_class)
-            # type_section_id = row[COMP]
             type_section = section.class_types[int(get_class_type(id))]
             type_section_class = type_section.get(id, None)
-
-            # debug
-            # if course_name == 'MATH2234':
-            #     print('debug')
 
             if type_section_class is None:
                 type_section[id] = [a_class]
             else:
                 type_section[id].append(a_class)
-            # debug
-            #! STILL HAPPENING ?? WHY?? CHeck COMP1631
             if len(section.class_types) > 3:
                 print('big no good')
 
     # Prune courses with no lecture sections
-    # IF ERRORS, add for loop to check all class_types
     for course in courses:
         has_sections = False
         for section in course.sections:
@@ -157,7 +146,8 @@ def student_eligible(course, student):
 
         for or_prereq in rows_of_prereqs_connected_by_ands:
 
-            if or_prereq.name in student.completed_courses:
+            # if or_prereq.name in student.completed_courses:
+            if or_prereq.name in student.courses_taken:
                 eligible = True
                 continue
 

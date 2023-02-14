@@ -10,7 +10,7 @@ def create_schedule(stud, course_dict):
 
     graph_nodes_list, graph_nodes_dict = stud.make_graph()
 
-    program = cd.Regi()
+    program = cd.Registration()
     num_semesters = 0
     year = 1
     semester_worf = stud.semester
@@ -34,7 +34,8 @@ def create_schedule(stud, course_dict):
 
         # prep for next semester
         courses_left = all_courses.copy()
-        print(semester_object)
+        # print the semester
+        # print(semester_object)
         if semester_worf == F:
             semester_worf = W
         else:
@@ -117,10 +118,6 @@ def can_schedule(course, semester):
     no_sections = -2
     new_section = None
 
-    #debug
-    if course.name == "MATH2234":
-        print("debug")
-
     for section in course.sections.values():
         time_available = True
         types = [cant_scheudule,cant_scheudule,cant_scheudule]
@@ -144,12 +141,8 @@ def can_schedule(course, semester):
             new_section = cd.Section(section.course_name, section.id, section.description)
             for index, value in enumerate(types):
                 if value != no_sections:
-                    #!!!!! THIS LINE NEEDS FIXING TO SET TO THE CORRECT SECTION PER TYPE
                     new_section.class_types[index][value] = section.class_types[index][value]
             return new_section
-
-    #! STILL SCHEDULING EXTRA SECTIONS....................
-
     return None
 
 
