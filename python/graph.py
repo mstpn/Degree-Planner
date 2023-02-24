@@ -211,8 +211,38 @@ def get_class_type(id):
 
     return int(type_)
 
+import json
+def courses_json():
+    '''
+    This function returns a json object of all the courses, also writes to a json file
+    '''
+    with open('data/courses.csv', 'r') as f:
+        reader = csv.reader(f)
+        all_course_dict = {}
+        course_dict = {}
+        prereq_row = 0
+        id = ""
+        for row in reader:
+            if row[0] == "START":
+                course_dict = {}
+                prereq_row = 0
+                row = next(reader)
+                id = str(row[0])
+                all_course_dict[id] = {}
+            elif row[0] == "END":
+                all_course_dict[id] = course_dict
+            else:
+                or_courses = []
+                for col in row:
+                    or_courses.append(col)
+                course_dict[prereq_row] = or_courses
+                prereq_row += 1
+
+    json.dump(all_course_dict, open('json/all_courses.json', 'w'))
+    return json.dumps(all_course_dict)
 
 if __name__ == '__main__':
     print("Building Graph")
     build_graph()
+    course_json = courses_json()
     print("Done")

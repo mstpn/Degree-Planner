@@ -38,7 +38,6 @@ for page_num in range(1, MAX_PAGE+1):
             if cell.text[0] == '•':
                 course = cell.text[3:3+9]
                 course = course.replace(' ', '')
-                # ! NEW
                 if course in IGNORE_COURSES or course[:4] in IGNORE_DEPTS:
                     continue
                 course_obj = course_dict.get(course, None)
@@ -46,8 +45,6 @@ for page_num in range(1, MAX_PAGE+1):
                     course_obj = Course(course)
                     course_dict[course] = course_obj
                 courses.append(course_obj)
-                # ! End NEW
-
             else:
                 continue
             try:

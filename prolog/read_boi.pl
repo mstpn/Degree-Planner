@@ -1,20 +1,30 @@
-%this is real boi, he wants to be human
-:- initialization(main, main).
 
-:- use_module(library(csv)).
-:- use_module(library(http/json)).
+%rules 
 
-main :-
-    (   current_prolog_flag(argv, [CSV_file|_])
-    ->  csv_read_file(CSV_file, CSV, [])
-    ;   csv_read_stream(current_input, CSV, [])
-    ),
-    CSV = [Colnames|Rows],
-    Colnames =.. [row|Names],
-    maplist(row_dict(Names), Rows, Dicts),
-    json_write_dict(current_output, Dicts, [null('')]).
+%student(name(),sem(),courses_taken(),chosen_sen_options(),chosen_jun_options(),cog(),choosen_cog(),years_to_grad(8),max_course(8))
 
-row_dict(Names, Row, Dict) :-
-    Row =.. [row|Fields],
-    pairs_keys_values(Data, Names, Fields),
-    dict_create(Dict, _, Data).
+course(dep(gned),code(1301),or([]),and([])).
+course(dep(gned),code(1303),or([]),and([])).
+course(dep(gned),code(1304),or([]),and([])).
+
+course(dep(comp),code(1631),or([]),and([])).
+course(dep(phil),code(1179),or([]),and([])).
+course(dep(math),code(1200),or([]),and([])).
+course(dep(math),code(1203),or([]),and([])).
+course(dep(math),code(1271),or([]),and([])).
+course(dep(math),code(2232),or([]),and([course(dep(math),code(1200),or([]),and([]))])).
+course(dep(comp),code(1631),or([]),and([])).
+course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))])).
+course(dep(comp),code(2613),or([]),and([course(dep(math),code(1271),or([]),and([])),course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))])).
+course(dep(comp),code(2631),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))])).
+course(dep(comp),code(2633),or([]),and([course(dep(comp),code(2631),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))]))])).
+course(dep(comp),code(2655),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))])).
+course(dep(comp),code(2659),or([]),and([course(dep(phil),code(1179),or([]),and([])),course(dep(comp),code(2655),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))]))])).
+course(dep(comp),code(3309),or([course(dep(gned),code(1301),or([]),and([])),course(dep(gned),code(1303),or([]),and([])),course(dep(gned),code(1304),or([]),and([]))]),and([])).
+course(dep(comp),code(3614),or([]),and([course(dep(math),code(1200),or([]),and([])),course(dep(comp),code(2613),or([]),and([course(dep(math),code(1271),or([]),and([])),course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))]),course(dep(comp),code(2631),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))])))])).
+course(dep(comp),code(3649),or([]),and([course(dep(comp),code(2631),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))])),course(dep(phil),code(1179),or([]),and([]))])).
+course(dep(comp),code(3659),or([]),and([course(dep(comp),code(2659),or([]),and([course(dep(comp),code(2631),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))]),course(dep(phil),code(1179),or([]),and([])),course(dep(comp),code(2655),or([]),and([course(dep(comp),code(1633),or([]),and([course(dep(comp),code(1631),or([]),and([]))]))])))]))])).
+
+
+course(D,C,_,_) :- D=dep(comp),C=code(1631).
+get_and_for(D,C,A) :- course(dep(D),code(C),_,A).
