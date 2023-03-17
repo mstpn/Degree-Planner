@@ -1,0 +1,15 @@
+get_all_prereqs('COMP1633', Prereqs)
+    get_prereqs('COMP1633', CoursePrereqs)
+    CoursePrereqs = ['COMP1631']
+    get_all_prereqs_helper(['COMP1631'], Prereqs)
+        H = 'COMP1631', T = []
+        atom('COMP1631')
+        get_all_prereqs('COMP1631', HPrereqs)
+            get_prereqs('COMP1631', CoursePrereqs2)
+                CoursePrereqs2 = []
+            get_all_prereqs_helper([], HPrereqs)
+                HPrereqs = []
+                
+        get_all_prereqs_helper([], TPrereqs)
+            [], TPrereqs = []
+        append([],[])

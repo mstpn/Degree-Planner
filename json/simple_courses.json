@@ -1,0 +1,32 @@
+{
+    "comp101": {
+        "name": "comp101",
+        "start": 9,
+        "duration": 2
+    },
+    "math102": {
+        "name": "math102",
+        "start": 11,
+        "duration": 3
+    },
+    "engl201": {
+        "name": "engl201",
+        "start": 14,
+        "duration": 1
+    },
+    "hist310": {
+        "name": "hist310",
+        "start": 15,
+        "duration": 2
+    },
+    "biol401": {
+        "name": "biol401",
+        "start": 16,
+        "duration": 3
+    },
+    "phil501": {
+        "name": "phil501",
+        "start": 19,
+        "duration": 2
+    }    
+}
