@@ -172,6 +172,11 @@ course_compatiable(C1,C2):-
     CourseName1 \= CourseName2,
     Semester1 = Semester2.
 
+course_conflicts(C1,C2):-
+    C1=course(_,_,_,Times1),
+    C2=course(_,_,_,Times2),
+    course_compatiable(C1,C2),
+    times_conflict(Times1,Times2).
 
 
 check_course_conflicts(_,[]).
