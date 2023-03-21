@@ -2,6 +2,8 @@
 :- include('student.pl').
 :- include('required.pl').
 
+section(_,_,_).
+slot(_,_,_).
 last(L,R):- append(_,[R],L).
 
 len([], LenResult):-
@@ -40,9 +42,14 @@ filter_course_type(T,L):-
 get_lecs_for_course(CourseName,Semester,LecList):- 
     (lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
             lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
-            LecList).
+            Lec),append(Lec,[],LecList).
 
 % get_lecs_for_section(_,_,_,[]).
+get_lecs_for_section(CourseName,Semester,Section,LecList):- 
+    findall(lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            Lec),append(Lec,[],LecList).
+
 get_lecs_for_section(CourseName,Semester,Section,LecList):- 
     findall(lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
             lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
@@ -50,15 +57,15 @@ get_lecs_for_section(CourseName,Semester,Section,LecList):-
 
 % get_tuts_for_course(_,_,_,[]).
 get_tuts_for_course(CourseName,Semester,Section,TutList) :-
-    findall(tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
-            tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
-            TutList).
+    findall(tut(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            tut(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            Tut),append(Tut,[],TutList).
 
 % get_labs_for_course(_,_,_,[]).
 get_labs_for_course(CourseName,Semester,Section,LabList) :-
-    findall(lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),
-            lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),
-            LabList).
+    findall(lab(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            lab(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            Lab),append(Lab,[],LabList).
 
 gatherTimes([],_).
 gatherTimes([X|XS],T):-
@@ -90,9 +97,11 @@ course_time_table(CourseName,Semester,Section,Times):-
     
 get_sections_for_course(CourseName,Semester,Sections):- 
     findall(section(CourseName,Section,Semester),
-            lecture(_,CourseName,Section,_,_,_,_,_,Semester),
+            lecture(Dept,CourseName,Section,Code,Del,Day,Start,Duration,Semester),
             SecList),
-    remove_duplicates(SecList,Sections).
+    remove_duplicates(SecList,Sec),
+    append([],Sec,Sections).
+
 
 build_sections([],_).
 build_sections([X|XS],Sections):-
@@ -121,15 +130,15 @@ time_overlaps(T1,T2):-
     (Start1 = Start2).
         
 time_overlaps(T1,T2):-
-    T1 = (Day1,Start1,Duration1),
+    T1 = slot(Day1,Start1,Duration1),
     T2 = (Day2,Start2,_),
     (Day1 = Day2),
     End1 = Start1 + Duration1,
     (Start1 < Start2, End1 > Start2).
 
 time_overlaps(T1,T2):-
-    T1 = (Day1,Start1,Duration1),
-    T2 = (Day2,Start2,Duration2),
+    T1 = slot(Day1,Start1,Duration1),
+    T2 = slot(Day2,Start2,Duration2),
     (Day1 = Day2),
     End1 = Start1 + Duration1,
     End2 = Start2 + Duration2,
@@ -137,15 +146,15 @@ time_overlaps(T1,T2):-
 
 time_overlaps(T1,T2):-
     T1 = (Day1,Start1,_),
-    T2 = (Day2,Start2,Duration2),
+    T2 = slot(Day2,Start2,Duration2),
     (Day1 = Day2),
     End2 = Start2 + Duration2,
     (Start2 < Start1,End2 > Start1).
 
    
 time_overlaps(T1,T2):-
-    T1 = (Day1,Start1,Duration1),
-    T2 = (Day2,Start2,Duration2),
+    T1 = slot(Day1,Start1,Duration1),
+    T2 = slot(Day2,Start2,Duration2),
     (Day1 = Day2),
     End1 = Start1 + Duration1,
     End2 = Start2 + Duration2,
@@ -175,8 +184,8 @@ course_compatiable(C1,C2):-
     Semester1 = Semester2.
 
 course_conflicts(C1,C2):-
-    C1=course(_,_,_,Times1),
-    C2=course(_,_,_,Times2),
+    C1=course(CourseName1,Semester1,Sections1,Times1),
+    C2=course(CourseName2,Semester2,Sections2,Times2),
     course_compatiable(C1,C2),
     times_conflict(Times1,Times2).
 
@@ -184,6 +193,7 @@ course_conflicts(C1,C2):-
 % check_course_conflicts(_,[]).
 check_course_conflicts(C1,[H|_]):-course_conflicts(C1,H).
 check_course_conflicts(C1,[_|T]):-check_course_conflicts(C1,T).
+
 check_courses(C1,A):-member(_,A),check_course_conflicts(C1,A).
 check_courses(_,A):-not(member(_,A)).
 
@@ -197,18 +207,16 @@ check_courses(_,A):-not(member(_,A)).
 
 % A = course("COMP3649", "winter", 1, [("Thursday", 10.5, 2.0), ("Tuesday", 16.0, 1.5), ("Thursday", 16.0, 1.5)],course("COMP3614", "winter", 1, [("Friday", 8.5, 1.0), ("Tuesday", 14.5, 1.5), ("Thursday", 14.5, 1.5)],course_conflicts(A,B).
 
-
-
 required_program_courses(L):-
     findall(C,program_course(C,_),L).
 
-needed_required_program_courses([],[],_).
-needed_required_program_courses([],NewReq,Needs):- Needs = NewReq.
-needed_required_program_courses([X|XS],Required,Needs):-
-    remove_taken(X,Required,NewReq),
-    needed_required_program_courses(XS,NewReq,Needs).
+% needed_required_program_courses([],_,_).
+% needed_required_program_courses([],NewReq,Needs):- Needs = NewReq.
+% needed_required_program_courses([X|XS],Required,Needs):-
+%     remove_taken(X,Required,NewReq),
+%     needed_required_program_courses(XS,NewReq,Needs).
 
-%required_program_courses(L),needed_required_program_courses(["COMP1631","COMP1633"],L,N).
+% %required_program_courses(L),needed_required_program_courses(["COMP1631","COMP1633"],L,N).
 no_one_of(C):- 
     C = course(CourseName,_,_,_),
     findall(Req,program_one_of_prereq(CourseName,Req),List),
@@ -315,7 +323,21 @@ picks(Amount,[Y|YS],Gen,Schedule):-
     picks(Amount,YS,Gen,Schedule).  
 
   
+solve_year(Max,Taken,NewTaken,YearSchedule):-
+    available_courses("fall",Taken,FallAvailable),
+    pick(Max,FallAvailable,FallSchedule),
+    appendScheduleToTaken(FallSchedule,WinterTaken),
+    available_courses("winter",WinterTaken,WinterAvailable),
+    pick(Max,WinterAvailable,WinterSchedule),
+    appendScheduleToTaken(WinterSchedule,NewTaken),
+    append([FallSchedule],[WinterSchedule],YearSchedule).
 
+solve_years(0,_,_,_).
+solve_years(Max,MaxYears,Taken,NewTaken,Year):-
+    NewMax is MaxYears - 1,
+    solve_year(Max,Taken,New,Schedule),
+    solve_years(Max,NewMax,New,NewTaken,Years),
+    append(Schedule,)
 
 
 %solve_semester(Max,Semester,Taken,Schedule):-
