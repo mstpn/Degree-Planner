@@ -94,26 +94,3 @@ add_course(CourseComponents, Schedule, NewSchedule) :-
         write("CONFLICT"),nl,
         NewSchedule = Schedule
     ).
-
-% (atom(Str)
-% -> Key = Str
-% ; 
-% atom_string(Key, Str)).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

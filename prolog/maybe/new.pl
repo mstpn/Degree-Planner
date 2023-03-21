@@ -36,22 +36,25 @@ remove_duplicates([H | T], [H|T1]) :-
 filter_course_type(T,L):-
     findall(C,program_course(C,T),L).
 
-
+% get_lecs_for_section(_,_,[]).
 get_lecs_for_course(CourseName,Semester,LecList):- 
-    findall(lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+    (lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
             lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
             LecList).
 
+% get_lecs_for_section(_,_,_,[]).
 get_lecs_for_section(CourseName,Semester,Section,LecList):- 
     findall(lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
             lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
             LecList).
 
+% get_tuts_for_course(_,_,_,[]).
 get_tuts_for_course(CourseName,Semester,Section,TutList) :-
     findall(tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
             tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
             TutList).
 
+% get_labs_for_course(_,_,_,[]).
 get_labs_for_course(CourseName,Semester,Section,LabList) :-
     findall(lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),
             lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),
@@ -59,33 +62,32 @@ get_labs_for_course(CourseName,Semester,Section,LabList) :-
 
 gatherTimes([],_).
 gatherTimes([X|XS],T):-
-    X = lecture(_,_,_,_,_,Day,Start,Duration,_),
+    (X = lecture(_,_,_,_,_,Day,Start,Duration,_);
+    X = tut(_,_,_,_,_,Day,Start,Duration,_);
+    X = lab(_,_,_,_,_,Day,Start,Duration,_)),
     Time = (Day,Start,Duration),
     gatherTimes(XS,Times),
-    append([Time],Times,T).
-
-gatherTimes([X|XS],T):-
-    X = tut(_,_,_,_,_,Day,Start,Duration,_),
-    Time = (Day,Start,Duration),
-    gatherTimes(XS,Times),
-    append([Time],Times,T).
-
-gatherTimes([X|XS],T):-
-    X = lab(_,_,_,_,_,Day,Start,Duration,_),
-    Time = (Day,Start,Duration),
-    gatherTimes(XS,Times),
-    append([Time],Times,T).
+    if(nonvar(Times),append([Time],Times,TMaybe),append([Time],[],TMaybe)),
+    if(nonvar(TMaybe),T=TMaybe,T=[]).
 
 course_time_table(CourseName,Semester,Section,Times):-
     get_lecs_for_section(CourseName,Semester,Section,LecList),
+    % write("LecList: "),write(LecList),nl,
     gatherTimes(LecList,LecTimes),
+    write("LecTimes: "),write(LecTimes),nl,
     get_tuts_for_course(CourseName,Semester,Section,TutList),
     gatherTimes(TutList,TutTimes),
+    write("TutTimes: "),write(TutTimes),nl,
     get_labs_for_course(CourseName,Semester,Section,LabList),
     gatherTimes(LabList,LabTimes),
+    write("LabTimes: "),write(LabTimes),nl,
+    if(nonvar(LecTimes),LecTimes=LecTimes,LecTimes=[]),
+    if(nonvar(TutTimes),TutTimes=TutTimes,TutTimes=[]),
+    if(nonvar(LabTimes),LabTimes=LabTimes,LabTimes=[]),
     append(LecTimes,TutTimes,LabTut),
-    append(LabTimes,LabTut,Times).
-
+    append(LabTimes,LabTut,Times),
+    write("Times: "),write(Times),nl.
+    
 get_sections_for_course(CourseName,Semester,Sections):- 
     findall(section(CourseName,Section,Semester),
             lecture(_,CourseName,Section,_,_,_,_,_,Semester),
@@ -116,14 +118,14 @@ time_overlaps(T1,T2):-
     T1 = (Day1,Start1,_),
     T2 = (Day2,Start2,_),
     (Day1 = Day2),
-    (Start1 = Start2,write(Day1),write(" conflicts1"),nl).
+    (Start1 = Start2).
         
 time_overlaps(T1,T2):-
     T1 = (Day1,Start1,Duration1),
     T2 = (Day2,Start2,_),
     (Day1 = Day2),
     End1 = Start1 + Duration1,
-    (Start1 < Start2, End1 > Start2,write(Day1),write(" conflicts2"),nl).
+    (Start1 < Start2, End1 > Start2).
 
 time_overlaps(T1,T2):-
     T1 = (Day1,Start1,Duration1),
@@ -131,14 +133,14 @@ time_overlaps(T1,T2):-
     (Day1 = Day2),
     End1 = Start1 + Duration1,
     End2 = Start2 + Duration2,
-    (Start1 < End2, End1 > End2,write(Day1),write("  conflicts3"),nl).
+    (Start1 < End2, End1 > End2).
 
 time_overlaps(T1,T2):-
     T1 = (Day1,Start1,_),
     T2 = (Day2,Start2,Duration2),
     (Day1 = Day2),
     End2 = Start2 + Duration2,
-    (Start2 < Start1,End2 > Start1,write(Day1),write(" conflicts4"),nl).
+    (Start2 < Start1,End2 > Start1).
 
    
 time_overlaps(T1,T2):-
@@ -147,7 +149,7 @@ time_overlaps(T1,T2):-
     (Day1 = Day2),
     End1 = Start1 + Duration1,
     End2 = Start2 + Duration2,
-    (Start2 < End1, End2 > End1,write(Day1),write(" conflicts5"),nl).
+    (Start2 < End1, End2 > End1).
 
 
 
@@ -179,7 +181,7 @@ course_conflicts(C1,C2):-
     times_conflict(Times1,Times2).
 
 
-check_course_conflicts(_,[]).
+% check_course_conflicts(_,[]).
 check_course_conflicts(C1,[H|_]):-course_conflicts(C1,H).
 check_course_conflicts(C1,[_|T]):-check_course_conflicts(C1,T).
 check_courses(C1,A):-member(_,A),check_course_conflicts(C1,A).
@@ -292,18 +294,24 @@ available_courses(Semester,Taken,Available):-
 picks(0,_,_,_).
 picks(_,[],[],_).
 picks(Amount,[Y|YS],XS,Schedule):-
+    % write("Y"),nl,
+    % write(Y),nl,
+    % write("XS"),nl,
+    % write(XS),nl,
+    write("Checking course conflicts"),nl,
+    % trace,
     not(check_course_conflicts(Y,XS)),
     write("HEY"),nl,
     Max = Amount - 1,
-    write(XS),nl,
+    % write(XS),nl,
     append([Y],XS,NewGen),
     picks(Max,YS,NewGen,New),
     append(NewGen,New,Schedule).
 
 picks(Amount,[Y|YS],Gen,Schedule):-
     check_course_conflicts(Y,Gen),
-    write(Y),nl,
-    write(Gen),nl,
+    % write(Y),nl,
+    % write(Gen),nl,
     picks(Amount,YS,Gen,Schedule).  
 
   
