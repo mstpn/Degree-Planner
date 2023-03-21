@@ -19,4 +19,4 @@ student(
     cog(geog),
     years_to_grad(8),
     max_course(8)
-    ).
+).
