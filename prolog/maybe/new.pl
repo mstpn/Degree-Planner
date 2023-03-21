@@ -2,8 +2,6 @@
 :- include('student.pl').
 :- include('required.pl').
 
-
-
 last(L,R):- append(_,[R],L).
 remove_taken(_,[],[]).
 remove_taken(C,L,L2):-
@@ -19,12 +17,6 @@ remove_duplicates([H | T], List) :-
 remove_duplicates([H | T], [H|T1]) :- 
       \+member(H, T),
       remove_duplicates( T, T1).
-
-print_offered([]):- write("DONE").
-print_offered([H|T]):- write(H),nl,print_offered(T).
-
-
-
 
 filter_course_type(T,L):-
     findall(C,program_course(C,T),L).
@@ -50,16 +42,24 @@ get_required_full_course_list([X|XS],T) :-
 
 
 get_lecs_for_course(CourseName,Semester,LecList):- 
-    findall(lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),LecList).
+    findall(lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            lecture(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
+            LecList).
 
 get_lecs_for_section(CourseName,Semester,Section,LecList):- 
-    findall(lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),LecList).
+    findall(lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
+            lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
+            LecList).
 
 get_tuts_for_course(CourseName,Semester,Section,TutList) :-
-    findall(tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),TutList).
+    findall(tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
+            tut(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
+            TutList).
 
 get_labs_for_course(CourseName,Semester,Section,LabList) :-
-    findall(lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),LabList).
+    findall(lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),
+            lab(A,CourseName,Section,Code,_,Day,Start,Duration,Semester),
+            LabList).
 
 gatherTimes([],_).
 gatherTimes([X|XS],T):-
@@ -91,7 +91,9 @@ course_time_table(CourseName,Semester,Section,Times):-
     append(LabTimes,LabTut,Times),!.
 
 get_sections_for_course(CourseName,Semester,Sections):- 
-    findall(section(CourseName,Section,Semester),lecture(_,CourseName,Section,_,_,_,_,_,Semester),SecList),
+    findall(section(CourseName,Section,Semester),
+            lecture(_,CourseName,Section,_,_,_,_,_,Semester),
+            SecList),
     remove_duplicates(SecList,Sections).
 
 build_sections([],_).
@@ -110,7 +112,6 @@ sections(CourseName,Semester,Sections):-
 
 % sections("COMP2659","winter",L)
 
-
 time_overlaps(T1,T2):-
     T1 = (Day1,Start1,Duration1),
     T2 = (Day2,Start2,Duration2),
@@ -118,11 +119,11 @@ time_overlaps(T1,T2):-
         End1 = Start1 + Duration1,
         End2 = Start2 + Duration2,
     (  
-        (Start1 = Start2,!,write("conflicts1"),nl,true);
-        (Start1 < Start2, End1 > Start2,!,write("conflicts2"),nl,true);
+        (Start1 = Start2,!,write(Day1),write("conflicts1"),nl,true);
+        (Start1 < Start2, End1 > Start2,!,write(Day1),write("conflicts2"),nl,true);
         (Start1 < End2, End1 > End2,!,write(Day1),write(" conflicts3"),nl,true);
-        (Start2 < Start1,End2 > Start1,!,write("conflicts4"),nl,true);
-        (Start2 < End1, End2 > End1,!,write("conflicts5"),nl,true)
+        (Start2 < Start1,End2 > Start1,!,write(Day1),write("conflicts4"),nl,true);
+        (Start2 < End1, End2 > End1,!,write(Day1),write("conflicts5"),nl,true)
     )
     ;
     false.
@@ -156,12 +157,16 @@ course_conflicts(C1,C2):-
     %write(Times2),nl,
     times_conflict(Times1,Times2).
 
+check_course_conflicts(_,[]).
+check_course_conflicts(C1,[H|T]):-
+    course_conflicts(C1,H)
+    ;
+    check_course_conflicts(C1,T).
 
 
 %sections("COMP2659","winter",L),!,[X|XS]=L,[Y|_]=XS,course_conflicts(X,Y).
 %A = course("COMP3649", "winter", 1, [("Thursday", 10.5, 2.0), ("Tuesday", 16.0, 1.5), ("Thursday", 16.0, 1.5)]),B = course("COMP3614", "winter", 1, [("Friday", 8.5, 1.0), ("Tuesday", 14.5, 1.5), ("Thursday", 14.5, 1.5)]),course_conflicts(A,B).
-%sections("COMP3649","winter",L),sections("COMP3614","winter",G),!,[X|_]=L,last(Y,G),course_conflicts(X,Y).
-%StartDur2 is Start2 + Duration
+%sections("COMP3614","winter",L),sections("COMP2659","winter",G),!,[_|XS]=L,[X|_]=XS,[Y|_]=G,course_conflicts(X,Y).
 
 
 %times_conflict([("Monday",10,5),("Tuesday",10,5)],[("Monday",10,5),("Tuesday",10,5)])
@@ -183,18 +188,29 @@ needed_required_program_courses([X|XS],Required,Needs):-
 
 %required_program_courses(L),needed_required_program_courses(["COMP1631","COMP1633"],L,N).
 
-generate_full_program_course(C,T):-
-    find_all_prereqs(C,ORS,ANDS),
-    !,
-    T = fullprogram_course(C,ORS,ANDS).
+has_one_of().
+has_prereqs().
 
-find_all_prereqs(C,O,A) :-
+find_all_prereqs(C,O,A):-
     findall(OR,program_one_of_prereq(C,OR),O),
     findall(AND,course_prereq(C,AND),A).
 
-available_course([X|XS],Needed,Available) :-
-    member(X,Needed).
+generate_full_program_course(C,T):-
+    find_all_prereqs(C,ORS,ANDS),
+    !,
+    T = full_program_course(C,ORS,ANDS).
 
-still_required(Taken,N):-
-    required_program_courses(L),
-    needed_required_program_courses(Taken,L,N).
+generate_full_program_course_list([],_).
+generate_full_program_course_list([X|XS],NewList):-
+    generate_full_program_course(X,T),
+    generate_full_program_course_list(XS,L),
+    append([T],L,NewList).
+
+%semester_solver(Taken,Semester):-
+%    required_program_courses(L),
+%    needed_required_program_courses(Taken,L,N),
+%    generate_full_program_course_list(N,Full).
+
+%still_required(Taken,N):-
+%    required_program_courses(L),
+%    needed_required_program_courses(Taken,L,N).
