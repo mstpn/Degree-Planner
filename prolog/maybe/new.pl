@@ -55,7 +55,6 @@ get_lecs_for_section(CourseName,Semester,Section,LecList):-
             lecture(A,CourseName,Section,_,_,Day,Start,Duration,Semester),
             LecList).
 
-% get_tuts_for_course(_,_,_,[]).
 get_tuts_for_course(CourseName,Semester,Section,TutList) :-
     findall(tut(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
             tut(A,CourseName,Section,Comp,Del,Day,Start,Duration,Semester),
@@ -69,19 +68,26 @@ get_labs_for_course(CourseName,Semester,Section,LabList) :-
 
 gatherTimes([],_).
 gatherTimes([X|XS],T):-
-    (X = lecture(_,_,_,_,_,Day,Start,Duration,_);
-    X = tut(_,_,_,_,_,Day,Start,Duration,_);
-    X = lab(_,_,_,_,_,Day,Start,Duration,_)),
+    X = lecture(_,_,_,_,_,Day,Start,Duration,_),
     Time = (Day,Start,Duration),
     gatherTimes(XS,Times),
-    if(nonvar(Times),append([Time],Times,TMaybe),append([Time],[],TMaybe)),
-    if(nonvar(TMaybe),T=TMaybe,T=[]).
+    append([Time],Times,T).
+
+gatherTimes([X|XS],T):-
+    X = tut(_,_,_,_,_,Day,Start,Duration,_),
+    Time = (Day,Start,Duration),
+    gatherTimes(XS,Times),
+    append([Time],Times,T).
+
+gatherTimes([X|XS],T):-
+    X = lab(_,_,_,_,_,Day,Start,Duration,_),
+    Time = (Day,Start,Duration),
+    gatherTimes(XS,Times),
+    append([Time],Times,T).
 
 course_time_table(CourseName,Semester,Section,Times):-
     get_lecs_for_section(CourseName,Semester,Section,LecList),
-    % write("LecList: "),write(LecList),nl,
     gatherTimes(LecList,LecTimes),
-    write("LecTimes: "),write(LecTimes),nl,
     get_tuts_for_course(CourseName,Semester,Section,TutList),
     gatherTimes(TutList,TutTimes),
     write("TutTimes: "),write(TutTimes),nl,
@@ -190,7 +196,7 @@ course_conflicts(C1,C2):-
     times_conflict(Times1,Times2).
 
 
-% check_course_conflicts(_,[]).
+check_course_conflicts(_,[]).
 check_course_conflicts(C1,[H|_]):-course_conflicts(C1,H).
 check_course_conflicts(C1,[_|T]):-check_course_conflicts(C1,T).
 
@@ -316,28 +322,28 @@ picks(Amount,[Y|YS],XS,Schedule):-
     picks(Max,YS,NewGen,New),
     append(NewGen,New,Schedule).
 
-picks(Amount,[Y|YS],Gen,Schedule):-
-    check_course_conflicts(Y,Gen),
-    % write(Y),nl,
-    % write(Gen),nl,
-    picks(Amount,YS,Gen,Schedule).  
+% picks(Amount,[Y|YS],Gen,Schedule):-
+%     check_course_conflicts(Y,Gen),
+%     % write(Y),nl,
+%     % write(Gen),nl,
+%     picks(Amount,YS,Gen,Schedule).  
 
   
-solve_year(Max,Taken,NewTaken,YearSchedule):-
-    available_courses("fall",Taken,FallAvailable),
-    pick(Max,FallAvailable,FallSchedule),
-    appendScheduleToTaken(FallSchedule,WinterTaken),
-    available_courses("winter",WinterTaken,WinterAvailable),
-    pick(Max,WinterAvailable,WinterSchedule),
-    appendScheduleToTaken(WinterSchedule,NewTaken),
-    append([FallSchedule],[WinterSchedule],YearSchedule).
+% solve_year(Max,Taken,NewTaken,YearSchedule):-
+%     available_courses("fall",Taken,FallAvailable),
+%     pick(Max,FallAvailable,FallSchedule),
+%     appendScheduleToTaken(FallSchedule,WinterTaken),
+%     available_courses("winter",WinterTaken,WinterAvailable),
+%     pick(Max,WinterAvailable,WinterSchedule),
+%     appendScheduleToTaken(WinterSchedule,NewTaken),
+%     append([FallSchedule],[WinterSchedule],YearSchedule).
 
-solve_years(0,_,_,_).
-solve_years(Max,MaxYears,Taken,NewTaken,Year):-
-    NewMax is MaxYears - 1,
-    solve_year(Max,Taken,New,Schedule),
-    solve_years(Max,NewMax,New,NewTaken,Years),
-    append(Schedule,)
+% solve_years(0,_,_,_).
+% solve_years(Max,MaxYears,Taken,NewTaken,Year):-
+%     NewMax is MaxYears - 1,
+%     solve_year(Max,Taken,New,Schedule),
+%     solve_years(Max,NewMax,New,NewTaken,Years),
+%     append(Schedule,)
 
 
 %solve_semester(Max,Semester,Taken,Schedule):-
