@@ -28,6 +28,10 @@ program_one_of_prereq("COMP3309","GNED1301").
 program_one_of_prereq("COMP3309","GNED1303").
 program_one_of_prereq("COMP3309","GNED1304").
 
+course_prereq("MATH1271","MATH1200").
+course_prereq("MATH1271","MATH1203").
+course_prereq("MATH2232","MATH1200").
+
 course_prereq("COMP1633","COMP1631").
 course_prereq("MATH2232","MATH1200").
 course_prereq("COMP2613","MATH1271").
