@@ -322,11 +322,11 @@ picks(Amount,[Y|YS],XS,Schedule):-
     picks(Max,YS,NewGen,New),
     append(NewGen,New,Schedule).
 
-% picks(Amount,[Y|YS],Gen,Schedule):-
-%     check_course_conflicts(Y,Gen),
-%     % write(Y),nl,
-%     % write(Gen),nl,
-%     picks(Amount,YS,Gen,Schedule).  
+picks(Amount,[Y|YS],Gen,Schedule):-
+    check_course_conflicts(Y,Gen),
+    % write(Y),nl,
+    % write(Gen),nl,
+    picks(Amount,YS,Gen,Schedule).  
 
   
 % solve_year(Max,Taken,NewTaken,YearSchedule):-
@@ -346,12 +346,12 @@ picks(Amount,[Y|YS],XS,Schedule):-
 %     append(Schedule,)
 
 
-%solve_semester(Max,Semester,Taken,Schedule):-
+% solve_semester(Max,Semester,Taken,Schedule):-
 %    available_courses(Semester,Taken,Available),
 %    pick(Amount,Available,Schedule).
     
-%appendScheduleToTaken([],_).
-%appendScheduleToTaken([X|XS],Taken):-
+% appendScheduleToTaken([],_).
+% appendScheduleToTaken([X|XS],Taken):-
 %    X = course(CourseName,_,_,_),
 %    appendScheduleToTaken(XS,Picked),
 %    append([CourseName],Picked,Taken).
@@ -360,6 +360,6 @@ picks(Amount,[Y|YS],XS,Schedule):-
 
 
 
-print_sech([]).
-print_sech([X|XS]):-
-    write(X),nl,print_sech(XS).
+% print_sech([]).
+% print_sech([X|XS]):-
+%     write(X),nl,print_sech(XS).
