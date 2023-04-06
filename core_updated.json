@@ -1,0 +1,137 @@
+{
+    "COMP1631": {
+        "name": "COMP1631",
+        "pre": [],
+        "next": [
+            "COMP1633"
+        ]
+    },
+    "COMP1633": {
+        "name": "COMP1633",
+        "pre": [
+            "COMP1631"
+        ],
+        "next": [
+            "COMP2613",
+            "COMP2631",
+            "COMP2655"
+        ]
+    },
+    "COMP2613": {
+        "name": "COMP2613",
+        "pre": [
+            "MATH1271",
+            "COMP1633"
+        ],
+        "next": [
+            "COMP3614",
+            "COMP3649"
+        ]
+    },
+    "COMP2631": {
+        "name": "COMP2631",
+        "pre": [
+            "COMP1633"
+        ],
+        "next": [
+            "COMP2633",
+            "COMP3614",
+            "COMP3649",
+            "COMP3659"
+        ]
+    },
+    "COMP2633": {
+        "name": "COMP2633",
+        "pre": [
+            "COMP2631"
+        ],
+        "next": []
+    },
+    "COMP2655": {
+        "name": "COMP2655",
+        "pre": [
+            "COMP1633"
+        ],
+        "next": [
+            "COMP2659"
+        ]
+    },
+    "COMP2659": {
+        "name": "COMP2659",
+        "pre": [
+            "PHIL1179",
+            "COMP2655"
+        ],
+        "next": [
+            "COMP3659"
+        ]
+    },
+    "COMP3309": {
+        "name": "COMP3309",
+        "pre": [],
+        "next": []
+    },
+    "COMP3614": {
+        "name": "COMP3614",
+        "pre": [
+            "COMP2631",
+            "COMP2613"
+        ],
+        "next": []
+    },
+    "COMP3649": {
+        "name": "COMP3649",
+        "pre": [
+            "COMP2613",
+            "COMP2631",
+            "PHIL1179"
+        ],
+        "next": []
+    },
+    "COMP3659": {
+        "name": "COMP3659",
+        "pre": [
+            "COMP2631",
+            "COMP2659"
+        ],
+        "next": []
+    },
+    "MATH1200": {
+        "name": "MATH1200",
+        "pre": [],
+        "next": [
+            "MATH2234"
+        ]
+    },
+    "MATH1203": {
+        "name": "MATH1203",
+        "pre": [],
+        "next": [
+            "MATH1271"
+        ]
+    },
+    "MATH1271": {
+        "name": "MATH1271",
+        "pre": [
+            "MATH1203"
+        ],
+        "next": [
+            "COMP2613"
+        ]
+    },
+    "MATH2234": {
+        "name": "MATH2234",
+        "pre": [
+            "MATH1200"
+        ],
+        "next": []
+    },
+    "PHIL1179": {
+        "name": "PHIL1179",
+        "pre": [],
+        "next": [
+            "COMP2659",
+            "COMP3649"
+        ]
+    }
+}

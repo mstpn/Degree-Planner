@@ -3,10 +3,9 @@ import pickle
 import random
 import csv
 import json
-from class_definitions import Course_Node, Registration, F, W
+from class_definitions import Course_Node, F, W
 CORE = ["PHIL1179", "MATH1200", "MATH1203", "MATH1271", "MATH2234", "COMP1631", "COMP1633", "COMP2613",
         "COMP2631", "COMP2633", "COMP2655", "COMP2659", "COMP3309", "COMP3614", "COMP3649", "COMP3659"]
-
 
 class Student:
     def __init__(self,filename=None, **kwargs):
@@ -27,7 +26,27 @@ class Student:
         self.years_to_grad = kwargs.get("years_to_grad", 4)
         self.max_courses_per_semester = kwargs.get(
             "max_courses_per_semester", 6)
+        self.all_required = self.all_required_courses()
+        self.graph_nodes_list, self.graph_nodes_dict = self.make_graph()
+        self.course_dict = self.make_course_dict()
+        self.sem_to_grad = self.years_to_grad * 2
 
+    def make_course_dict(self):
+        courses = [[], []]
+        course_dict = [{}, {}]
+        pickle_folder = 'pickles/'
+        fall_pickle_path = pickle_folder + 'fall_courses.pkl'
+        winter_pickle_path = pickle_folder + 'winter_courses.pkl'
+        courses[F] = pickle.load(open(fall_pickle_path, 'rb'))
+        courses[W] = pickle.load(open(winter_pickle_path, 'rb'))
+        for course in courses[F]:
+            course_dict[F][course.name] = course
+        for course in courses[W]:
+            course_dict[W][course.name] = course
+        return course_dict
+
+    def change_semester(self):
+        self.semester = (self.semester + 1) % 2
 
     def __str__(self) -> str:
         str_fmt = "NAME:{}\nSEMESTER: {}\nCOURSE_TAKEN{}\nSEN_OPS{}\nJUN_OPS{}\nCOG{}\nPREFERED_GRAD_YEAR: {}".format(
@@ -58,6 +77,7 @@ class Student:
 
     def make_graph(self):
         reqs = self.all_required_courses()
+        reqs.sort()
         pickle_path = 'pickles/all_courses_dict.pkl'
         courses = pickle.load(open(pickle_path, 'rb'))
         node_list = []
@@ -83,9 +103,7 @@ class Student:
         return node_list, node_dict
 
     def all_required_courses(self):
-
         all_req_courses = []
-
         all_req_courses.extend(CORE)
         all_req_courses.extend(self.get_cognate_choice())
         all_req_courses.extend(self.get_jun_ops())
@@ -97,13 +115,12 @@ class Student:
 
         random.shuffle(all_req_courses)
         # all_required_courses = sort_courses_lowest_prereq_count( all_required_courses )
-
         return all_req_courses
 
-    def program_to_csv(self, program: Registration):
+    def program_to_csv(self, program):
         csv_folder = 'data/out/'
-        file_desc = self.name + '-' + self.cognate_name + \
-            '-' + str(program.get_years()) + '_years'
+        # file_desc = self.name + '-' + self.cognate_name + '-' + str(program.get_years()) + '_years'
+        file_desc = self.name + '-' + self.cognate_name + '-' + str(len(program)) + '_semesters'
         curr_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         file_name = curr_time + '-' + file_desc + '.csv'
         schedule_file = csv_folder + file_name
@@ -114,7 +131,8 @@ class Student:
             writer = csv.writer(f)
             writer.writerow([file_desc])
             writer.writerow([''])
-            for semester in program.semesters:
+            for semester in program:
+            # for semester in program.semesters: # old way using Registration
                 semester_str = semester.get_year_and_worf()
                 writer.writerow(['START ' + semester_str])
                 writer.writerow(csv_header)
@@ -197,10 +215,20 @@ def build_student_test():
 
 if __name__ == '__main__':
 
-    student = build_student_test()
-    student.all_required_courses()
+    student_input_file = "data/input/soren.json"
+    student = Student(filename=student_input_file)
+
     print(student.cognate_choice)
 
     node_list, node_dict = student.make_graph()
 
-    # print("done")
+    print("done")
+
+    # import json
+    # with open("sample.json", "w") as outfile:
+    #     outfile.write('{')
+    #     for node in node_list:
+    #         outfile.write('\"' + str(node.name) + '\":')
+    #         json.dump(node.to_json(), outfile)
+    #         outfile.write(',')
+    #     outfile.write('}')

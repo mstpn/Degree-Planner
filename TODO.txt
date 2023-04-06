@@ -1,0 +1,27 @@
+Python
+    refactor to use backtracking
+    clean up functions (code duplication + other stuff Marc likes)
+
+Prolog
+
+
+Haskell
+    get working with real data
+    IO
+
+All
+    Test plan
+        Black box should be similar for all the languages
+        White box testing for specific functions
+            Looks like lots of marks for this based on his comments
+
+Presentation
+    Recap of 
+        Python
+            now backtracks
+        Prolog
+            actually works now
+        Haskell
+            All new
+    Clarify inputs/outputs
+    Try to have graphs for data structures/program flow

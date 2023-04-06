@@ -2,6 +2,7 @@
 This file is essentialy a header file for the other files in this project.
 '''
 import csv
+import json
 import math
 
 IGNORE_COURSES = [
@@ -28,20 +29,20 @@ LAB = 1
 TUT = 2
 
 
-# A students registration
-class Registration():
+# # A students registration
+# class Registration():
 
-    def __init__(self) -> None:
-        self.semesters = []
-        self.num_semesters = 0
-        self.years = 0
+#     def __init__(self) -> None:
+#         self.semesters = []
+#         self.num_semesters = 0
+#         self.years = 0
 
-    def get_years(self):
-        return math.ceil(len(self.semesters) / 2)
-    
-    def __str__(self) -> str:
-        for semester in self.semesters:
-            print(semester)
+#     def get_years(self):
+#         return math.ceil(len(self.semesters) / 2)
+
+#     def __str__(self) -> str:
+#         for semester in self.semesters:
+#             print(semester)
 
 
 class Semester():
@@ -49,7 +50,13 @@ class Semester():
         self.year = year
         self.worf = worf
         self.max_courses = max_courses
-        self.courses = [] # contains Section objects
+        self.courses = []  # contains Section objects
+
+    def list_courses(self):
+        course_list = []
+        for section in self.courses:
+            course_list.append(section.course_name)
+        return course_list
 
     def __str__(self) -> str:
         courses = ''
@@ -83,6 +90,19 @@ class Course_Node():
 
     def findPrereqCount(self):
         pass
+
+    def to_json(self):
+        return {
+            'name': self.name,
+            'pre': self.pre_to_str_list(),
+            'next': self.next_to_str_list(),
+        }
+    
+    def pre_to_str_list(self):
+        return [x.name for x in self.pre]
+    
+    def next_to_str_list(self):
+        return [x.name for x in self.next]
 
 
 class A_Class:
