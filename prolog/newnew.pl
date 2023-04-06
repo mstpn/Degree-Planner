@@ -1,244 +1,65 @@
-% offering(cmpt365, fall, d100, mwf(14), bby).
-% offering(cmpt441, fall, d100, tr2(13), bby).
-% offering(cmpt433, fall, d100, mwf(10), bby).
+offering(comp1631, fall, d100, mwf(11), mru).
+offering(math1200, fall, d100, tr2(13), mru).
+offering(math1203, fall, d100, mwf(16), mru).
+offering(comp3309, fall, d100, tr2(10), mru).
+offering(math1271, fall, d100, mwf(8), mru).
+offering(comp2655, fall, d100, mwf(14), mru).
+offering(comp2631, fall, d100, tr2(10), mru).
+offering(comp2613, fall, d100, tr2(14), mru).
+offering(comp2659, winter, d100, mwf(15), mru).
+offering(comp2633, winter, d100, tr2(8), mru).
+offering(math2234, winter, d100, mwf(10), mru).
+offering(comp1633, winter, d100, mwf(10), mru).
+offering(math1271, winter, d100, mwf(8), mru).
+offering(comp3309, winter, d100, tr2(11), mru).
+offering(phil1179, winter, d100, mwf(16), mru).
+offering(comp3614, winter, d100, t2r(14), mru).
+offering(comp3649, winter, d100, tr2(16), mru).
+offering(comp3659, fall, d100, mwf(8), mru).
 
-% offering(cmpt365, fall, d100, t2r(11), bby).
-% offering(cmpt441, fall, d100, t2r(14), bby).
-% offering(cmpt433, fall, d100, t2r(9), bby).
-% offering(cmpt365, fall, d100, t2r(7), bby).
 
-% offering(cmpt365, fall, d100, tr2(10), bby).
-% offering(cmpt441, fall, d100, tr2(13), bby).
-% offering(cmpt433, fall, d100, tr2(11), bby).
-% offering(cmpt441, fall, d100, tr2(14), bby).
 
-% offering(cmpt365, fall, e100, eve(wed), bby).
-% offering(cmpt441, fall, e100, eve(tue), bby).
-% offering(cmpt433, fall, e100, eve(mon), bby).
+prerequisites(comp1631, []).
+prerequisites(math1200, []).
+prerequisites(math1203, []).
+prerequisites(phil1179, []).
+prerequisites(comp3309, []).
+prerequisites(comp1633, [comp1631]).
+prerequisites(math1271, [math1203]).
+prerequisites(math2234, [math1200]).
+prerequisites(comp2655, [comp1633]).
+prerequisites(comp2631, [comp1633]).
+prerequisites(comp2633, [comp2631]).
+prerequisites(comp2613, [math1271,comp1633]).
+prerequisites(comp2659, [phil1179,comp2655]).
+prerequisites(comp3614, [comp2631,comp2613]).
+prerequisites(comp3649, [comp2613,comp2631,phil1179]).
+prerequisites(comp3659, [comp2631,comp2659]).
 
-% offering(cmpt365, fall, d100, mwf(14), bby).
-% offering(cmpt441, fall, d100, mwf(15), bby).
-% offering(cmpt433, fall, d100, mwf(16), bby).
 
-% offering(cmpt376, fall, d100, mwf(11), bby).
-% offering(cmpt405, fall, d100, mwf(10), bby).
-% offering(cmpt412, fall, d100, mwf(13), bby).
-% offering(cmpt454, fall, d100, tr2(10), bby).
-% offering(cmpt464, fall, d100, t2r(14), bby).
-% offering(cmpt471, fall, d100, mwf(9), bby).
-% offering(cmpt475, fall, e100, eve(wed), bby).
-% offering(cmpt479, fall, d100, t2r(11), bby).
-% offering(cmpt371, fall, d100, t2r(14), sur).
-% offering(cmpt379, fall, d100, mwf(13), sur).
-% offering(cmpt383, fall, d100, mwf(12), sur).
-% offering(cmpt473, fall, d100, mwf(14), sur).
-% offering(cmpt489, fall, d100, tr2(16), sur).
-% offering(cmpt371, fall, e100, eve(wed), vcr).
-% offering(cmpt470, fall, e100, eve(thu), vcr).
-% offering(cmpt300, fall, d100, mwf(15), bby).
-% offering(cmpt307, fall, d100, t2r(14), bby).
-% offering(cmpt310, fall, d100, mwf(12), bby).
-% offering(cmpt320, fall, e100, eve(wed), bby).
-% offering(cmpt354, fall, d100, mwf(11), bby).
-% offering(cmpt361, fall, e100, eve(tue), bby).
-% offering(cmpt371, fall, d100, mwf(11), bby).
-% offering(cmpt376, fall, d100, mwf(10), bby).
-% offering(cmpt379, fall, d100, mwf(15), bby).
-% offering(cmpt405, fall, d100, mwf(12), bby).
-% offering(cmpt411, fall, d100, mwf(14), bby).
-offering(cmpt417, fall, d100, mwf(15), bby).
-% offering(cmpt419, fall, d100, mwf(10), bby).
-% offering(cmpt431, fall, d100, tr2(10), bby).
-% offering(cmpt454, fall, d100, t2r(14), bby).
-% offering(cmpt459, fall, d100, t2r(11), bby).
-% offering(cmpt470, fall, e100, eve(mon), bby).
-% offering(cmpt471, fall, d100, mwf(13), bby).
-% offering(cmpt477, fall, d100, t2r(11), bby).
-% offering(cmpt307, fall, d200, mwf(11), sur).
-% offering(cmpt354, fall, d100, mwf(9), sur).
-% offering(cmpt373, fall, d100, mwf(12), sur).
-% offering(cmpt383, fall, d100, t2r(8), sur).
-% offering(cmpt433, fall, d100, mwf(10), sur).
-% offering(cmpt473, fall, d100, tr2(16), sur).
-% offering(cmpt363, fall, e100, eve(mon), vcr).
-% offering(cmpt475, fall, e100, eve(wed), vcr).
-% offering(macm316, fall, d100, mwf(13), bby).
-% offering(cmpt365, fall, d100, mwf(14), bby).
-% offering(cmpt376, winter, d100, mwf(11), bby).
-% offering(cmpt405, winter, d100, mwf(10), bby).
-% offering(cmpt412, winter, d100, mwf(13), bby).
-% offering(cmpt454, winter, d100, tr2(10), bby).
-% offering(cmpt464, winter, d100, t2r(14), bby).
-% offering(cmpt471, winter, d100, mwf(9), bby).
-% offering(cmpt475, winter, e100, eve(wed), bby).
-% offering(cmpt479, winter, d100, t2r(11), bby).
-% offering(cmpt371, winter, d100, t2r(14), sur).
-% offering(cmpt379, winter, d100, mwf(13), sur).
-% offering(cmpt383, winter, d100, mwf(12), sur).
-% offering(cmpt473, winter, d100, mwf(14), sur).
-% offering(cmpt489, winter, d100, tr2(16), sur).
-% offering(cmpt371, winter, e100, eve(wed), vcr).
-% offering(cmpt470, winter, e100, eve(thu), vcr).
-% offering(cmpt300, winter, d100, mwf(15), bby).
-% offering(cmpt307, winter, d100, t2r(14), bby).
-% offering(cmpt310, winter, d100, mwf(12), bby).
-% offering(cmpt320, winter, e100, eve(wed), bby).
-% offering(cmpt354, winter, d100, mwf(11), bby).
-% offering(cmpt361, winter, e100, eve(tue), bby).
-% offering(cmpt371, winter, d100, mwf(11), bby).
-% offering(cmpt376, winter, d100, mwf(10), bby).
-% offering(cmpt379, winter, d100, mwf(15), bby).
-% offering(cmpt405, winter, d100, mwf(12), bby).
-offering(cmpt411, fall, d100, mwf(14), bby).
-% offering(cmpt417, winter, d100, mwf(15), bby).
-% offering(cmpt419, winter, d100, mwf(10), bby).
-% offering(cmpt431, winter, d100, tr2(10), bby).
-offering(cmpt441, fall, d100, tr2(13), bby).
-% offering(cmpt454, winter, d100, t2r(14), bby).
-offering(cmpt459, fall, d100, t2r(11), bby).
-% offering(cmpt470, winter, e100, eve(mon), bby).
-% offering(cmpt471, winter, d100, mwf(13), bby).
-% offering(cmpt477, winter, d100, t2r(11), bby).
-% offering(cmpt307, winter, d200, mwf(11), sur).
-% offering(cmpt354, winter, d100, mwf(9), sur).
-offering(cmpt373, fall, d100, mwf(12), sur).
-% offering(cmpt383, winter, d100, t2r(8), sur).
-offering(cmpt433, fall, d100, mwf(10), sur).
-% offering(cmpt473, winter, d100, tr2(16), sur).
-offering(cmpt363, fall, e100, eve(mon), vcr).
-% offering(cmpt475, winter, e100, eve(wed), vcr).
-offering(macm316, fall, d100, mwf(13), bby).
-% offering(cmpt300, winter, d100, mwf(13), bby).
-% offering(cmpt307, winter, d100, mwf(14), bby).
-% offering(cmpt310, winter, d100, tr2(10), bby).
-% offering(cmpt354, winter, d100, t2r(14), bby).
-% offering(cmpt371, winter, d100, t2r(14), bby).
-% offering(cmpt376, winter, d100, mwf(10), bby).
-% offering(cmpt379, winter, d100, t2r(11), bby).
-% offering(cmpt405, winter, d100, mwf(15), bby).
-% offering(cmpt419, winter, d100, tr2(13), bby).
-% offering(cmpt454, winter, d100, mwf(12), bby).
-% offering(cmpt471, winter, e100, eve(thu), bby).
-% offering(cmpt471, winter, d100, t2r(14), bby).
-% offering(cmpt475, winter, e100, eve(thu), vcr).
 
-offering(cmpt300, fall, e100, eve(mon), bby).
-offering(cmpt307, fall, d100, t2r(14), bby).
-offering(cmpt320, fall, e100, eve(thu), bby).
-offering(cmpt354, fall, d100, mwf(13), bby).
-offering(cmpt361, fall, d100, tr2(13), bby).
-offering(cmpt365, fall, d100, mwf(14), bby).
-offering(cmpt376, fall, d100, mwf(11), bby).
-offering(cmpt405, fall, d100, mwf(10), bby).
-offering(cmpt412, fall, d100, mwf(13), bby).
-offering(cmpt454, fall, d100, tr2(10), bby).
-offering(cmpt464, fall, d100, t2r(14), bby).
-offering(cmpt471, fall, d100, mwf(9), bby).
-offering(cmpt475, fall, e100, eve(wed), bby).
-offering(cmpt479, fall, d100, t2r(11), bby).
-offering(cmpt371, fall, d100, t2r(14), sur).
-offering(cmpt379, fall, d100, mwf(13), sur).
-offering(cmpt383, fall, d100, mwf(12), sur).
-offering(cmpt473, fall, d100, mwf(14), sur).
-offering(cmpt489, fall, d100, tr2(16), sur).
-offering(cmpt371, fall, e100, eve(wed), vcr).
-offering(cmpt470, fall, e100, eve(thu), vcr).
-offering(cmpt300, fall, d100, mwf(13), bby).
-offering(cmpt307, fall, d100, mwf(14), bby).
-offering(cmpt310, fall, d100, tr2(10), bby).
-offering(cmpt354, fall, d100, t2r(14), bby).
-offering(cmpt371, fall, d100, t2r(14), bby).
-offering(cmpt376, fall, d100, mwf(10), bby).
-offering(cmpt379, fall, d100, t2r(11), bby).
-offering(cmpt405, fall, d100, mwf(15), bby).
-offering(cmpt419, fall, d100, tr2(13), bby).
-offering(cmpt454, fall, d100, mwf(12), bby).
-offering(cmpt471, fall, e100, eve(thu), bby).
-offering(cmpt471, fall, d100, t2r(14), bby).
-offering(cmpt475, fall, e100, eve(thu), vcr).
-offering(cmpt300, winter, d100, mwf(15), bby).
-offering(cmpt307, winter, d100, t2r(14), bby).
-offering(cmpt310, winter, d100, mwf(12), bby).
-offering(cmpt320, winter, e100, eve(wed), bby).
-offering(cmpt354, winter, d100, mwf(11), bby).
-offering(cmpt361, winter, e100, eve(tue), bby).
-offering(cmpt371, winter, d100, mwf(11), bby).
-offering(cmpt376, winter, d100, mwf(10), bby).
-offering(cmpt379, winter, d100, mwf(15), bby).
-offering(cmpt405, winter, d100, mwf(12), bby).
-offering(cmpt411, winter, d100, mwf(14), bby).
-offering(cmpt417, winter, d100, mwf(15), bby).
-offering(cmpt419, winter, d100, mwf(10), bby).
-offering(cmpt431, winter, d100, tr2(10), bby).
-offering(cmpt441, winter, d100, tr2(13), bby).
-offering(cmpt454, winter, d100, t2r(14), bby).
-offering(cmpt459, winter, d100, t2r(11), bby).
-offering(cmpt470, winter, e100, eve(mon), bby).
-offering(cmpt471, winter, d100, mwf(13), bby).
-offering(cmpt477, winter, d100, t2r(11), bby).
-offering(cmpt307, winter, d200, mwf(11), sur).
-offering(cmpt354, winter, d100, mwf(9), sur).
-offering(cmpt373, winter, d100, mwf(12), sur).
-offering(cmpt383, winter, d100, t2r(8), sur).
-offering(cmpt433, winter, d100, mwf(10), sur).
-offering(cmpt473, winter, d100, tr2(16), sur).
-offering(cmpt363, winter, e100, eve(mon), vcr).
-offering(cmpt475, winter, e100, eve(wed), vcr).
-offering(macm316, winter, d100, mwf(13), bby).
-prerequisites(macm316, []).
-prerequisites(cmpt365, []).
-prerequisites(cmpt370, [cmpt354]).
-prerequisites(cmpt405, [cmpt307]).
-prerequisites(cmpt407, [cmpt307]).
-prerequisites(cmpt431, [cmpt300, cmpt371]).
-prerequisites(cmpt300, []).
-prerequisites(cmpt301, []).
-prerequisites(cmpt305, []).
-prerequisites(cmpt307, []).
-prerequisites(cmpt308, []).
-prerequisites(cmpt310, []).
-prerequisites(cmpt320, []).
-prerequisites(cmpt340, []).
-prerequisites(cmpt354, []).
-prerequisites(cmpt361, []).
-prerequisites(cmpt363, []).
-prerequisites(cmpt371, []).
-prerequisites(cmpt376, []).
-prerequisites(cmpt379, []).
-prerequisites(cmpt383, []).
-prerequisites(cmpt384, []).
-prerequisites(cmpt404, []).
-prerequisites(cmpt408, [cmpt307]).
-prerequisites(cmpt409, [cmpt307]).
-prerequisites(cmpt411, []).
-prerequisites(cmpt412, []).
-prerequisites(cmpt413, []).
-prerequisites(cmpt414, []).
-prerequisites(cmpt417, []).
-prerequisites(cmpt433, [cmpt300]).
-prerequisites(cmpt441, [cmpt307]).
-prerequisites(cmpt454, [cmpt300, cmpt354]).
-prerequisites(cmpt456, [cmpt354]).
-prerequisites(cmpt459, [cmpt354]).
-prerequisites(cmpt461, [cmpt361, macm316]).
-prerequisites(cmpt464, [cmpt361, macm316]).
-prerequisites(cmpt466, [cmpt361, macm316]).
-prerequisites(cmpt467, [cmpt361, macm316]).
-prerequisites(cmpt469, [cmpt361]).
-prerequisites(cmpt470, [cmpt354]).
-prerequisites(cmpt471, [cmpt300, cmpt371]).
-prerequisites(cmpt373, []).
-prerequisites(cmpt473, [cmpt373]).
-prerequisites(cmpt474, [cmpt371]).
-prerequisites(cmpt475, []).
-prerequisites(cmpt479, [cmpt431]).
-prerequisites(cmpt489, [cmpt383]).
-prerequisites(macm316, []).
-prerequisites(cmpt365, []).
-prerequisites(cmpt370, [cmpt354]).
-prerequisites(cmpt405, [cmpt307]).
-prerequisites(cmpt407, [cmpt307]).
-prerequisites(cmpt431, [cmpt300, cmpt371]).
+
+
+
+required_courses(C):-
+    C=[
+        comp1631,
+        math1200,
+        math1203, 
+        phil1179, 
+        comp3309, 
+        comp1633, 
+        math1271, 
+        math2234, 
+        comp2655, 
+        comp2631, 
+        comp2633,
+        comp2613,
+        comp2659,
+        comp3614,
+        comp3649,
+        comp3659
+    ].
 
 schedule(mwf(N), Campus, [slot(mon, N, Campus), slot(wed, N, Campus), slot(fri, N, Campus)]).
 schedule(t2r(N), Campus, [slot(tue, N, Campus), slot(tue, N1, Campus), slot(thu, N, Campus)]) :- N1 is N+1.
@@ -271,7 +92,7 @@ remove_duplicates([H | T], [H|T1]) :-
 feasible_semester_schedule(_, [], []).
 feasible_semester_schedule(Sem, [Course|More], Schedule) :-
   feasible_semester_schedule(Sem, More, Subschedule),
-  offering(Course, Sem, Section, SchedPattern, Campus),
+  offering(Course, Sem, _, SchedPattern, Campus),
   schedule(SchedPattern, Campus, CourseSched),
   compatible_schedules(CourseSched, Subschedule),
   append(CourseSched, Subschedule, Schedule);
@@ -280,10 +101,11 @@ feasible_semester_schedule(Sem, [Course|More], Schedule) :-
 feasible_semester_schedule_new(_, [], [],[]).
 feasible_semester_schedule_new(Sem, [Course|More], Schedule,CourseSchedule) :-
     feasible_semester_schedule_new(Sem, More, Subschedule,SubCourseSchedule),
-    offering(Course, Sem, Section, SchedPattern, Campus),
+    offering(Course, Sem, _, SchedPattern, Campus),
     schedule(SchedPattern, Campus, CourseSched),
     compatible_schedules(CourseSched, Subschedule),
     append(CourseSched, Subschedule, Schedule),
+    %write("wowy"),nl,
     append([course_instance(Course,CourseSched)],SubCourseSchedule,CourseSchedule)
     ;
     feasible_semester_schedule_new(Sem, More, Schedule,CourseSchedule).
@@ -295,7 +117,7 @@ prerequisites_satisfied([C|Cs], Taken) :-
    prerequisites_satisfied(Cs, Taken).
 
 filterTakeable([],_,[]).
-filterTakeable([],[],[]).
+% filterTakeable([],[],[]).
 filterTakeable([C|Cs],Taken,CanTake):-
     not(member(C,Taken)),
     prerequisites(C, Prereqlist),
@@ -332,16 +154,16 @@ sort_on_prereqs(NonW,Sorted):-
 pick(Num,From,Too):-
     (choose(Num,From,Too);length(From,L),choose(L,From,Too)).
 
-generate_grad_plan(Taken,Sops,Jops,Cog).
+% generate_grad_plan(Taken,Sops,Jops,Cog).
 
-student(Taken,Sops,Jops,Cog,Sems,CrsPerSem):-
-    is_set(Taken),
-    is_set(Sops),
-    is_set(Jops),
-    member(Cog,[geog,biol,geol,chem,math,phys]),
-    Sems > 0,
-    CrsPerSem > 3,
-    generate_grad_plan(Taken,Sops,Jops,Cog).
+% student(Taken,Sops,Jops,Cog,Sems,CrsPerSem):-
+%     is_set(Taken),
+%     is_set(Sops),
+%     is_set(Jops),
+%     member(Cog,[geog,biol,geol,chem,math,phys]),
+%     Sems > 0,
+%     CrsPerSem > 3,
+%     generate_grad_plan(Taken,Sops,Jops,Cog).
 
 feasible_semester_plan(_, [], _).
 feasible_semester_plan(Sem, Crses, Taken) :-
@@ -351,70 +173,206 @@ feasible_semester_plan(Sem, Crses, Taken) :-
 
 
 
-semester_schedule(_, [], [],[]).
-semester_schedule(Sem, [Course|More], Schedule,Able) :-
-  semester_schedule(Sem, More, Subschedule,SubAble),
-  offering(Course, Sem, Section, SchedPattern, Campus),
+semester_schedule(_, [], [],[],[]).
+semester_schedule(Sem, [Course|More], Schedule,Able,CourseSchedule) :-
+  semester_schedule(Sem, More, Subschedule,SubAble,SubCourseSchedule),
+  offering(Course, Sem, _, SchedPattern, Campus),
   schedule(SchedPattern, Campus, CourseSched),
   compatible_schedules(CourseSched, Subschedule),
   append(CourseSched, Subschedule, Schedule),
-%   write(idk),nl,
-  append([Course], SubAble, Able);
-%   write("Cant"),nl,
-  semester_schedule(Sem, More, Schedule,Able).
+%   %write(idk),nl,
+  append([Course], SubAble, Able),
+  append([course_instance(Course,CourseSched)],SubCourseSchedule,CourseSchedule);
+%   %write("Cant"),nl,
+  semester_schedule(Sem, More, Schedule,Able,CourseSchedule).
 
-prob_semester(Sem,Num,Taken,Able):-
-    findall(L,offering(L, Sem, _, _, _),RCrses),
-    remove_duplicates(RCrses,Crses),
-    % write(Crses),nl,
-    filterTakeable(Crses,Taken,Takeable),
-    % write(Takeable),nl,
-    sort_on_prereqs(Takeable,Sorted),
-    pick(Num,Sorted,G),
-    semester_schedule(Sem,G,_,Able).
+% prob_semester(Sem,Num,Taken,Able):-
+%     findall(L,(offering(L, Sem, _, _, _),not(member(L,Taken))),RCrses),
+%     remove_duplicates(RCrses,Crses),
+%     % %write(Crses),nl,
+%     filterTakeable(Crses,Taken,Takeable),
+%     %write("prob_sem"),nl,
+%     sort_on_prereqs(Takeable,Sorted),
+%     pick(Num,Sorted,G),
+%     semester_schedule(Sem,G,_,Able).
+    %write("lol"),nl.
 
-generate_plan(_,0,_,_).
-generate_plan(Taken,Sems,CrsPer,Semesters):-
-    WhatSem is Sems mod 2,
-    % write(WhatSem),nl,
+% prob_semester(Sem,Num,Required,Taken,RetReq,Able):-
+%     (
+%         % required_courses(C),
+%         subtract(Required,Taken,Crses),
+%         %write(Crses),nl,
+%         Crses \= []
+%     ),
+%     filterTakeable(Crses,Taken,Takeable),
+%     %write("probable_sem"),nl,
+%     sort_on_prereqs(Takeable,Sorted),
+%     pick(Num,Sorted,G),
+%     semester_schedule(Sem,G,_,Able),
+%     subtract(Crses,Able,RetReq).
+    %write("lol probable"),nl.
+
+prob_semester(Sem,Num,Required,Taken,Able,CourseSchedule):-
     (
-        WhatSem == 2,
-        % write("even"),nl,
-        Sem = winter
-    
-    ;
-    
-        WhatSem \= 2,
-        % write("odd"),nl,
-        Sem = fall
+        % required_courses(C),
+        subtract(Required,Taken,Crses)
+        %write("NEW REQUIRED CLASS: "),%write(Crses),nl
+        % Crses \= []
     ),
-    % write(Sem),nl,
-    prob_semester(Sem,CrsPer,Taken,Able),
-    NextSems is Sems -1,
-    append(Able,Taken,NewTaken),
-    A = semester_plan(Sem,Able),
-    write(NewTaken),nl,
-    generate_plan(NewTaken,NextSems,CrsPer,SubSemesters),
-    append([A],SubSemesters,Semesters).
+    filterTakeable(Crses,Taken,Takeable),
+    %write("TAKEABLE IN "),%write(Sem),%write(": "),%write(Takeable),nl,
+    sort_on_prereqs(Takeable,Sorted),
+    %write("SORTED: "),%write(Sorted),nl,
+    pick(Num,Sorted,G),
+    %write("PICKED "),%write(Num),%write(" FROM LIST: "),%write(Sorted),nl,
+    semester_schedule(Sem,G,_,Able,CourseSchedule).
+    % subtract(Crses,Able,RetReq),
+    %write("ABLE TO BE TAKEN: "),%write(Able),nl;
+    % Able = [].
 
+even(X) :- 0 is mod(X, 2).
+sem_type_select(Num,Sem):-
+    even(Num),
+    Sem = winter;
+    Sem = fall.
+
+% generate_plan(_,0,_,[]).
+% generate_plan(Taken,Sems,CrsPer,Semesters):-
+%     sem_type_select(Sems,Sem),
+%     %write("Prob sem is the problem"),nl,
+%     prob_semester(Sem,CrsPer,Taken,Able),
+%     %write("PROBABLE SEMESTER: "),%write(Able),nl,
+%     NextSems is Sems - 1,
+%     NextSems >= 0, 
+%     append(Able,Taken,NewTaken),
+%     A = semester_plan(Sem,Able),
+%     %write(NextSems),nl,
+%     generate_plan(NewTaken,NextSems,CrsPer,SubSemesters),
+%     length(SubSemesters,L),
+%     %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
+%     append([A],SubSemesters,Semesters).
+
+    % generate_plan(Taken,Sems,CrsPer,Semesters).
+
+% generate_plan(_,A,_,R,R,[]):-
+%     A >= 0,
+%     R = [].
+% generate_plan(_,0,_,_,[],[]):- fail.
+% generate_plan(_,A,_,_,G,[]):-
+%     A >= 0,
+%     G = [].
+
+
+% generate_plan(_,_,_,[],[],[]).
+% generate_plan(_,0,_,_,[],[]).
+% generate_plan(_,0,_,[_|_],[_|_],_):-!, fail.
+% generate_plan(Taken,Sems,CrsPer,Required,AfterRequired,Semesters):-
+%     sem_type_select(Sems,Sem),
+%     %write("Prob sem is the problem"),nl,
+%     prob_semester(Sem,CrsPer,Required,Taken,RetReq,Able),
+%     %write(RetReq),nl,
+%     NextSems is Sems - 1,
+%     NextSems >= 0, 
+%     append(Able,Taken,NewTaken),
+%     A = semester_plan(Sem,Able),
+%     %write(Required),nl,
+%     generate_plan(NewTaken,NextSems,CrsPer,RetReq,AfterRequired,SubSemesters),
+%     length(SubSemesters,L),
+%     % AfterRequired = [],
+%     %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
+%     append([A],SubSemesters,Semesters).
+    % AfterRequired = RetReq. 
+
+    % generate_plan(_,_,_,[],[],[]).
+    % generate_plan(NewTaken,Required,NextSems,CrsPer,[[A]|SubSemesters]),
+
+
+generate_plan(T1,T2,0,_,A):-
+    T1=T2,A=[].
+    %write("BASE CASE 2"),nl,
+    %write("T1 "),%write(T1),nl,
+    %write("T2 "),%write(T2),nl,
+    %write("A "),%write(A),nl.
+
+generate_plan(T1,T2,B,_,A):-
+    %write("BASE CASE 1"),nl,
+    B>0,T1=T2,A=[].
+    %write("T1 "),%write(T1),nl,
+    %write("T2 "),%write(T2),nl,
+    %write("A "),%write(A),nl,
+    %write("B "),%write(B),nl.
+generate_plan(T1,T2,0,_,A):-
+    T1\=T2,!,
+    %write("BASE CASE FAIL"),nl,
+    %write("T1 "),%write(T1),nl,
+    %write("T2 "),%write(T2),nl,
+    %write("A "),%write(A),nl,
+    A=[],
+    false.
+generate_plan(Taken,Required,Sems,CrsPer,Semesters):-
+    sem_type_select(Sems,Sem),
+    % %write("Prob sem is the problem"),nl,
+    %write("OLD REQUIRED"),%write(Required),nl,
+    prob_semester(Sem,CrsPer,Required,Taken,Able,CourseSchedule),
+    %write("ABLE COURSES AFTER SCH ARE: "),%write(Able),nl,
+    %write("SEMS IS: "),%write(Sems),nl,
+    append(Able,Taken,NewTaken),
+    A = semester_plan(Sem,CourseSchedule),
+    sort(NewTaken,  TakenSorted),
+    sort(Required,  RequiredSorted),
+        NextSems is Sems - 1,
+        NextSems >= -1, 
+        %write("SCHEDULING ABLE COURSES: "),%write(A),nl,
+        %write("NEXT CALL"),nl,
+        %write(" NEW TAKEN FOR NEXT "),%write(TakenSorted),nl,
+        %write(" NEW REQUIRED FOR NEXT "),%write(Required),nl,
+        %write(" NEW NEXTSEMS FOR NEXT "),%write(NextSems),nl,
+        (generate_plan(TakenSorted,RequiredSorted,NextSems,CrsPer,SubSemesters),
+        length(SubSemesters,L),
+        %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
+        append([A],SubSemesters,Semesters));false.
+        % ;
+        % generate_plan(NewTaken,RequiredSorted,Sems,CrsPer,Semesters)
+
+
+
+% generate_plan(T,T,_,_,[]).
+% generate_plan(T,T,0,_,[]).
+% generate_plan(_,T,_,_,T,A).
+% generate_plan(_,T,0,_,T,A).
+% generate_plan(_,0,_,[_|_],_):-!, fail.
+% generate_plan(Taken,Required,Sems,CrsPer,TakenAfter,Semesters):-
+%     sem_type_select(Sems,Sem),
+%     % %write("Prob sem is the problem"),nl,
+%     %write("OLD REQUIRED"),%write(Required),nl,
+%     prob_semester(Sem,CrsPer,Required,Taken,Able),
+%     NextSems is Sems - 1,
+%     NextSems >= 0, 
+%     append(Able,Taken,NewTaken),
+%     A = semester_plan(Sem,Able),
+%     %write("SCHEDULING ABLE COURSES: "),%write(A),nl,
+%     generate_plan(NewTaken,Required,NextSems,CrsPer,SubSemesters),
+%     length(SubSemesters,L),
+%     %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
+%     append([A],SubSemesters,Semesters).
 graduation_plan_(_, [],_).
 graduation_plan_(Taken, [semester_plan(Sem, Crses)|More],Schedule) :-
     feasible_semester_schedule_new(Sem, Crses, _,SemSchedule),
     append(Crses, Taken, TakenAfterSem),
     graduation_plan_(TakenAfterSem, More,FutureSchedule),
-    append([SemSchedule],FutureSchedule,Schedule);
-    graduation_plan_(Taken, More,Schedule).
+    append([SemSchedule],FutureSchedule,Schedule).
+    % graduation_plan_(Taken, More,Schedule).
 
-feasible_semester_plan4(_, [], _,_).
-feasible_semester_plan4(Sem, Crses, Taken,Able) :-
-    feasible_semester_schedule(Sem, Crses, _),
-    is_set(Crses),
-    prerequisites_satisfied(Crses, Taken).
+% feasible_semester_plan4(_, [], _,_).
+% feasible_semester_plan4(Sem, Crses, Taken,Able) :-
+%     feasible_semester_schedule(Sem, Crses, _),
+%     is_set(Crses),
+%     prerequisites_satisfied(Crses, Taken).
 
-semester_plan(Sem, [Crs|Crses],Taken,Takeable) :-
-    feasible_semester_schedule_new(Sem, Crses, _,_),
-    is_set(Crses),
-    prerequisites_satisfied(Crses, Taken).
+% semester_plan(Sem, [Crs|Crses],Taken,Takeable) :-
+%     feasible_semester_schedule_new(Sem, Crses, _,_),
+%     is_set(Crses),
+%     prerequisites_satisfied(Crses, Taken).
 
 
 % semester_plan(Sem,[H|[]],Taken,Prop):-
@@ -459,7 +417,7 @@ meets_cmpt_major_requirements(Taken) :-
     area_covered(A1, Taken),
     area_covered(A2, Taken),
     area_covered(A3, Taken),
-    write("here"),nl,
+    %write("here"),nl,
     cmpt400courses(Taken, DepthCourses),
     length(DepthCourses, D),
     D >= 3,
