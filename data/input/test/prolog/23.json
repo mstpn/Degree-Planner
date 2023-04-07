@@ -1,0 +1,22 @@
+{
+        "taken": [
+                "phil1179",
+                "math1200",
+                "math1203",
+                "math1271",
+                "math2234",
+                "comp1631",
+                "comp1633",
+                "comp2613",
+                "comp2631",
+                "comp2633",
+                "comp2655",
+                "comp2659",
+                "comp3309",
+                "comp3614",
+                "comp3649",
+                "comp3659"
+        ],
+        "semesters": 8,
+        "courses_for_semester": 5
+}

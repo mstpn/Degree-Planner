@@ -8,7 +8,7 @@ if __name__ == '__main__':
     print('building graph')
     build_graph()
 
-    test_path = "data/input/test/"
+    test_path = "data/input/test/python/"
     num_tests = len(os.listdir(test_path))
     num = 23
     # for i in range(1, num_tests+1):
