@@ -6,6 +6,8 @@ offering(math1271, fall, d100, mwf(8), mru).
 offering(comp2655, fall, d100, mwf(14), mru).
 offering(comp2631, fall, d100, tr2(10), mru).
 offering(comp2613, fall, d100, tr2(14), mru).
+offering(comp3659, fall, d100, mwf(8), mru).
+
 offering(comp2659, winter, d100, mwf(15), mru).
 offering(comp2633, winter, d100, tr2(8), mru).
 offering(math2234, winter, d100, mwf(10), mru).
@@ -15,9 +17,33 @@ offering(comp3309, winter, d100, tr2(11), mru).
 offering(phil1179, winter, d100, mwf(16), mru).
 offering(comp3614, winter, d100, t2r(14), mru).
 offering(comp3649, winter, d100, tr2(16), mru).
-offering(comp3659, fall, d100, mwf(8), mru).
 
+offering(comp2659, winter, d100, mwf(16), mru).
 
+offering(math2234, winter, d100, mwf(2), mru).
+offering(comp1633, winter, d100, mwf(4), mru).
+offering(math1271, winter, d100, mwf(6), mru).
+offering(phil1179, winter, d100, mwf(8), mru).
+offering(comp2633, winter, d100, tr2(2), mru).
+offering(comp3309, winter, d100, tr2(6), mru).
+offering(comp3649, winter, d100, tr2(10), mru).
+offering(comp3614, winter, d100, t2r(14), mru).
+
+% OPTIONS
+offering(comp2521, winter, d100, tr2(10), mru).
+offering(comp2521, winter, d100, t2r(14), mru).
+offering(comp2521, fall, d100, tr2(15), mru).
+offering(comp3533, winter, d100, mwf(10), mru).
+offering(comp3533, fall, d100, mwf(10), mru).
+offering(comp3625, fall, d100, t2r(20), mru).
+offering(comp3505, winter, d100, mwf(13), mru).
+offering(comp4555, fall, d100, mwf(10), mru).
+offering(comp4513, winter, d100, mwf(15), mru).
+offering(comp4522, winter, d100, mwf(0), mru).
+offering(comp4630, winter, d100, mwf(11), mru).
+offering(comp4635, winter, d100, eve(tue), mru).
+offering(comp5690, winter, d100, eve(any), mru).
+offering(comp5690, fall, d100, eve(any), mru).
 
 prerequisites(comp1631, []).
 prerequisites(math1200, []).
@@ -36,7 +62,24 @@ prerequisites(comp3614, [comp2631,comp2613]).
 prerequisites(comp3649, [comp2613,comp2631,phil1179]).
 prerequisites(comp3659, [comp2631,comp2659]).
 
+% OPTIONS
+prerequisites(comp2521, []). %Database 1 10 winter fall
+prerequisites(comp3612, [1633]). %web cs
+prerequisites(comp3533, [comp2655]). %network 8,16 mwf winter fqll
+prerequisites(comp3625, [comp2631,comp2613]). %AI
+prerequisites(comp3505, [comp1633,comp2631]). %testing mwf(13)
+prerequisites(comp4555, [comp2659]). %Games
+prerequisites(comp4513, [comp3612]). %Web 3 
+prerequisites(comp4522, [comp2521]). %Database 2
+prerequisites(comp4630, [comp3625]). %ml mwf(11)
+prerequisites(comp4635, [comp3533]). %dist eve(tue)
+prerequisites(comp5690, []). %sen eve(tue)
 
+jun_ops(Ops):- 
+    Ops = [comp2521,comp3612,comp3533,comp3625,comp3505].
+
+sen_ops(Ops):-
+    Ops = [comp4555,comp4513,comp4522,comp4630,comp4635,comp5690].
 
 
 
@@ -151,19 +194,22 @@ sort_on_prereqs(NonW,Sorted):-
     calcWeights(NonW,W),
     take_weight_off(W,Sorted).
 
+selectn(0, [], Rest, Rest).
+selectn(N, [A|B], C, Rest) :-
+    append(H, [A|T], C),
+    M is N-1,
+    selectn(M, B, T, S),
+    append(H, S, Rest).
+
 pick(Num,From,Too):-
-    (choose(Num,From,Too);length(From,L),choose(L,From,Too)).
+    (
+        choose(Num,From,TS);
+        length(From,L),choose(L,From,TS)
+    ),
+    length(TS,Len),
+    Len =< Num,
+    Too = TS,!.
 
-% generate_grad_plan(Taken,Sops,Jops,Cog).
-
-% student(Taken,Sops,Jops,Cog,Sems,CrsPerSem):-
-%     is_set(Taken),
-%     is_set(Sops),
-%     is_set(Jops),
-%     member(Cog,[geog,biol,geol,chem,math,phys]),
-%     Sems > 0,
-%     CrsPerSem > 3,
-%     generate_grad_plan(Taken,Sops,Jops,Cog).
 
 feasible_semester_plan(_, [], _).
 feasible_semester_plan(Sem, Crses, Taken) :-
@@ -186,266 +232,84 @@ semester_schedule(Sem, [Course|More], Schedule,Able,CourseSchedule) :-
 %   %write("Cant"),nl,
   semester_schedule(Sem, More, Schedule,Able,CourseSchedule).
 
-% prob_semester(Sem,Num,Taken,Able):-
-%     findall(L,(offering(L, Sem, _, _, _),not(member(L,Taken))),RCrses),
-%     remove_duplicates(RCrses,Crses),
-%     % %write(Crses),nl,
-%     filterTakeable(Crses,Taken,Takeable),
-%     %write("prob_sem"),nl,
-%     sort_on_prereqs(Takeable,Sorted),
-%     pick(Num,Sorted,G),
-%     semester_schedule(Sem,G,_,Able).
-    %write("lol"),nl.
-
-% prob_semester(Sem,Num,Required,Taken,RetReq,Able):-
-%     (
-%         % required_courses(C),
-%         subtract(Required,Taken,Crses),
-%         %write(Crses),nl,
-%         Crses \= []
-%     ),
-%     filterTakeable(Crses,Taken,Takeable),
-%     %write("probable_sem"),nl,
-%     sort_on_prereqs(Takeable,Sorted),
-%     pick(Num,Sorted,G),
-%     semester_schedule(Sem,G,_,Able),
-%     subtract(Crses,Able,RetReq).
-    %write("lol probable"),nl.
-
+prob_semester(_,0,_,_,[],[]).
 prob_semester(Sem,Num,Required,Taken,Able,CourseSchedule):-
     (
-        % required_courses(C),
         subtract(Required,Taken,Crses)
-        %write("NEW REQUIRED CLASS: "),%write(Crses),nl
-        % Crses \= []
     ),
     filterTakeable(Crses,Taken,Takeable),
-    %write("TAKEABLE IN "),%write(Sem),%write(": "),%write(Takeable),nl,
-    sort_on_prereqs(Takeable,Sorted),
-    %write("SORTED: "),%write(Sorted),nl,
+    sort_on_prereqs(Takeable,Sorted),!,
     pick(Num,Sorted,G),
-    %write("PICKED "),%write(Num),%write(" FROM LIST: "),%write(Sorted),nl,
     semester_schedule(Sem,G,_,Able,CourseSchedule).
-    % subtract(Crses,Able,RetReq),
-    %write("ABLE TO BE TAKEN: "),%write(Able),nl;
-    % Able = [].
 
 even(X) :- 0 is mod(X, 2).
 sem_type_select(Num,Sem):-
     even(Num),
-    Sem = winter;
-    Sem = fall.
+    Sem = winter,!;
+    Sem = fall,!.
 
-% generate_plan(_,0,_,[]).
-% generate_plan(Taken,Sems,CrsPer,Semesters):-
-%     sem_type_select(Sems,Sem),
-%     %write("Prob sem is the problem"),nl,
-%     prob_semester(Sem,CrsPer,Taken,Able),
-%     %write("PROBABLE SEMESTER: "),%write(Able),nl,
-%     NextSems is Sems - 1,
-%     NextSems >= 0, 
-%     append(Able,Taken,NewTaken),
-%     A = semester_plan(Sem,Able),
-%     %write(NextSems),nl,
-%     generate_plan(NewTaken,NextSems,CrsPer,SubSemesters),
-%     length(SubSemesters,L),
-%     %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
-%     append([A],SubSemesters,Semesters).
-
-    % generate_plan(Taken,Sems,CrsPer,Semesters).
-
-% generate_plan(_,A,_,R,R,[]):-
-%     A >= 0,
-%     R = [].
-% generate_plan(_,0,_,_,[],[]):- fail.
-% generate_plan(_,A,_,_,G,[]):-
-%     A >= 0,
-%     G = [].
-
-
-% generate_plan(_,_,_,[],[],[]).
-% generate_plan(_,0,_,_,[],[]).
-% generate_plan(_,0,_,[_|_],[_|_],_):-!, fail.
-% generate_plan(Taken,Sems,CrsPer,Required,AfterRequired,Semesters):-
-%     sem_type_select(Sems,Sem),
-%     %write("Prob sem is the problem"),nl,
-%     prob_semester(Sem,CrsPer,Required,Taken,RetReq,Able),
-%     %write(RetReq),nl,
-%     NextSems is Sems - 1,
-%     NextSems >= 0, 
-%     append(Able,Taken,NewTaken),
-%     A = semester_plan(Sem,Able),
-%     %write(Required),nl,
-%     generate_plan(NewTaken,NextSems,CrsPer,RetReq,AfterRequired,SubSemesters),
-%     length(SubSemesters,L),
-%     % AfterRequired = [],
-%     %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
-%     append([A],SubSemesters,Semesters).
-    % AfterRequired = RetReq. 
-
-    % generate_plan(_,_,_,[],[],[]).
-    % generate_plan(NewTaken,Required,NextSems,CrsPer,[[A]|SubSemesters]),
-
-
-generate_plan(T1,T2,0,_,A):-
-    T1=T2,A=[].
-    %write("BASE CASE 2"),nl,
-    %write("T1 "),%write(T1),nl,
-    %write("T2 "),%write(T2),nl,
-    %write("A "),%write(A),nl.
-
-generate_plan(T1,T2,B,_,A):-
-    %write("BASE CASE 1"),nl,
-    B>0,T1=T2,A=[].
-    %write("T1 "),%write(T1),nl,
-    %write("T2 "),%write(T2),nl,
-    %write("A "),%write(A),nl,
-    %write("B "),%write(B),nl.
-generate_plan(T1,T2,0,_,A):-
-    T1\=T2,!,
-    %write("BASE CASE FAIL"),nl,
-    %write("T1 "),%write(T1),nl,
-    %write("T2 "),%write(T2),nl,
-    %write("A "),%write(A),nl,
-    A=[],
-    false.
+generate_plan(T1,T2,0,_,_):-T1\=T2,false.
+generate_plan(T,T,0,_,[]).
+generate_plan(T,T,_,_,[]).
 generate_plan(Taken,Required,Sems,CrsPer,Semesters):-
     sem_type_select(Sems,Sem),
-    % %write("Prob sem is the problem"),nl,
-    %write("OLD REQUIRED"),%write(Required),nl,
     prob_semester(Sem,CrsPer,Required,Taken,Able,CourseSchedule),
-    %write("ABLE COURSES AFTER SCH ARE: "),%write(Able),nl,
-    %write("SEMS IS: "),%write(Sems),nl,
     append(Able,Taken,NewTaken),
     A = semester_plan(Sem,CourseSchedule),
     sort(NewTaken,  TakenSorted),
     sort(Required,  RequiredSorted),
-        NextSems is Sems - 1,
-        NextSems >= -1, 
-        %write("SCHEDULING ABLE COURSES: "),%write(A),nl,
-        %write("NEXT CALL"),nl,
-        %write(" NEW TAKEN FOR NEXT "),%write(TakenSorted),nl,
-        %write(" NEW REQUIRED FOR NEXT "),%write(Required),nl,
-        %write(" NEW NEXTSEMS FOR NEXT "),%write(NextSems),nl,
-        (generate_plan(TakenSorted,RequiredSorted,NextSems,CrsPer,SubSemesters),
-        length(SubSemesters,L),
-        %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
-        append([A],SubSemesters,Semesters));false.
-        % ;
-        % generate_plan(NewTaken,RequiredSorted,Sems,CrsPer,Semesters)
+    NextSems is Sems - 1,
+    NextSems >= 0, 
+    generate_plan(TakenSorted,RequiredSorted,NextSems,CrsPer,SubSemesters),
+    append([A],SubSemesters,Semesters).
+
+graduation_plan(Taken,Sems,CrsPer,Semesters):-
+    required_courses(Reqs),
+    generate_plan(Taken,Reqs,Sems,CrsPer,Semesters).
+
+main:-
+    %read file!,
+    graduation_plan([],3,4,L),
+    put_char(Char),
+
+    
 
 
 
-% generate_plan(T,T,_,_,[]).
-% generate_plan(T,T,0,_,[]).
-% generate_plan(_,T,_,_,T,A).
-% generate_plan(_,T,0,_,T,A).
-% generate_plan(_,0,_,[_|_],_):-!, fail.
-% generate_plan(Taken,Required,Sems,CrsPer,TakenAfter,Semesters):-
-%     sem_type_select(Sems,Sem),
-%     % %write("Prob sem is the problem"),nl,
-%     %write("OLD REQUIRED"),%write(Required),nl,
-%     prob_semester(Sem,CrsPer,Required,Taken,Able),
-%     NextSems is Sems - 1,
-%     NextSems >= 0, 
-%     append(Able,Taken,NewTaken),
-%     A = semester_plan(Sem,Able),
-%     %write("SCHEDULING ABLE COURSES: "),%write(A),nl,
-%     generate_plan(NewTaken,Required,NextSems,CrsPer,SubSemesters),
-%     length(SubSemesters,L),
-%     %write("Sem is: "),%write(NextSems),%write(" and Schedule size is: "),%write(L),nl,
-%     append([A],SubSemesters,Semesters).
-graduation_plan_(_, [],_).
-graduation_plan_(Taken, [semester_plan(Sem, Crses)|More],Schedule) :-
-    feasible_semester_schedule_new(Sem, Crses, _,SemSchedule),
-    append(Crses, Taken, TakenAfterSem),
-    graduation_plan_(TakenAfterSem, More,FutureSchedule),
-    append([SemSchedule],FutureSchedule,Schedule).
-    % graduation_plan_(Taken, More,Schedule).
+print_graduation_plan(SemNum,[],[]).
+print_graduation_plan(SemNum,[Sem|More],Lines):-
+    print_semester_plan(SemNum,Sem,Line),!,
+    write(Line),
+    NextSem is SemNum + 1,!,
+    print_graduation_plan(NextSem,More,SubLines),
+    append(Line,SubLines,Lines).
 
-% feasible_semester_plan4(_, [], _,_).
-% feasible_semester_plan4(Sem, Crses, Taken,Able) :-
-%     feasible_semester_schedule(Sem, Crses, _),
-%     is_set(Crses),
-%     prerequisites_satisfied(Crses, Taken).
+print_semester_plan(SemNum,semester_plan(_,[]),[]):-!.
+print_semester_plan(SemNum,semester_plan(Sem,[C|Cs]),Lines):-
+    print_course_instance(SemNum,Sem,C,S),!,
+    print_semester_plan(SemNum,semester_plan(Sem,Cs),SubLines),!,
+    write(SubLines),
+    append([S],SubLines,Lines),!.
 
-% semester_plan(Sem, [Crs|Crses],Taken,Takeable) :-
-%     feasible_semester_schedule_new(Sem, Crses, _,_),
-%     is_set(Crses),
-%     prerequisites_satisfied(Crses, Taken).
+print_course_instance(SemNum,Semester,course_instance(Course,CourseSched),S):-
+    [S1|[S2|[S3|[]]]] = CourseSched,!,
+    decompose_time_slot(S1,DS1),
+    decompose_time_slot(S2,DS2),
+    decompose_time_slot(S3,DS3),
+    swritef(S,"%w,%w,%w,%w,%w,%w,\n",[SemNum,Semester,Course,DS1,DS2,DS3]).
+
+    % swritef(S, '%15L%w', ['Hello', 'World']).
 
 
-% semester_plan(Sem,[H|[]],Taken,Prop):-
-%     prerequisites_satisfied(H,Taken),
+% [slot(mon,16,mru),slot(wed,16,mru),slot(fri,16,mru)]
+decompose_time_slot(slot(Day,Time,Site),R):-
+    R = Day/Time/Site.
 
-
-% semester_plan(Sem,Crs,Taken,Prop):-
-%     filterTakeable(Crse,Taken,Takeable),
-
-   
-is_ordered([]).
-is_ordered([_]).
-is_ordered([C1, C2|Cs]) :- C1 @< C2, is_ordered([C2|Cs]).
-
-graduation_plan_new(_, _,0,_,_).
-graduation_plan_new(_, [],_,_,_).
-graduation_plan_new(Taken, [semester_plan(Sem, Crses)|More],Sems,CrsPer,Schedule) :-
-    filterTakeable(Crses,Taken,Takeable),
-    feasible_semester_plan(Sem, Takeable,Taken),
-    pick(CrsPer,Takeable,Choosen),
-    feasible_semester_schedule_new(Sem, Choosen, _,SemSchedule),
-    append(Choosen, Taken, TakenAfterSem),
-    SemsRest is Sems - 1,
-    graduation_plan_new(TakenAfterSem, More,SemsRest,CrsPer,FutureSchedule),
-    append([SemSchedule],FutureSchedule,Schedule);
-    graduation_plan_new(Taken, More,Sems,CrsPer,Schedule).
-
-graduation_plan(Taken, []) :-
-    meets_cmpt_major_requirements(Taken).
-
-graduation_plan(Taken, [semester_plan(Sem, Crses)|More]) :-
-    feasible_semester_plan(Sem, Crses, Taken),
-    append(Crses, Taken, TakenAfterSem),
-    graduation_plan(TakenAfterSem, More).
-
-meets_cmpt_major_requirements(Taken) :-
-    member(cmpt300, Taken),
-    member(cmpt307, Taken),
-    member(cmpt320, Taken),
-    member(macm316, Taken),
-    breadth_areas(A1, A2, A3),
-    area_covered(A1, Taken),
-    area_covered(A2, Taken),
-    area_covered(A3, Taken),
-    %write("here"),nl,
-    cmpt400courses(Taken, DepthCourses),
-    length(DepthCourses, D),
-    D >= 3,
-    is_set(Taken),
-    length(Taken, N),
-    N >= 13.
-
-area_covered(A, Taken) :-
-    cmpt_concentration(A, Crses),
-    has_one(Taken, Crses).
-
-has_one([H|_], L) :- member(H, L), !.
-has_one([_|T], L) :- has_one(T, L).
-
-
-breadth_areas(A1, A2, A3) :- 
-    append(_, [A1|L1], [ai, cgmm, infosys, pl]),
-    append(_, [A2|L2], L1),
-    append(_, [A3|_], L2).
- 
-cmpt_concentration(ai, [cmpt310, cmpt340, cmpt411, cmpt412, cmpt413, cmpt414, cmpt417, cmpt418, cmpt419]).
-cmpt_concentration(cgmm, [cmpt361, cmpt363, cmpt365, cmpt461, cmpt464, cmpt466, cmpt467, cmpt468, cmpt469]).
-cmpt_concentration(infosys, [cmpt301, cmpt354, cmpt370, cmpt441, cmpt454, cmpt459, cmpt470, cmpt474]).
-cmpt_concentration(pl, [cmpt373, cmpt375, cmpt383, cmpt384, cmpt473, cmpt475, cmpt477, cmpt489]).
-cmpt_concentration(sys-required, [cmpt300]).
-cmpt_concentration(theory-required, [cmpt307]).
- 
-cmpt400level(Crse) :- atom_concat('cmpt4', _, Crse).
-cmpt400courses([], []).
-cmpt400courses([Crse|Cs], [Crse|Ds]) :- atom_concat('cmpt4', _, Crse), !, cmpt400courses(Cs, Ds).
-cmpt400courses([_|Cs], Ds) :- cmpt400courses(Cs, Ds).
+test_plan(L):-
+L = [semester_plan(fall, [course_instance(comp1631, [slot(mon, 11, mru), slot(wed, 11, mru), slot(fri, 11, mru)]), course_instance(math1200, [slot(tue, 13, mru), slot(thu, 13, mru), slot(thu, 12, mru)]), course_instance(math1203, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3309, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)])]), semester_plan(winter, [course_instance(comp1633, [slot(mon, 4, mru), slot(wed, 4, mru), slot(fri, 4, mru)]), course_instance(math1271, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)]), course_instance(phil1179, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(math2234, [slot(mon, 10, mru), slot(wed, 10, mru), slot(fri, 10, mru)])]), semester_plan(fall, [course_instance(comp2631, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)]), course_instance(comp2613, [slot(tue, 14, mru), slot(thu, 14, mru), slot(thu, 13, mru)]), course_instance(comp2655, [slot(mon, 14, mru), slot(wed, 14, mru), slot(fri, 14, mru)])]), semester_plan(winter, [course_instance(comp2633, [slot(tue, 8, mru), slot(thu, 8, mru), slot(thu, 7, mru)]), course_instance(comp2659, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3614, [slot(tue, 14, mru), slot(tue, 15, mru), slot(thu, 14, mru)]), course_instance(comp3649, [slot(tue, 16, mru), slot(thu, 16, mru), slot(thu, 15, mru)])]), semester_plan(fall, [course_instance(comp3659, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)])])].
+% graduation_plan(_, [],_).
+% graduation_plan(Taken, [semester_plan(Sem, Crses)|More],Schedule) :-
+%     feasible_semester_schedule_new(Sem, Crses, _,SemSchedule),
+%     append(Crses, Taken, TakenAfterSem),
+%     graduation_plan(TakenAfterSem, More,FutureSchedule),
+%     append([SemSchedule],FutureSchedule,Schedule).
