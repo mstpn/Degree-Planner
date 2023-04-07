@@ -273,11 +273,12 @@ graduation_plan(Taken,Sems,CrsPer,Semesters):-
 
 write_lines(_,[]).
 write_lines(Out,[L|Ls]):-
+    write(L),
     write(Out,L),
     write_lines(Out,Ls).
 
-get_student_dict(Student) :-
-    open("soren.json", read, Stream),
+get_student_dict(JsonFile,Student) :-
+    open(JsonFile, read, Stream),
     json_read_dict(Stream, Student),
     % write(Student),
     close(Stream).
@@ -304,19 +305,11 @@ convert_taken_string_to_atom([C|Cs],Taken):-
     append([L],SubTaken,Taken).
 
 
-main:-
-    get_student_dict(StudentDict),
-    get_student(StudentDict,Student),
-    (
-        graduation_plan(Student,L),
-        print_graduation_plan(0,L,Lines),
-        write_plan(Lines)
-        ;
-        write("The provided file did not generate a plan"),nl,fail
-    ).
+
 
 write_plan(Lines):-
-    open('output.csv',write,Out),!,
+    open('output.csv',append,Out),!,
+    write(Out,"\nNEW GRADUATION PLAN\n"),
     write_lines(Out,Lines),
     close(Out),!. 
 
@@ -350,3 +343,20 @@ test_plan(L):-
             semester_plan(fall, [course_instance(comp1631, [slot(mon, 11, mru), slot(wed, 11, mru), slot(fri, 11, mru)]), course_instance(math1200, [slot(tue, 13, mru), slot(thu, 13, mru), slot(thu, 12, mru)]), course_instance(math1203, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3309, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)])]), 
             semester_plan(winter, [course_instance(comp1633, [slot(mon, 4, mru), slot(wed, 4, mru), slot(fri, 4, mru)]), course_instance(math1271, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)]), course_instance(phil1179, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(math2234, [slot(mon, 10, mru), slot(wed, 10, mru), slot(fri, 10, mru)])]), semester_plan(fall, [course_instance(comp2631, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)]), course_instance(comp2613, [slot(tue, 14, mru), slot(thu, 14, mru), slot(thu, 13, mru)]), course_instance(comp2655, [slot(mon, 14, mru), slot(wed, 14, mru), slot(fri, 14, mru)])]), semester_plan(winter, [course_instance(comp2633, [slot(tue, 8, mru), slot(thu, 8, mru), slot(thu, 7, mru)]), course_instance(comp2659, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3614, [slot(tue, 14, mru), slot(tue, 15, mru), slot(thu, 14, mru)]), course_instance(comp3649, [slot(tue, 16, mru), slot(thu, 16, mru), slot(thu, 15, mru)])]), semester_plan(fall, [course_instance(comp3659, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)])])
         ].
+
+
+main(FileNameAndPath):-
+
+    get_student_dict(FileNameAndPath,StudentDict),
+    get_student(StudentDict,Student),!,
+    (
+        graduation_plan(Student,L),
+        print_graduation_plan(0,L,Lines),
+        nl,write("Generated a Plan"),nl,
+        tab(2),write("Found plans are automatically appened to output.csv"),nl,nl,
+        write_plan(Lines),
+        write("Press (;) to continue"),nl,
+        write("Press (.) to stop"),nl,nl
+        ;
+        write("The provided file did not generate a plan"),nl,fail
+    ).
