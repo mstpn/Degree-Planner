@@ -267,10 +267,17 @@ graduation_plan(Taken,Sems,CrsPer,Semesters):-
     required_courses(Reqs),
     generate_plan(Taken,Reqs,Sems,CrsPer,Semesters).
 
-main:-
-    %read file!,
-    graduation_plan([],3,4,L),
-    put_char(Char),
+write_lines(_,[]).
+write_lines(Out,[L|Ls]):-
+    write(Out,L),
+    write_lines(Out,Ls).
+
+writefacts:-
+    open('output.csv',write,Out),
+    graduation_plan([],10,4,L),
+    print_graduation_plan(0,L,Lines),
+    write_lines(Out,Lines),
+    close(Out),!. 
 
     
 
