@@ -1,0 +1,25 @@
+{
+        "name": "Soren Edwards",
+        "semester": 0,
+        "courses_taken": [
+        ],
+        "chosen_sen_options": [
+                "COMP4555",
+                "COMP5690",
+                "COMP4630"
+        ],
+        "chosen_jun_options": [
+                "COMP3533",
+                "COMP3625",
+                "COMP2521"
+        ],
+        "cognate_name": "MATH",
+        "cognate_choice": [
+                "MATH3200",
+                "MATH2200",
+                "MATH2311",
+                "MATH3101"
+        ],
+        "years_to_grad": 8,
+        "max_courses_per_semester": 5
+}

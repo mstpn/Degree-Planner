@@ -22,26 +22,42 @@ Idea:
             If we can schedule it, we move on to the next course in the list.
 """
 
-import math
 import class_definitions as cd
 import student as std
 
 
 def degree_handler(student):
+    """
+    Handles the scheduling of a degree.
+    A degree is a list of semesters, each of which is a list of courses.
+    Initiates the recursive backtracking search for semesters
+        Each semester contains a backtracking search for courses
+    On success, returns the degree, a boolean indicating success, and a message
+    On failure, returns an empty degree, a boolean indicating failure, and a message
+    """
+    # Check for invalid inputs
     if student.years_to_grad <= 0 or student.max_courses_per_semester <= 0:
         success = False
         msg = "Student has an invalid number of semesters to graduate or courses per semester"
         return [], success, msg
-    # courses_remaining = student.all_required
+    if len(student.all_required) > student.max_courses_per_semester * student.sem_to_grad:
+        success = False
+        msg = "Student has too many courses to take in the time allotted"
+        return [], success, msg
+    # Check for completed degree
+    if len(student.all_required) == 0:
+        success = True
+        msg = "Student has already completed their degree"
+        return [], success, msg
+    # Schedule degree
     courses_remaining = student.sort_all()
-    backtrack = (student.sem_to_grad-1, 0)
     degree = []
     curr_sem = 0
     success = schedule_recursive(
         student, curr_sem, degree, courses_remaining)
     if success:
         msg = f"Degree successfully scheduled in %s years (%s semesters)" % (
-            math.ceil(len(degree)/2), len(degree))
+            len(degree)/2, len(degree))
     else:
         msg = f"Degree was not able to be scheduled in %s years" % student.years_to_grad
     return degree, success, msg
@@ -74,7 +90,7 @@ def schedule_recursive(student: std.Student, curr_sem: int, degree: list[cd.Seme
             courses_remaining = reorder_courses(courses_remaining, i)
             to_schedule = courses_remaining.copy()
             course_recursive(student, courses_remaining,
-                              to_schedule, degree[-1])
+                             to_schedule, degree[-1], degree)
             courses_remaining = [
                 x for x in courses_remaining if x not in degree[-1].list_courses()]
             curr_sem += 1
@@ -82,12 +98,13 @@ def schedule_recursive(student: std.Student, curr_sem: int, degree: list[cd.Seme
             success = schedule_recursive(
                 student, curr_sem, degree, courses_remaining)
             if not success:
+                # print("Backtracking semester")
                 degree = degree[:curr_sem]
                 i += 1
     return success
 
 
-def course_recursive(student, courses_remaining, to_schedule, semester):
+def course_recursive(student, courses_remaining, to_schedule, semester, degree):
     """
     Recursive function to schedule a semester.
     The recursive case iterates through every possible course to schedule in the remaining courses list.
@@ -105,26 +122,37 @@ def course_recursive(student, courses_remaining, to_schedule, semester):
     while len(to_schedule) > 0 and not success:
         course = to_schedule.pop(0)
         course_details = student.course_dict[semester.worf].get(course, None)
-        if course_details and check_prereqs(student, course, courses_remaining) and schedule_course(course_details, semester):
+        if course_details and \
+                check_prereqs(student, course, degree) and \
+                schedule_course(course_details, semester):
             success = course_recursive(
-                student, courses_remaining, to_schedule, semester)
+                student, courses_remaining, to_schedule, semester, degree)
+            # print("Backtracking course")
     return success
 
 
-def check_prereqs(student, course, courses_remaining):
+def check_prereqs(student, course, degree):
     """
     Returns True if the course has its prereqs met
     Returns False if the course does not have its prereqs met
     """
-    course_node: cd.Course_Node = student.graph_nodes_dict.get(course, None)
-    if course_node is None:
+    if course == "MATH2101" or course == "MATH4111":
+        print("")
+    course_details = student.course_dict[degree[-1].worf].get(course, None)
+    if course_details is None:
         print("Course not found in graph")
         return False
-    if len(course_node.pre) == 0:
-        return True
-    pre_list = course_node.pre_to_str_list()
-    for prereq in pre_list:
-        if prereq in courses_remaining:
+    pre_list = course_details.list_prereqs()
+    courses_taken = student.compute_courses_taken(degree)
+    for option_list in pre_list:
+        if len(option_list) == 0:
+            continue
+        taken_option = False
+        for option in option_list:
+            if option in courses_taken:
+                taken_option = True
+                break
+        if not taken_option:
             return False
     return True
 
@@ -229,6 +257,9 @@ def reorder_courses(courses, index):
 
 
 if __name__ == "__main__":
+    """
+    The optional main for testing purposes
+    """
     student_input_file = "data/input/soren.json"
     student = std.Student(filename=student_input_file)
 

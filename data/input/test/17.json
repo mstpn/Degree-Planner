@@ -4,13 +4,18 @@
         "courses_taken": [
         ],
         "chosen_sen_options": [
+                "COMP4555",
+                "COMP5690",
+                "COMP4630"
         ],
         "chosen_jun_options": [
+                "COMP3533",
+                "COMP3625",
+                "COMP2521"
         ],
-        "cognate_name": "N/A",
+        "cognate_name": "GEOG",
         "cognate_choice": [
-
         ],
-        "years_to_grad": 0,
+        "years_to_grad": 4,
         "max_courses_per_semester": 5
 }

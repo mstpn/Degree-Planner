@@ -2,15 +2,21 @@
         "name": "Soren Edwards",
         "semester": 0,
         "courses_taken": [
+                "COMP1631",
+                "MATH1200",
+                "COMP1633",
+                "PHIL1179"
         ],
         "chosen_sen_options": [
+ 
         ],
         "chosen_jun_options": [
-        ],
-        "cognate_name": "N/A",
-        "cognate_choice": [
 
         ],
-        "years_to_grad": 0,
+        "cognate_name": "GEOG",
+        "cognate_choice": [
+ 
+        ],
+        "years_to_grad": 4,
         "max_courses_per_semester": 5
 }

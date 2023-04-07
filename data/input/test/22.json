@@ -4,13 +4,15 @@
         "courses_taken": [
         ],
         "chosen_sen_options": [
+
         ],
         "chosen_jun_options": [
+
         ],
-        "cognate_name": "N/A",
+        "cognate_name": "GEOG",
         "cognate_choice": [
 
         ],
-        "years_to_grad": 0,
-        "max_courses_per_semester": 5
+        "years_to_grad": 16,
+        "max_courses_per_semester": 1
 }

@@ -10,13 +10,17 @@ IGNORE_COURSES = [
 ]
 
 IGNORE_PREREQS = [
-    'MATH0135'
+    'MATH0135',
+    'MATH0130',
+    'MATH1283',
+    'MATH1285',
 ]
 
 IGNORE_DEPTS = [
     'XFDC',
     'XMAT',
-    'XPFT'
+    'XPFT',
+    'GNED',
 ]
 
 # Semester indices
@@ -53,6 +57,9 @@ class Semester():
         self.courses = []  # contains Section objects
 
     def list_courses(self):
+        """
+        Returns a list of the course names in the semester
+        """
         course_list = []
         for section in self.courses:
             course_list.append(section.course_name)
@@ -146,6 +153,19 @@ class Course:
         self.semester = semester
         self.prereqs = []  # nested lists of classes, separated by AND
         self.sections = {}  # dict so that we can add from the csv easily
+
+    def list_prereqs(self):
+        """
+        Returns a list of the names of prereqs in the course
+        """
+        prereq_list = []
+        for prereq_group in self.prereqs:
+            group = []
+            for prereq in prereq_group:
+                if prereq.name not in IGNORE_PREREQS and prereq.dept not in IGNORE_DEPTS:
+                    group.append(prereq.name)
+            prereq_list.append(group)
+        return prereq_list
 
     def __str__(self):
         name = self.name

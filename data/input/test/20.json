@@ -1,0 +1,25 @@
+{
+        "name": "Soren Edwards",
+        "semester": 0,
+        "courses_taken": [
+        ],
+        "chosen_sen_options": [
+                "COMP4513",
+                "COMP5690",
+                "COMP4555"
+        ],
+        "chosen_jun_options": [
+                "COMP2521",
+                "COMP3612",
+                "COMP3654"
+        ],
+        "cognate_name": "GEOG",
+        "cognate_choice": [
+                "GEOG1101",
+                "GEOG1105",
+                "GEOG2553",
+                "GEOG3553"
+        ],
+        "years_to_grad": 8,
+        "max_courses_per_semester": 5
+}

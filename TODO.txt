@@ -1,13 +1,13 @@
 Python
-    refactor to use backtracking
-    clean up functions (code duplication + other stuff Marc likes)
+    Clean up the big nested function
 
 Prolog
-
+    test plan
 
 Haskell
     get working with real data
     IO
+    test plan
 
 All
     Test plan
@@ -19,6 +19,7 @@ Presentation
     Recap of 
         Python
             now backtracks
+                Use the print statements in course_recursive and schedule_recursive in a demo to show this
         Prolog
             actually works now
         Haskell

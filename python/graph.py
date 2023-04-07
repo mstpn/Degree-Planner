@@ -1,3 +1,4 @@
+import json
 import pickle
 import csv
 from class_definitions import Course, Section, A_Class, IGNORE_COURSES, IGNORE_PREREQS, IGNORE_DEPTS, F, W, LEC, LAB, TUT
@@ -134,26 +135,6 @@ def fill_course_data(courses, course_dict, semester):
     return
 
 
-def student_eligible(course, student):
-    '''
-    This function checks if the student is eligible to take the given course
-
-    Returns True if the student is eligible, False otherwise
-    '''
-    for rows_of_prereqs_connected_by_ands in course.prereqs:
-
-        eligible = False
-
-        for or_prereq in rows_of_prereqs_connected_by_ands:
-
-            # if or_prereq.name in student.completed_courses:
-            if or_prereq.name in student.courses_taken:
-                eligible = True
-                continue
-
-    return eligible
-
-
 def build_graph():
     '''
     This function builds the graphs of courses and stores them in pickle objects
@@ -211,7 +192,7 @@ def get_class_type(id):
 
     return int(type_)
 
-import json
+
 def courses_json():
     '''
     This function returns a json object of all the courses, also writes to a json file
@@ -240,6 +221,7 @@ def courses_json():
 
     json.dump(all_course_dict, open('json/all_courses.json', 'w'))
     return json.dumps(all_course_dict)
+
 
 if __name__ == '__main__':
     print("Building Graph")
