@@ -13,7 +13,7 @@ class Student:
             with open(filename, 'r') as f:
                 data = json.load(f)
             if data:
-                print(data)
+                # print(data)
                 kwargs = data
         
         self.name = kwargs.get("name", "N\A")
@@ -101,6 +101,19 @@ class Student:
                         prereq.next.append(node)
 
         return node_list, node_dict
+
+    def sort_all(self):
+        course_dict = {}
+        for is_pre in self.all_required:
+            num_pre = 0
+            for course in self.all_required:
+                if is_pre in self.graph_nodes_dict.get(course).pre_to_str_list():
+                    num_pre += 1
+            course_dict[is_pre] = num_pre
+        sorted_dict = sorted(course_dict.items(), key=lambda x: x[1], reverse=True)
+        sorted_list = [key for key, value in sorted_dict]
+        return sorted_list
+
 
     def all_required_courses(self):
         all_req_courses = []

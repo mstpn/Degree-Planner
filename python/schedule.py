@@ -13,7 +13,7 @@ Idea:
     Search:
         Recursive backtracking search.
         This will be performed at both the semester and degree level
-            If we get to a situation where we can't complete the degree in the alloted time, we backtrack to the previous semseter and try to schedule a different course.
+            If we get to a situation where we can't complete the degree in the alloted time, we backtrack to the previous semeseter and try to schedule a different course.
                 So we will need to keep track of the courses that have been scheduled or attempted to be scheduled in each semester.
         The base case is a case in which the solution configuration has been achieved
             In our case this means that either the maximum number of courses per term has been met or no more courses can be taken
@@ -32,12 +32,13 @@ def degree_handler(student):
         success = False
         msg = "Student has an invalid number of semesters to graduate or courses per semester"
         return [], success, msg
-    courses_remaining = student.all_required
-    first_course_index = 0
+    # courses_remaining = student.all_required
+    courses_remaining = student.sort_all()
+    backtrack = (student.sem_to_grad-1, 0)
     degree = []
     curr_sem = 0
     success = schedule_recursive(
-        student, curr_sem, degree, courses_remaining, first_course_index)
+        student, curr_sem, degree, courses_remaining)
     if success:
         msg = f"Degree successfully scheduled in %s years (%s semesters)" % (
             math.ceil(len(degree)/2), len(degree))
@@ -46,57 +47,68 @@ def degree_handler(student):
     return degree, success, msg
 
 
-def schedule_recursive(student: std.Student, curr_sem: int, degree: list[cd.Semester], courses_remaining: list[str], first_course_index: int):
-    # base success case, degree valid
-    if len(courses_remaining) == 0:
-        return True
-    # base fail case, no perm found in initial semester
-    elif curr_sem < 0:
+def schedule_recursive(student: std.Student, curr_sem: int, degree: list[cd.Semester], courses_remaining: list[str]):
+    """
+    Recursive function to schedule a degree.
+    The recursive case iterates through every possible course to schedule in the remaining courses list.
+    If the course can be scheduled, it is added to the current semester and the function is called again.
+    If the course cannot be scheduled, the function is called again with the next course in the list.
+        This is the backtracking part of the algorithm. 
+        Degree is returned to the state it was in before the semester was attempted to be scheduled.
+        This ensures all possible permuations of the degree are attempted before the function returns False.
+    If the course cannot be scheduled and there are no more courses in the list, the function returns False.
+    """
+    # base fail case, no degree found after all semesters scheduled
+    if len(degree) >= student.sem_to_grad:
         return False
-    # backtrack case, redo previous semester(s)
-    elif curr_sem >= student.sem_to_grad:
-        while curr_sem > 0:
-            curr_sem -= 1
-            old = degree.pop()
-            student.change_semester()
-            first_course_index = 0
-            courses_remaining += old.list_courses()
-            success = False
-            while first_course_index < len(courses_remaining) and success == False:
-                first_course_index += 1
-                success = schedule_recursive(
-                    student, curr_sem, degree, courses_remaining, first_course_index)
-        return success
+    # base success case, degree valid
+    elif len(courses_remaining) == 0:
+        return True
     # recursive case, schedule current semester
     else:
-        degree.append(cd.Semester((curr_sem // 2)+1,
-                      student.semester, student.max_courses_per_semester))
-        course_recursive(student, courses_remaining,
-                         degree[-1], first_course_index)
-        courses_remaining = [
-            x for x in courses_remaining if x not in degree[-1].list_courses()]
-        curr_sem += 1
-        first_course_index = 0
-        student.change_semester()
-        return schedule_recursive(student, curr_sem, degree, courses_remaining, first_course_index)
+        success = False
+        i = 0
+        while i < len(courses_remaining) and not success:
+            degree.append(cd.Semester((curr_sem // 2)+1,
+                          student.semester, student.max_courses_per_semester))
+            courses_remaining = reorder_courses(courses_remaining, i)
+            to_schedule = courses_remaining.copy()
+            course_recursive(student, courses_remaining,
+                              to_schedule, degree[-1])
+            courses_remaining = [
+                x for x in courses_remaining if x not in degree[-1].list_courses()]
+            curr_sem += 1
+            student.change_semester()
+            success = schedule_recursive(
+                student, curr_sem, degree, courses_remaining)
+            if not success:
+                degree = degree[:curr_sem]
+                i += 1
+    return success
 
 
-def course_recursive(student, courses_remaining, semester, first_course_index):
+def course_recursive(student, courses_remaining, to_schedule, semester):
+    """
+    Recursive function to schedule a semester.
+    The recursive case iterates through every possible course to schedule in the remaining courses list.
+    If the course can be scheduled, it is added to the current semester and the function is called again.
+    If the course cannot be scheduled, the function is called again with the next course in the list.
+        This is the backtracking part of the algorithm. 
+        This ensures all possible permuations of courses are attempted before the function returns False.
+    If the course cannot be scheduled and there are no more courses in the list, the function returns False.
+    """
     # base case
-    if len(semester.courses) >= student.max_courses_per_semester or len(courses_remaining) <= 0:
+    if len(semester.courses) >= student.max_courses_per_semester or len(to_schedule) <= 0:
         return True
     # recursive case
-    to_schedule = courses_remaining.copy()
-    if first_course_index > 0:
-        reorder_courses(to_schedule, first_course_index)
-    while len(to_schedule) > 0:
+    success = False
+    while len(to_schedule) > 0 and not success:
         course = to_schedule.pop(0)
         course_details = student.course_dict[semester.worf].get(course, None)
-        if course_details \
-                and check_prereqs(student, course, courses_remaining) \
-                and schedule_course(course_details, semester):
-            return course_recursive(student, to_schedule, semester, 0)
-    return False
+        if course_details and check_prereqs(student, course, courses_remaining) and schedule_course(course_details, semester):
+            success = course_recursive(
+                student, courses_remaining, to_schedule, semester)
+    return success
 
 
 def check_prereqs(student, course, courses_remaining):
@@ -207,6 +219,10 @@ def overlap(start1, duration1, start2, duration2):
 
 
 def reorder_courses(courses, index):
+    """
+    Returns a list of courses with the courses at index and after moved to the front
+    This gives us new orderings of the courses to try on backtracking
+    """
     l1 = courses[index:]
     l2 = courses[:index]
     return l1 + l2

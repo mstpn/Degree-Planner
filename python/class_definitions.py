@@ -28,21 +28,21 @@ LEC = 0
 LAB = 1
 TUT = 2
 
+# A students registration
+class Registration():
 
-# # A students registration
-# class Registration():
+    def __init__(self) -> None:
+        self.semesters = []
+        self.num_semesters = 0
+        self.years = 0
 
-#     def __init__(self) -> None:
-#         self.semesters = []
-#         self.num_semesters = 0
-#         self.years = 0
+    def get_years(self):
+        return math.ceil(len(self.semesters) / 2)
+    
+    def __str__(self) -> str:
+        for semester in self.semesters:
+            print(semester)
 
-#     def get_years(self):
-#         return math.ceil(len(self.semesters) / 2)
-
-#     def __str__(self) -> str:
-#         for semester in self.semesters:
-#             print(semester)
 
 
 class Semester():
@@ -97,6 +97,10 @@ class Course_Node():
             'pre': self.pre_to_str_list(),
             'next': self.next_to_str_list(),
         }
+    
+    # def depth(self):
+    #     depth = 0
+    #     depth += 
     
     def pre_to_str_list(self):
         return [x.name for x in self.pre]
