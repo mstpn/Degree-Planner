@@ -1,3 +1,5 @@
+:- use_module(library(http/json)).
+
 offering(comp1631, fall, d100, mwf(11), mru).
 offering(math1200, fall, d100, tr2(13), mru).
 offering(math1203, fall, d100, mwf(16), mru).
@@ -80,9 +82,6 @@ jun_ops(Ops):-
 
 sen_ops(Ops):-
     Ops = [comp4555,comp4513,comp4522,comp4630,comp4635,comp5690].
-
-
-
 
 required_courses(C):-
     C=[
@@ -263,39 +262,77 @@ generate_plan(Taken,Required,Sems,CrsPer,Semesters):-
     generate_plan(TakenSorted,RequiredSorted,NextSems,CrsPer,SubSemesters),
     append([A],SubSemesters,Semesters).
 
+
+graduation_plan(student(Sems,CrsPer,Taken),Semesters):-
+    required_courses(Req),
+    generate_plan(Taken,Req,Sems,CrsPer,Semesters).
+
 graduation_plan(Taken,Sems,CrsPer,Semesters):-
-    required_courses(Reqs),
-    generate_plan(Taken,Reqs,Sems,CrsPer,Semesters).
+    required_courses(Req),
+    generate_plan(Taken,Req,Sems,CrsPer,Semesters).
 
 write_lines(_,[]).
 write_lines(Out,[L|Ls]):-
     write(Out,L),
     write_lines(Out,Ls).
 
-writefacts:-
-    open('output.csv',write,Out),
-    graduation_plan([],10,4,L),
-    print_graduation_plan(0,L,Lines),
+get_student_dict(Student) :-
+    open("soren.json", read, Stream),
+    json_read_dict(Stream, Student),
+    % write(Student),
+    close(Stream).
+
+get_student(StudentDict,Student):-
+    get_dict(taken, StudentDict, TakenStr),
+    get_dict(semesters, StudentDict, Sems),
+    % nl,write("SEMS: "),write(SemsStr),nl,
+    get_dict(courses_for_semester, StudentDict, CrsPer),
+    convert_taken_string_to_atom(TakenStr,Taken),
+    Student = student(Sems,CrsPer,Taken).
+
+convert_taken_string_to_atom([],[]).
+convert_taken_string_to_atom([C|Cs],Taken):-
+    % write(C),
+    (
+        atom(C),L = C
+    ; 
+        % write(C),nl,
+        string_to_atom(C,L)
+        % write(L),nl
+    ),
+    convert_taken_string_to_atom(Cs,SubTaken),
+    append([L],SubTaken,Taken).
+
+
+main:-
+    get_student_dict(StudentDict),
+    get_student(StudentDict,Student),
+    (
+        graduation_plan(Student,L),
+        print_graduation_plan(0,L,Lines),
+        write_plan(Lines)
+        ;
+        write("The provided file did not generate a plan"),nl,fail
+    ).
+
+write_plan(Lines):-
+    open('output.csv',write,Out),!,
     write_lines(Out,Lines),
     close(Out),!. 
 
-    
-
-
-
-print_graduation_plan(SemNum,[],[]).
+print_graduation_plan(_,[],[]).
 print_graduation_plan(SemNum,[Sem|More],Lines):-
     print_semester_plan(SemNum,Sem,Line),!,
-    write(Line),
+    % write(Line),
     NextSem is SemNum + 1,!,
     print_graduation_plan(NextSem,More,SubLines),
     append(Line,SubLines,Lines).
 
-print_semester_plan(SemNum,semester_plan(_,[]),[]):-!.
+print_semester_plan(_,semester_plan(_,[]),[]):-!.
 print_semester_plan(SemNum,semester_plan(Sem,[C|Cs]),Lines):-
     print_course_instance(SemNum,Sem,C,S),!,
     print_semester_plan(SemNum,semester_plan(Sem,Cs),SubLines),!,
-    write(SubLines),
+    % write(SubLines),nl,
     append([S],SubLines,Lines),!.
 
 print_course_instance(SemNum,Semester,course_instance(Course,CourseSched),S):-
@@ -305,18 +342,11 @@ print_course_instance(SemNum,Semester,course_instance(Course,CourseSched),S):-
     decompose_time_slot(S3,DS3),
     swritef(S,"%w,%w,%w,%w,%w,%w,\n",[SemNum,Semester,Course,DS1,DS2,DS3]).
 
-    % swritef(S, '%15L%w', ['Hello', 'World']).
-
-
-% [slot(mon,16,mru),slot(wed,16,mru),slot(fri,16,mru)]
 decompose_time_slot(slot(Day,Time,Site),R):-
     R = Day/Time/Site.
 
 test_plan(L):-
-L = [semester_plan(fall, [course_instance(comp1631, [slot(mon, 11, mru), slot(wed, 11, mru), slot(fri, 11, mru)]), course_instance(math1200, [slot(tue, 13, mru), slot(thu, 13, mru), slot(thu, 12, mru)]), course_instance(math1203, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3309, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)])]), semester_plan(winter, [course_instance(comp1633, [slot(mon, 4, mru), slot(wed, 4, mru), slot(fri, 4, mru)]), course_instance(math1271, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)]), course_instance(phil1179, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(math2234, [slot(mon, 10, mru), slot(wed, 10, mru), slot(fri, 10, mru)])]), semester_plan(fall, [course_instance(comp2631, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)]), course_instance(comp2613, [slot(tue, 14, mru), slot(thu, 14, mru), slot(thu, 13, mru)]), course_instance(comp2655, [slot(mon, 14, mru), slot(wed, 14, mru), slot(fri, 14, mru)])]), semester_plan(winter, [course_instance(comp2633, [slot(tue, 8, mru), slot(thu, 8, mru), slot(thu, 7, mru)]), course_instance(comp2659, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3614, [slot(tue, 14, mru), slot(tue, 15, mru), slot(thu, 14, mru)]), course_instance(comp3649, [slot(tue, 16, mru), slot(thu, 16, mru), slot(thu, 15, mru)])]), semester_plan(fall, [course_instance(comp3659, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)])])].
-% graduation_plan(_, [],_).
-% graduation_plan(Taken, [semester_plan(Sem, Crses)|More],Schedule) :-
-%     feasible_semester_schedule_new(Sem, Crses, _,SemSchedule),
-%     append(Crses, Taken, TakenAfterSem),
-%     graduation_plan(TakenAfterSem, More,FutureSchedule),
-%     append([SemSchedule],FutureSchedule,Schedule).
+    L = [
+            semester_plan(fall, [course_instance(comp1631, [slot(mon, 11, mru), slot(wed, 11, mru), slot(fri, 11, mru)]), course_instance(math1200, [slot(tue, 13, mru), slot(thu, 13, mru), slot(thu, 12, mru)]), course_instance(math1203, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3309, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)])]), 
+            semester_plan(winter, [course_instance(comp1633, [slot(mon, 4, mru), slot(wed, 4, mru), slot(fri, 4, mru)]), course_instance(math1271, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)]), course_instance(phil1179, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(math2234, [slot(mon, 10, mru), slot(wed, 10, mru), slot(fri, 10, mru)])]), semester_plan(fall, [course_instance(comp2631, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)]), course_instance(comp2613, [slot(tue, 14, mru), slot(thu, 14, mru), slot(thu, 13, mru)]), course_instance(comp2655, [slot(mon, 14, mru), slot(wed, 14, mru), slot(fri, 14, mru)])]), semester_plan(winter, [course_instance(comp2633, [slot(tue, 8, mru), slot(thu, 8, mru), slot(thu, 7, mru)]), course_instance(comp2659, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3614, [slot(tue, 14, mru), slot(tue, 15, mru), slot(thu, 14, mru)]), course_instance(comp3649, [slot(tue, 16, mru), slot(thu, 16, mru), slot(thu, 15, mru)])]), semester_plan(fall, [course_instance(comp3659, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)])])
+        ].
