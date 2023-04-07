@@ -344,11 +344,25 @@ test_plan(L):-
             semester_plan(winter, [course_instance(comp1633, [slot(mon, 4, mru), slot(wed, 4, mru), slot(fri, 4, mru)]), course_instance(math1271, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)]), course_instance(phil1179, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(math2234, [slot(mon, 10, mru), slot(wed, 10, mru), slot(fri, 10, mru)])]), semester_plan(fall, [course_instance(comp2631, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)]), course_instance(comp2613, [slot(tue, 14, mru), slot(thu, 14, mru), slot(thu, 13, mru)]), course_instance(comp2655, [slot(mon, 14, mru), slot(wed, 14, mru), slot(fri, 14, mru)])]), semester_plan(winter, [course_instance(comp2633, [slot(tue, 8, mru), slot(thu, 8, mru), slot(thu, 7, mru)]), course_instance(comp2659, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3614, [slot(tue, 14, mru), slot(tue, 15, mru), slot(thu, 14, mru)]), course_instance(comp3649, [slot(tue, 16, mru), slot(thu, 16, mru), slot(thu, 15, mru)])]), semester_plan(fall, [course_instance(comp3659, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)])])
         ].
 
-
+main:-
+    main("default.json").
 main(FileNameAndPath):-
-
-    get_student_dict(FileNameAndPath,StudentDict),
-    get_student(StudentDict,Student),!,
+    (
+        exists_file(FileNameAndPath),
+        get_student_dict(FileNameAndPath,StudentDict),
+        get_student(StudentDict,Student)
+    ;
+        tab(2),write("Error: Failed to Load Provided Json File."),nl,
+        tab(4),write("- Ensure it is in the same directory or that the path is correct"),nl,
+        tab(4),write("- Ensure it is in the correct format and has the following keys."),nl,
+        tab(8),write("- taken:"),nl,
+        tab(12),write("A list of taken courses."),nl,
+        tab(8),write("- semesters:"),nl,
+        tab(12),write("The max amount of semesters the student would like to take."),nl,
+        tab(8),write("- courses_for_semester:"),nl,
+        tab(12),write("The max amount of classes to taken in a semester."),nl,
+        fail
+    ),!,
     (
         graduation_plan(Student,L),
         print_graduation_plan(0,L,Lines),
