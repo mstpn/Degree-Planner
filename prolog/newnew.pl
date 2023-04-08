@@ -276,6 +276,7 @@ prob_semester(Sem,Num,Required,Taken,Able,CourseSchedule):-
     % pick(Num,Sorted,G),
     % write(G),nl,
     semester_schedule(Sem,Takeable,_,Able,CourseSchedule),
+    Able \= [],
     length(Able,L),
     L =< Num.
 
@@ -357,10 +358,10 @@ test_student_semesters(student(Sems,_,_,_,_)):-
         fail
     ),
     (
-        Sems < 9,!
+        Sems =< 9,!
         ;
         !,write("Error: The Provided Maximum Semesters is incorrect"),nl,
-        tab(4),format("Message: Maximum Semester Count can not be above 8, IE not (~w)",[Sems]),nl,
+        tab(4),format("Message: Maximum Semester Count can not be above 9, IE not (~w)",[Sems]),nl,
         fail
     ).
 
@@ -461,9 +462,6 @@ convert_taken_string_to_atom([C|Cs],Taken):-
     convert_taken_string_to_atom(Cs,SubTaken),
     append([L],SubTaken,Taken).
 
-
-
-
 write_plan(Lines):-
     open('output.csv',append,Out),!,
     write(Out,"\nNEW GRADUATION PLAN\n"),
@@ -518,7 +516,6 @@ main(FileNameAndPath):-
     ),!,
     (
         student_append(Student,Required),
-        % append_options(Jun,Sen,Req,NewReq),
         test_student_choices(Student,Required),!,
         graduation_plan(Student,L),
         print_graduation_plan(0,L,Lines),
