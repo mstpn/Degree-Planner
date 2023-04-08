@@ -1,93 +1,95 @@
 :- use_module(library(http/json)).
 
+% m = monday, t = tuesday, w = wednesday, r = thursday, f = friday, s = saturday, u = sunday
+% eve is an unscheduled day of week. Say eve(tue) means any time on tuesday
+% eve(any) means any time on any day of the week
+    % This is useful for courses like the senior project with no fixed time
 offering(comp1631, fall, d100, mwf(11), mru).
-offering(math1200, fall, d100, tr2(13), mru).
+offering(math1200, fall, d100, tr(13), mru).
 offering(math1203, fall, d100, mwf(16), mru).
-offering(comp3309, fall, d100, tr2(10), mru).
+offering(comp3309, fall, d100, tr(10), mru).
 offering(math1271, fall, d100, mwf(8), mru).
 offering(comp2655, fall, d100, mwf(14), mru).
-offering(comp2631, fall, d100, tr2(10), mru).
-offering(comp2613, fall, d100, tr2(14), mru).
+offering(comp2631, fall, d100, tr(10), mru).
+offering(comp2613, fall, d100, tr(14), mru).
 offering(comp3659, fall, d100, mwf(8), mru).
 
 % TESTING
-offering(comp1631, winter, d100, mwf(11), mru).
-offering(math1200, winter, d100, tr2(13), mru).
-offering(math1203, winter, d100, mwf(16), mru).
-offering(comp3309, winter, d100, tr2(10), mru).
-offering(math1271, winter, d100, mwf(8), mru).
-offering(comp2655, winter, d100, mwf(14), mru).
-offering(comp2631, winter, d100, tr2(10), mru).
-offering(comp2613, winter, d100, tr2(14), mru).
-offering(comp3659, winter, d100, mwf(8), mru).
-
-offering(comp3659, winter, d100, mwf(80), mru).
-offering(comp3659, fall, d100, mwf(80), mru).
+% offering(comp1631, winter, d100, mwf(11), mru).
+% offering(math1200, winter, d100, tr(13), mru).
+% offering(math1203, winter, d100, mwf(16), mru).
+% offering(comp3309, winter, d100, tr(10), mru).
+% offering(math1271, winter, d100, mwf(8), mru).
+% offering(comp2655, winter, d100, mwf(14), mru).
+% offering(comp2631, winter, d100, tr(10), mru).
+% offering(comp2613, winter, d100, tr(14), mru).
+% offering(comp3659, winter, d100, mwf(8), mru).
+% offering(comp3659, winter, d100, mwf(80), mru).
+% offering(comp3659, fall, d100, mwf(80), mru).
 
 offering(comp2659, winter, d100, mwf(15), mru).
-offering(comp2633, winter, d100, tr2(8), mru).
+offering(comp2633, winter, d100, tr(8), mru).
 offering(math2234, winter, d100, mwf(10), mru).
 offering(comp1633, winter, d100, mwf(10), mru).
 offering(math1271, winter, d100, mwf(8), mru).
-offering(comp3309, winter, d100, tr2(11), mru).
+offering(comp3309, winter, d100, tr(11), mru).
 offering(phil1179, winter, d100, mwf(16), mru).
-offering(comp3614, winter, d100, t2r(14), mru).
-offering(comp3649, winter, d100, tr2(16), mru).
+offering(comp3614, winter, d100, tr(14), mru).
+offering(comp3649, winter, d100, tr(16), mru).
 
-offering(comp2659, winter, d100, mwf(16), mru).
-
-offering(math2234, winter, d100, mwf(2), mru).
-offering(comp1633, winter, d100, mwf(4), mru).
-offering(math1271, winter, d100, mwf(6), mru).
-offering(phil1179, winter, d100, mwf(8), mru).
-offering(comp2633, winter, d100, tr2(2), mru).
-offering(comp3309, winter, d100, tr2(6), mru).
-offering(comp3649, winter, d100, tr2(10), mru).
-offering(comp3614, winter, d100, t2r(14), mru).
+% offering(comp2659, winter, d100, mwf(16), mru).
+% offering(math2234, winter, d100, mwf(2), mru).
+% offering(comp1633, winter, d100, mwf(4), mru).
+% offering(math1271, winter, d100, mwf(6), mru).
+% offering(phil1179, winter, d100, mwf(8), mru).
+% offering(comp2633, winter, d100, tr(2), mru).
+% offering(comp3309, winter, d100, tr(6), mru).
+% offering(comp3649, winter, d100, tr(10), mru).
+% offering(comp3614, winter, d100, tr(14), mru).
 
 %Testing
-offering(math2234, fall, d100, mwf(2), mru).
-offering(comp1633, fall, d100, mwf(4), mru).
-offering(math1271, fall, d100, mwf(6), mru).
-offering(phil1179, fall, d100, mwf(8), mru).
-offering(comp2633, fall, d100, tr2(2), mru).
-offering(comp3309, fall, d100, tr2(6), mru).
-offering(comp3649, fall, d100, tr2(10), mru).
-offering(comp3614, fall, d100, t2r(14), mru).
+% offering(math2234, fall, d100, mwf(2), mru).
+% offering(comp1633, fall, d100, mwf(4), mru).
+% offering(math1271, fall, d100, mwf(6), mru).
+% offering(phil1179, fall, d100, mwf(8), mru).
+% offering(comp2633, fall, d100, tr(2), mru).
+% offering(comp3309, fall, d100, tr(6), mru).
+% offering(comp3649, fall, d100, tr(10), mru).
+% offering(comp3614, fall, d100, tr(14), mru).
 
 % OPTIONS
-offering(comp2521, winter, d100, tr2(110), mru).
-offering(comp2521, winter, d100, t2r(214), mru).
-offering(comp2521, fall, d100, tr2(315), mru).
-offering(comp3533, winter, d100, mwf(410), mru).
-offering(comp3533, fall, d100, mwf(510), mru).
-offering(comp3625, fall, d100, t2r(620), mru).
-offering(comp3505, winter, d100, mwf(713), mru).
-offering(comp4555, fall, d100, mwf(810), mru).
-offering(comp4513, winter, d100, mwf(915), mru).
-offering(comp4522, winter, d100, mwf(1110), mru).
-offering(comp4630, winter, d100, mwf(2011), mru).
-offering(comp4635, winter, d100, eve(tue), mru).
-offering(comp5690, winter, d100, eve(any), mru).
-offering(comp5690, fall, d100, eve(any), mru).
-offering(comp3612, fall, d100, mwf(3013), mru).
-
-
-offering(comp2521, fall, d100, tr2(110), mru).
-offering(comp2521, fall, d100, t2r(214), mru).
-offering(comp2521, winter, d100, tr2(315), mru).
-offering(comp3533, fall, d100, mwf(410), mru).
-offering(comp3533, winter, d100, mwf(510), mru).
-offering(comp3625, winter, d100, t2r(620), mru).
-offering(comp3505, fall, d100, mwf(713), mru).
-offering(comp4555, winter, d100, mwf(810), mru).
-offering(comp4513, fall, d100, mwf(915), mru).
-offering(comp4522, fall, d100, mwf(1110), mru).
-offering(comp4630, fall, d100, mwf(2011), mru).
+% offering(comp2521, fall, d100, tr(11), mru).
+offering(comp2521, fall, d100, tr(2), mru).
+offering(comp3505, fall, d100, mwf(7), mru).
+offering(comp3533, fall, d100, mwf(4), mru).
+offering(comp4513, fall, d100, mwf(9), mru).
+offering(comp4522, fall, d100, mwf(11), mru). 
+offering(comp4630, fall, d100, mwf(12), mru).
 offering(comp4635, fall, d100, eve(tue), mru).
 offering(comp5690, fall, d100, eve(any), mru).
+
+% offering(comp2521, winter, d100, tr(3), mru).
+offering(comp3533, winter, d100, mwf(5), mru).
+offering(comp3612, winter, d100, mwf(3), mru).
+offering(comp3625, winter, d100, tr(6), mru).
+offering(comp4555, winter, d100, mwf(8), mru).
 offering(comp5690, winter, d100, eve(any), mru).
-offering(comp3612, winter, d100, mwf(3013), mru).
+
+% offering(comp2521, winter, d100, tr(11), mru).
+% offering(comp2521, winter, d100, tr(2), mru).
+% offering(comp2521, fall, d100, tr(3), mru).
+% offering(comp3533, winter, d100, mwf(4), mru).
+% offering(comp3533, fall, d100, mwf(5), mru).
+% offering(comp3625, fall, d100, tr(6), mru).
+% offering(comp3505, winter, d100, mwf(7), mru).
+% offering(comp4555, fall, d100, mwf(8), mru).
+% offering(comp4513, winter, d100, mwf(9), mru).
+% offering(comp4522, winter, d100, mwf(11), mru).
+% offering(comp4630, winter, d100, mwf(12), mru).
+% offering(comp4635, winter, d100, eve(tue), mru).
+% offering(comp5690, winter, d100, eve(any), mru).
+% offering(comp5690, fall, d100, eve(any), mru).
+% offering(comp3612, fall, d100, mwf(3), mru).
 
 required(comp1631).
 required(math1200).
@@ -135,7 +137,7 @@ prerequisites(comp4513, [comp3612]). %Web 3
 prerequisites(comp4522, [comp2521]). %Database 2
 prerequisites(comp4630, [comp3625]). %ml mwf(11)
 prerequisites(comp4635, [comp3533]). %dist eve(tue)
-prerequisites(comp5690, []). %sen eve(tue)
+prerequisites(comp5690, [comp2659]). %sen eve(tue)
 
 
 
@@ -211,8 +213,8 @@ required_courses(C):-
     ].
 
 schedule(mwf(N), Campus, [slot(mon, N, Campus), slot(wed, N, Campus), slot(fri, N, Campus)]).
-schedule(t2r(N), Campus, [slot(tue, N, Campus), slot(tue, N1, Campus), slot(thu, N, Campus)]) :- N1 is N+1.
-schedule(tr2(N), Campus, [slot(tue, N, Campus), slot(thu, N, Campus), slot(thu, N1, Campus)]) :- N1 is N-1.
+schedule(tr(N), Campus, [slot(tue, N, Campus), slot(tue, N1, Campus), slot(thu, N, Campus)]) :- N1 is N+1.
+schedule(tr(N), Campus, [slot(tue, N, Campus), slot(thu, N, Campus), slot(thu, N1, Campus)]) :- N1 is N-1.
 schedule(eve(D), Campus, [slot(D, 17, Campus), slot(D, 18, Campus), slot(D, 19, Campus)]).
 
 % Schedules are compatible if there are no conflicting time slots.
