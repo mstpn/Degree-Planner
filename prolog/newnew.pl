@@ -9,8 +9,21 @@ offering(comp2655, fall, d100, mwf(14), mru).
 offering(comp2631, fall, d100, tr2(10), mru).
 offering(comp2613, fall, d100, tr2(14), mru).
 offering(comp3659, fall, d100, mwf(8), mru).
+
+% TESTING
+offering(comp1631, winter, d100, mwf(11), mru).
+offering(math1200, winter, d100, tr2(13), mru).
+offering(math1203, winter, d100, mwf(16), mru).
+offering(comp3309, winter, d100, tr2(10), mru).
+offering(math1271, winter, d100, mwf(8), mru).
+offering(comp2655, winter, d100, mwf(14), mru).
+offering(comp2631, winter, d100, tr2(10), mru).
+offering(comp2613, winter, d100, tr2(14), mru).
+offering(comp3659, winter, d100, mwf(8), mru).
+
 offering(comp3659, winter, d100, mwf(80), mru).
 offering(comp3659, fall, d100, mwf(80), mru).
+
 offering(comp2659, winter, d100, mwf(15), mru).
 offering(comp2633, winter, d100, tr2(8), mru).
 offering(math2234, winter, d100, mwf(10), mru).
@@ -31,6 +44,16 @@ offering(comp2633, winter, d100, tr2(2), mru).
 offering(comp3309, winter, d100, tr2(6), mru).
 offering(comp3649, winter, d100, tr2(10), mru).
 offering(comp3614, winter, d100, t2r(14), mru).
+
+%Testing
+offering(math2234, fall, d100, mwf(2), mru).
+offering(comp1633, fall, d100, mwf(4), mru).
+offering(math1271, fall, d100, mwf(6), mru).
+offering(phil1179, fall, d100, mwf(8), mru).
+offering(comp2633, fall, d100, tr2(2), mru).
+offering(comp3309, fall, d100, tr2(6), mru).
+offering(comp3649, fall, d100, tr2(10), mru).
+offering(comp3614, fall, d100, t2r(14), mru).
 
 % OPTIONS
 offering(comp2521, winter, d100, tr2(110), mru).
@@ -101,11 +124,12 @@ prerequisites(comp3649, [comp2613,comp2631,phil1179]).
 prerequisites(comp3659, [comp2631,comp2659]).
 
 % OPTIONS
-prerequisites(comp2521, []). %Database 1 10 winter fall
-prerequisites(comp3612, [1633]). %web cs
+prerequisites(comp2521, [comp1631]). %Database 1 10 winter fall
+prerequisites(comp3612, [comp1633]). %web cs
 prerequisites(comp3533, [comp2655]). %network 8,16 mwf winter fqll
 prerequisites(comp3625, [comp2631,comp2613]). %AI
 prerequisites(comp3505, [comp1633,comp2631]). %testing mwf(13)
+
 prerequisites(comp4555, [comp2659]). %Games
 prerequisites(comp4513, [comp3612]). %Web 3 
 prerequisites(comp4522, [comp2521]). %Database 2
@@ -155,6 +179,16 @@ append_options(Jun,Sen,Required,NewRequired):-
     check_sen_ops(Sen,RequiredNow),
     append(Sen,RequiredNow,NewRequired).
 
+
+% append_options([],[],_,_):-false.
+% append_options(Jun,Sen,Required,NewRequired):- 
+%     check_jun_ops(Jun),
+%     append(Jun,Required,RequiredNow),
+%     check_sen_ops(Sen,RequiredNow),
+%     append(Sen,RequiredNow,NewRequired).
+student_append(student(_,_,_,Jun,Sen),Required):-
+    required_courses(Reqs),
+    append_options(Jun,Sen,Reqs,Required).
 
 required_courses(C):-
     C=[
@@ -237,8 +271,12 @@ filterTakeable([C|Cs],Taken,CanTake):-
     not(member(C,Taken)),
     prerequisites(C, Prereqlist),
     subset(Prereqlist, Taken),
+    % write(C),nl,
     filterTakeable(Cs,Taken,CanTakeRest),
-    append([C],CanTakeRest,CanTake),!;
+    append([C],CanTakeRest,CanTake)
+    % write(C),nl
+    ;
+    % write(Cs),nl,
     filterTakeable(Cs,Taken,CanTake).
 
 choose(1, [H|_], [H]).
@@ -344,24 +382,6 @@ sem_type_select(Num,Sem):-
     Sem = winter,!;
     Sem = fall,!.
 
-% generate_plan(T1,T2,0,_,_):-T1\=T2,false.%write("FAILING"),nl,false.
-% generate_plan(T,T,0,_,[]).
-% generate_plan(T,T,_,_,[]).
-% generate_plan(Taken,Required,Sems,CrsPer,Semesters):-
-%     sem_type_select(Sems,Sem),
-%     prob_semester(Sem,CrsPer,Required,Taken,Able,CourseSchedule),
-%     append(Able,Taken,NewTaken),
-%     A = semester_plan(Sem,CourseSchedule),
-%     NextSems is Sems - 1,
-%     NextSems >= 0, 
-%     sort(NewTaken,  TakenSorted),
-%     sort(Required,  RequiredSorted),
-%     % write("HERE"),nl,
-%     generate_plan(TakenSorted,RequiredSorted,NextSems,CrsPer,SubSemesters),
-%     append([A],SubSemesters,Semesters).
-
-
-
 generate_plan(T1,T2,0,_,_):-T1\=T2,false.%write("FAILING"),nl,false.
 generate_plan(T,T,0,_,[]).
 generate_plan(T,T,_,_,[]).
@@ -386,8 +406,8 @@ generate_plan(Taken,Required,Sems,CrsPer,Semesters):-
 % required_courses(D),[_|XS]=D,test_student_choices(student(0,1,XS)).
 % required_courses(D),[_|XS]=D,test_student_choices(student(0,0,XS)).
 % test_student_choices(student(1,1,[])).
-test_student_choices(Student):-
-    required_courses(Req),
+test_student_choices(Student,Req):-
+    % required_courses(Req),
     test_student_courses_per(Student),
     test_student_semesters(Student),
     check_student_taken_is_sub(Student,Req),
@@ -400,12 +420,19 @@ test_student_choices(Student):-
 % FAILS
 % test_student_courses_per(student(_,-10,_)).
 % test_student_courses_per(student(_,-1,_)).
-test_student_courses_per(student(_,CrsPer,_)):-
+test_student_courses_per(student(_,CrsPer,_,_,_)):-
     (
-        CrsPer >= 0,!
+        CrsPer > 0,!
         ;
         !,write("Error: The Provided Maximum Courses Taken in a Semester is incorrrect"),nl,
         tab(4),format("Message: Course Per Semester can not be negative, IE not (~w)",[CrsPer]),nl,
+        fail
+    ),
+    (
+        CrsPer =< 5,!
+        ;
+        !,write("Error: The Provided Maximum Courses Taken in a Semester is incorrrect"),nl,
+        tab(4),format("Message: Course Per Semester can not be above 5 without permission, IE not (~w)",[CrsPer]),nl,
         fail
     ).
 
@@ -418,12 +445,19 @@ test_student_courses_per(student(_,CrsPer,_)):-
 % test_student_semesters(student(-1,_,_)).
 % test_student_semesters(student(-10,_,_)).
 % test_student_semesters(student(-10000000,_,_)).
-test_student_semesters(student(Sems,_,_)):-
+test_student_semesters(student(Sems,_,_,_,_)):-
     (
         Sems >= 0,!
         ;
         !,write("Error: The Provided Maximum Semesters is incorrect"),nl,
         tab(4),format("Message: Maximum Semester Count can not be negative, IE not (~w)",[Sems]),nl,
+        fail
+    ),
+    (
+        Sems < 9,!
+        ;
+        !,write("Error: The Provided Maximum Semesters is incorrect"),nl,
+        tab(4),format("Message: Maximum Semester Count can not be above 8, IE not (~w)",[Sems]),nl,
         fail
     ).
 
@@ -432,7 +466,7 @@ test_student_semesters(student(Sems,_,_)):-
 % required_courses(D),check_student_taken_is_sub(student(0,0,[comp1631]),D).
 % FAILS
 % required_courses(D),check_student_taken_is_sub(student(5,5,[comp10000]),D).
-check_student_taken_is_sub(student(_,_,Taken),Req):-
+check_student_taken_is_sub(student(_,_,Taken,_,_),Req):-
     (
         is_set(Taken),
         subset(Taken,Req),!
@@ -450,7 +484,7 @@ check_student_taken_is_sub(student(_,_,Taken),Req):-
 % required_courses(D),!,check_for_impossible_times(student(2,5,[]),D).
 % required_courses(D),!,check_for_impossible_times(student(1,5,[]),D).
 % required_courses(D),!,check_for_impossible_times(student(0,5,[]),D).
-check_for_impossible_times(student(Sems,CrsPer,Taken),Req):-
+check_for_impossible_times(student(Sems,CrsPer,Taken,_,_),Req):-
     TotalTakeableInTime is Sems * CrsPer,
     subtract(Req,Taken,Needs),
     length(Needs,NeedsLen),!,
@@ -466,9 +500,10 @@ check_for_impossible_times(student(Sems,CrsPer,Taken),Req):-
 
     % graduation_plan_ops(student(20,10,[],[comp2521,comp3612,comp3625],[comp4522,comp4513,comp4630]),L).
     % graduation_plan_ops(student(10,5,[comp1631,comp1633,comp2521,comp2613,comp2631,comp2633,comp2655,comp2659,comp3309,comp3614,comp3625,comp3649,comp4522,comp4630,math1200,math1203,math1271,math2234,phil1179],[comp2521,comp3612,comp3625],[comp4522,comp4513,comp4630]),L).
-graduation_plan_ops(student(Sems,CrsPer,Taken,Jun,Sen),Semesters):-
+graduation_plan(student(Sems,CrsPer,Taken,Jun,Sen),Semesters):-
     required_courses(Req),
     append_options(Jun,Sen,Req,NewReq),
+    % write(NewReq),nl,
     generate_plan(Taken,NewReq,Sems,CrsPer,Semesters).    
 
 graduation_plan(student(Sems,CrsPer,Taken),Semesters):-
@@ -492,13 +527,23 @@ get_student_dict(JsonFile,Student) :-
     % write(Student),
     close(Stream).
 
+get_student_w_ops(StudentDict,Student):-
+    get_dict(taken, StudentDict, TakenStr),
+    get_dict(jun, StudentDict, JunStr),
+    get_dict(sen, StudentDict, SenStr),
+    get_dict(semesters, StudentDict, Sems),
+    get_dict(courses_for_semester, StudentDict, CrsPer),
+    convert_taken_string_to_atom(TakenStr,Taken),
+    convert_taken_string_to_atom(JunStr,Jun),
+    convert_taken_string_to_atom(SenStr,Sen),
+    Student = student(Sems,CrsPer,Taken,Jun,Sen).
+
 get_student(StudentDict,Student):-
     get_dict(taken, StudentDict, TakenStr),
     get_dict(semesters, StudentDict, Sems),
-    % nl,write("SEMS: "),write(SemsStr),nl,
     get_dict(courses_for_semester, StudentDict, CrsPer),
     convert_taken_string_to_atom(TakenStr,Taken),
-    Student = student(Sems,CrsPer,Taken).
+    Student = student(Sems,CrsPer,Taken,_,_).
 
 convert_taken_string_to_atom([],[]).
 convert_taken_string_to_atom([C|Cs],Taken):-
@@ -560,7 +605,7 @@ main(FileNameAndPath):-
     (
         exists_file(FileNameAndPath),
         get_student_dict(FileNameAndPath,StudentDict),
-        get_student(StudentDict,Student)
+        get_student_w_ops(StudentDict,Student)
         
     ;
         tab(2),write("Error: Failed to Load Provided Json File."),nl,
@@ -575,7 +620,9 @@ main(FileNameAndPath):-
         fail
     ),!,
     (
-        test_student_choices(Student),
+        student_append(Student,Required),
+        % append_options(Jun,Sen,Req,NewReq),
+        test_student_choices(Student,Required),
         graduation_plan(Student,L),
         print_graduation_plan(0,L,Lines),
         nl,write("Generated a Plan"),nl,
