@@ -227,38 +227,6 @@ conflict_free_slots(slot(Day1, _, _), slot(Day2, _, _)) :- Day1 \== Day2.
 conflict_free_slots(slot(Day, Hour1, Campus), slot(Day, Hour2, Campus)) :- Hour1 =\= Hour2.
 conflict_free_slots(slot(Day, Hour1, _), slot(Day, Hour2, _)) :- TimeDiff is abs(Hour1-Hour2), TimeDiff > 1.
 
-
-remove_duplicates([],[]).
-
-remove_duplicates([H | T], List) :-    
-     member(H, T),
-     remove_duplicates( T, List).
-
-remove_duplicates([H | T], [H|T1]) :- 
-      \+member(H, T),
-      remove_duplicates( T, T1).
-
-feasible_semester_schedule(_, [], []).
-feasible_semester_schedule(Sem, [Course|More], Schedule) :-
-  feasible_semester_schedule(Sem, More, Subschedule),
-  offering(Course, Sem, _, SchedPattern, Campus),
-  schedule(SchedPattern, Campus, CourseSched),
-  compatible_schedules(CourseSched, Subschedule),
-  append(CourseSched, Subschedule, Schedule);
-  feasible_semester_schedule(Sem, More, Schedule).
-
-feasible_semester_schedule_new(_, [], [],[]).
-feasible_semester_schedule_new(Sem, [Course|More], Schedule,CourseSchedule) :-
-    feasible_semester_schedule_new(Sem, More, Subschedule,SubCourseSchedule),
-    offering(Course, Sem, _, SchedPattern, Campus),
-    schedule(SchedPattern, Campus, CourseSched),
-    compatible_schedules(CourseSched, Subschedule),
-    append(CourseSched, Subschedule, Schedule),
-    %write("wowy"),nl,
-    append([course_instance(Course,CourseSched)],SubCourseSchedule,CourseSchedule)
-    ;
-    feasible_semester_schedule_new(Sem, More, Schedule,CourseSchedule).
-
 prerequisites_satisfied([], _).
 prerequisites_satisfied([C|Cs], Taken) :-
    prerequisites(C, Prereqlist),
@@ -266,7 +234,6 @@ prerequisites_satisfied([C|Cs], Taken) :-
    prerequisites_satisfied(Cs, Taken).
 
 filterTakeable([],_,[]).
-% filterTakeable([],[],[]).
 filterTakeable([C|Cs],Taken,CanTake):-
     not(member(C,Taken)),
     prerequisites(C, Prereqlist),
@@ -278,70 +245,6 @@ filterTakeable([C|Cs],Taken,CanTake):-
     ;
     % write(Cs),nl,
     filterTakeable(Cs,Taken,CanTake).
-
-choose(1, [H|_], [H]).
-choose(N, [H|TL], [H|ST]) :- Less1 is N - 1, choose(Less1, TL, ST).
-choose(N, [_|T], L) :- choose(N, T, L).
-
-count(P,Count) :-
-    findall(1,P,L),
-    length(L,Count).
-
-% calcWeight(Pred,PW):-
-%     count(prerequisites(_, [Pred|_]),AsFirst),
-%     count(prerequisites(_, [_|[Pred]]),AsSecond),
-%     count(prerequisites(_, [_|[_|Pred]]),AsThird),
-%     L is AsFirst + AsSecond + AsThird,
-%     % count(prerequisites(_, [Pred|_]),L),
-%     (
-%         required(Pred),
-%         NewCount is L + 10,
-%         PW = Pred/NewCount
-%         ;
-%         PW = Pred/L
-%     ),!.
-    
-calcWeight(Pred,PW):-
-    count(prerequisites(_, [Pred|_]),L),
-    PW = Pred/L.
-
-calcWeights(NonW,Sorted):-
-    maplist(calcWeight, NonW, W),
-    sort(2,  @>=, W,  Sorted).
-
-strip_weight(S/_,S).
-
-take_weight_off(W,NonW):-
-    maplist(strip_weight, W,NonW).
-
-sort_on_prereqs(NonW,Sorted):-
-    calcWeights(NonW,W),
-    take_weight_off(W,Sorted).
-
-selectn(0, [], Rest, Rest).
-selectn(N, [A|B], C, Rest) :-
-    append(H, [A|T], C),
-    M is N-1,
-    selectn(M, B, T, S),
-    append(H, S, Rest).
-
-pick(Num,From,Too):-
-    (
-        choose(Num,From,TS);
-        length(From,L),choose(L,From,TS)
-    ),!,
-    length(TS,Len),
-    Len =< Num,
-    Too = TS,!.
-
-prereq_depth().
-% optimal_pick(Num,From,Too):-
-
-feasible_semester_plan(_, [], _).
-feasible_semester_plan(Sem, Crses, Taken) :-
-    feasible_semester_schedule(Sem, Crses, _),
-    is_set(Crses),
-    prerequisites_satisfied(Crses, Taken).
 
 semester_schedule(_, [], [],[],[]).
 semester_schedule(Sem, [Course|More], Schedule,Able,CourseSchedule) :-
@@ -592,12 +495,6 @@ print_course_instance(SemNum,Semester,course_instance(Course,CourseSched),S):-
 decompose_time_slot(slot(Day,Time,Site),R):-
     R = Day/Time/Site.
 
-test_plan(L):-
-    L = [
-            semester_plan(fall, [course_instance(comp1631, [slot(mon, 11, mru), slot(wed, 11, mru), slot(fri, 11, mru)]), course_instance(math1200, [slot(tue, 13, mru), slot(thu, 13, mru), slot(thu, 12, mru)]), course_instance(math1203, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3309, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)])]), 
-            semester_plan(winter, [course_instance(comp1633, [slot(mon, 4, mru), slot(wed, 4, mru), slot(fri, 4, mru)]), course_instance(math1271, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)]), course_instance(phil1179, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(math2234, [slot(mon, 10, mru), slot(wed, 10, mru), slot(fri, 10, mru)])]), semester_plan(fall, [course_instance(comp2631, [slot(tue, 10, mru), slot(thu, 10, mru), slot(thu, 9, mru)]), course_instance(comp2613, [slot(tue, 14, mru), slot(thu, 14, mru), slot(thu, 13, mru)]), course_instance(comp2655, [slot(mon, 14, mru), slot(wed, 14, mru), slot(fri, 14, mru)])]), semester_plan(winter, [course_instance(comp2633, [slot(tue, 8, mru), slot(thu, 8, mru), slot(thu, 7, mru)]), course_instance(comp2659, [slot(mon, 16, mru), slot(wed, 16, mru), slot(fri, 16, mru)]), course_instance(comp3614, [slot(tue, 14, mru), slot(tue, 15, mru), slot(thu, 14, mru)]), course_instance(comp3649, [slot(tue, 16, mru), slot(thu, 16, mru), slot(thu, 15, mru)])]), semester_plan(fall, [course_instance(comp3659, [slot(mon, 8, mru), slot(wed, 8, mru), slot(fri, 8, mru)])])
-        ].
-
 main:-
     main("default.json").
 
@@ -622,7 +519,7 @@ main(FileNameAndPath):-
     (
         student_append(Student,Required),
         % append_options(Jun,Sen,Req,NewReq),
-        test_student_choices(Student,Required),
+        test_student_choices(Student,Required),!,
         graduation_plan(Student,L),
         print_graduation_plan(0,L,Lines),
         nl,write("Generated a Plan"),nl,
