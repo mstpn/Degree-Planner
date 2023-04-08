@@ -18,6 +18,9 @@ Search:
 import class_definitions as cd
 import student as std
 
+CANT_SCHED = -1
+NO_SECTIONS = -2
+
 
 def degree_handler(student):
     """
@@ -31,16 +34,16 @@ def degree_handler(student):
     # Check for invalid inputs
     if student.years_to_grad <= 0 or student.max_courses_per_semester <= 0:
         success = False
-        msg = "Student has an invalid number of semesters to graduate or courses per semester"
+        msg = "\nStudent has an invalid number of semesters to graduate or courses per semester"
         return [], success, msg
     if len(student.all_required) > student.max_courses_per_semester * student.sem_to_grad:
         success = False
-        msg = "Student has too many courses to take in the time allotted"
+        msg = "\nStudent has too many courses to take in the time allotted"
         return [], success, msg
     # Check for completed degree
     if len(student.all_required) == 0:
         success = True
-        msg = "Student has already completed their degree"
+        msg = "\nStudent has already completed their degree"
         return [], success, msg
     # Schedule degree
     courses_remaining = student.sort_all()
@@ -49,10 +52,10 @@ def degree_handler(student):
     success = schedule_recursive(
         student, curr_sem, degree, courses_remaining)
     if success:
-        msg = f"Degree successfully scheduled in %s years (%s semesters)" % (
+        msg = f"\nDegree successfully scheduled in %s years (%s semesters)" % (
             len(degree)/2, len(degree))
     else:
-        msg = f"Degree was not able to be scheduled in %s years" % student.years_to_grad
+        msg = f"\nDegree was not able to be scheduled in %s years" % student.years_to_grad
     return degree, success, msg
 
 
@@ -165,30 +168,19 @@ def schedule_course(course, semester):
 
 def can_schedule(course, semester):
     """
+    Checks if a course can be scheduled in the semester
+    The all sections of the course are checked against the courses already scheduled in the semester
+        The types[] array ensures that all lectures, labs, and tutorials for a section are valid
     Returns a section of a course that can be scheduled in the semester
     Returns None if no section can be scheduled
     """
-    cant_scheudule = -1
-    no_sections = -2
     new_section = None
 
     for section in course.sections.values():
         time_available = True
-        types = [cant_scheudule, cant_scheudule, cant_scheudule]
-        for i in range(len(section.class_types)):
-            if len(section.class_types[i]) == 0:
-                types[i] = no_sections
-                continue
-            for type_section in section.class_types[i].values():
-                section_available = True
-                for a_class in type_section:
-                    if time_conflict(a_class, semester):
-                        section_available = False
-                        break
-                if section_available:
-                    types[i] = type_section[0].id
-                    break
-        if cant_scheudule in types:
+        types = [CANT_SCHED, CANT_SCHED, CANT_SCHED]
+        solve_section(section, semester, types)
+        if CANT_SCHED in types:
             time_available = False
             break
         if time_available:
@@ -196,12 +188,48 @@ def can_schedule(course, semester):
                 section.course_name, section.id, section.description
             )
             for index, value in enumerate(types):
-                if value != no_sections:
+                if value != NO_SECTIONS:
                     new_section.class_types[index][
                         value
                     ] = section.class_types[index][value]
             return new_section
     return None
+
+
+def solve_section(section, semester, types):
+    """
+    Solves the section by finding if all class types can be scheduled
+    """
+    for i in range(len(section.class_types)):
+        if len(section.class_types[i]) == 0:
+            types[i] = NO_SECTIONS
+            continue
+        solve_class_type(section, semester, types, i)
+    return
+
+
+def solve_class_type(section, semester, types, type_index):
+    """
+    Checks all class types to see if one can be found that can be scheduled
+    """
+    for type_section in section.class_types[type_index].values():
+        # section_available = True
+        if solve_session(type_section, semester):
+            types[type_index] = type_section[0].id
+            break
+    return
+
+
+def solve_session(type_section, semester):
+    """
+    Solves the class type by finding if all sessions can be scheduled
+    Returns True if all sessions can be scheduled
+    Returns False if any session cannot be scheduled
+    """
+    for session in type_section:
+        if time_conflict(session, semester):
+            return False
+    return True
 
 
 def time_conflict(a_class, semester):

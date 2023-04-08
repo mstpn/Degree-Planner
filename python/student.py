@@ -53,11 +53,15 @@ class Student:
         """
         courses = [[], []]
         course_dict = [{}, {}]
-        pickle_folder = 'pickles/'
+        pickle_folder = 'data/pickles/'
         fall_pickle_path = pickle_folder + 'fall_courses.pkl'
         winter_pickle_path = pickle_folder + 'winter_courses.pkl'
-        courses[F] = pickle.load(open(fall_pickle_path, 'rb'))
-        courses[W] = pickle.load(open(winter_pickle_path, 'rb'))
+        with open(fall_pickle_path, 'rb') as f:
+            courses[F] = pickle.load(f)
+        # courses[F] = pickle.load(open(fall_pickle_path, 'rb'))
+        with open(winter_pickle_path, 'rb') as f:
+            courses[W] = pickle.load(f)
+        # courses[W] = pickle.load(open(winter_pickle_path, 'rb'))
         for course in courses[F]:
             course_dict[F][course.name] = course
         for course in courses[W]:
@@ -84,8 +88,10 @@ class Student:
         """
         reqs = self.all_required_courses()
         reqs.sort()
-        pickle_path = 'pickles/all_courses_dict.pkl'
-        courses = pickle.load(open(pickle_path, 'rb'))
+        pickle_path = 'data/pickles/all_courses_dict.pkl'
+        with open(pickle_path, 'rb') as f:
+            courses = pickle.load(f)
+        # courses = pickle.load(open(pickle_path, 'rb'))
         node_list = []
         node_dict = {}
         for prereq in reqs:

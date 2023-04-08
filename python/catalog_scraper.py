@@ -105,7 +105,7 @@ with open(course_file, 'w') as f:
             writer.writerow(name_list)
         writer.writerow(['END'])
 
-pickle_folder = 'pickles/'
+pickle_folder = 'data/pickles/'
 pickle_file = pickle_folder + 'courses_no_semester.pkl'
 print('Writing to pickle...')
 with open(pickle_file, 'wb') as f:

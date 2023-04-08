@@ -152,7 +152,7 @@ def build_graph():
     courses = [[], []]
     course_dict = [{}, {}]
     data_folder = 'data/'
-    pickle_folder = 'pickles/'
+    pickle_folder = 'data/pickles/'
 
     # PICKLE METHOD
     course_pickle_name = 'courses_no_semester.pkl'
