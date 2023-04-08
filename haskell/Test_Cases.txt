@@ -1,5 +1,0 @@
-1)	Schedule course with no pre-reqs 
-
-2) 	Schedule course with 1, already taken, prereq
-
-3) 	Schedule course with 1, not taken, prereq

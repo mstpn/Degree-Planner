@@ -172,6 +172,15 @@ remove_duplicates_from_course_list (x:xs) | ( does_semester_occur_in_list x xs )
                                           | otherwise = x:( remove_duplicates_from_course_list xs )
 remove_duplicates_from_course_list x = x
 
+remove_duplicates_from_program_list :: [Program([Semester([Course(String, [String], [Session(Int,Int,Int)])])])]  -> [Program([Semester([Course(String, [String], [Session(Int,Int,Int)])])])] 
+remove_duplicates_from_program_list (p:ps) | ( does_program_occur_in_list p ps ) = ( remove_duplicates_from_program_list ps )
+                                           | otherwise = p:( remove_duplicates_from_program_list ps )
+remove_duplicates_from_program_list x = x                                    
+
+does_program_occur_in_list :: Program([Semester([Course(String, [String], [Session(Int,Int,Int)])])]) -> [Program([Semester([Course(String, [String], [Session(Int,Int,Int)])])])] -> Bool
+does_program_occur_in_list p (x:xs) = (  (all_course_names_from_program p) == (all_course_names_from_program x) || ( does_program_occur_in_list p xs )  )
+does_program_occur_in_list p x = False
+
 -- Checks if a semester occurs in a list of semesters.
 does_semester_occur_in_list :: Semester([Course(String, [String], [Session(Int,Int,Int)])]) -> [Semester([Course(String, [String], [Session(Int,Int,Int)])])] -> Bool
 does_semester_occur_in_list s (x:xs) = ( (course_list_is_course_sublist sl xl) && (course_list_is_course_sublist xl sl) ) || (does_semester_occur_in_list s xs)
@@ -221,12 +230,6 @@ takeProgram _ []     = []
 takeProgram n (x:xs) = x : take (n-1) xs
 
 
-
-
-
-
-
-
 ------ schedule_1course_to_semester
 -- Attempts to add 1 course from student's required course list. 
 -- If it can add, it adds it and adds the resulting Semester permutation to the returned Semester list. 
@@ -259,7 +262,7 @@ createFullSemester n seed offered student | n-1 > 0 =  (schedule_1course_to_seme
 
 --                               list of possible programs, from prev run                                   coursesPerSem  offered courses                                        given student                        list of all permutations of programs with one more semester added
 schedule_1semester_to_program :: [Program([Semester([Course(String,[String],[Session(Int,Int,Int)])])])] -> Int     ->     [Course(String, [String], [Session(Int,Int,Int)])]  -> Student(String,[String],[String]) -> [Program([Semester([Course(String, [String], [Session(Int,Int,Int)])])])] 
-schedule_1semester_to_program  possibleProgramSchedules coursesPerSem coursesOffered student = newPerms
+schedule_1semester_to_program  possibleProgramSchedules coursesPerSem coursesOffered student = (remove_duplicates_from_program_list newPerms)
       
   where newPerms = [ if canAddNewSemester then (semester_into_program s p) else p |  p <- possibleProgramSchedules,    s <- (createFullSemester coursesPerSem [(Semester [])] coursesOffered student),                
 
@@ -317,16 +320,16 @@ coursesOfferedWinter = [ Course "WinterA" [] [ Session 0 2 1 ],
 
 
 main = do
-  let student = Student "El Chappo" [] ["CourseA","CourseB","WinterA","WinterB","WinterC","FallA","FallB","FallC"]
+  let student = Student "El Chappo" [] ["WinterA","WinterB","WinterC","FallA","FallB","FallC"]
 
 
-  let programList = ( createFullProgram 2 2 [(Program[])] coursesOfferedFall coursesOfferedWinter student )
+  let programList = ( createFullProgram 3 3 [(Program[])] coursesOfferedFall coursesOfferedWinter student )
 
   let graduationProgramsOnly = (filter_programs_that_graduate programList (required student))
 
   let taken = (take 1 graduationProgramsOnly)
 
-  printProgramList programList
+  printProgramList graduationProgramsOnly
   
 
 
