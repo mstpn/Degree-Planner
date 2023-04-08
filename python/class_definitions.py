@@ -1,8 +1,8 @@
 '''
 This file is essentialy a header file for the other files in this project.
+It contains the class definitions for our data structures as well as some constants
+that are used throughout the project.
 '''
-import csv
-import json
 import math
 
 IGNORE_COURSES = [
@@ -32,27 +32,15 @@ LEC = 0
 LAB = 1
 TUT = 2
 
-# A students registration
-class Registration():
-
-    def __init__(self) -> None:
-        self.semesters = []
-        self.num_semesters = 0
-        self.years = 0
-
-    def get_years(self):
-        return math.ceil(len(self.semesters) / 2)
-    
-    def __str__(self) -> str:
-        for semester in self.semesters:
-            print(semester)
-
-
 
 class Semester():
+    """
+    A class to represent a semester in a degree program
+    """
+
     def __init__(self, year, worf, max_courses) -> None:
         self.year = year
-        self.worf = worf
+        self.worf = worf  # 0 for fall, 1 for winter
         self.max_courses = max_courses
         self.courses = []  # contains Section objects
 
@@ -87,6 +75,11 @@ class Semester():
 
 
 class Course_Node():
+    """
+    The course node is used to build the graph of courses that the student
+    will actually take.
+    It is based off the student json and courses required to graduate.
+    """
 
     def __init__(self, name) -> None:
         self.name = name
@@ -104,19 +97,23 @@ class Course_Node():
             'pre': self.pre_to_str_list(),
             'next': self.next_to_str_list(),
         }
-    
-    # def depth(self):
-    #     depth = 0
-    #     depth += 
-    
+
     def pre_to_str_list(self):
         return [x.name for x in self.pre]
-    
+
     def next_to_str_list(self):
         return [x.name for x in self.next]
 
 
 class A_Class:
+    """
+    A specific session of a course
+        lab
+        tutorial
+        lecture
+    Contains all the detailed information about that session
+    """
+
     def __init__(self, id, occurence, start_time, duration, day, prof, room):
         self.id = id  # csv col E
         self.occurence = occurence  # csv col F, time this id occurs
@@ -128,6 +125,13 @@ class A_Class:
 
 
 class Section:
+    """
+    A section of a course.
+    Contains all the information about a course that is not specific to a session
+    Contains all of the lectures, labs, and tutorials for that course
+        Each of these is a list of A_Class objects
+    """
+
     def __init__(self, course_name, id, description=None):
         self.course_name = course_name
         self.id = id  # Section from CSV (col D)
@@ -146,6 +150,11 @@ class Section:
 
 
 class Course:
+    """
+    A course is a class that is offered by the university
+    Contains all the information about a course that is not specific to a section
+    """
+
     def __init__(self, name, dept=None, course=None, description=None, semester=None):
         self.name = name
         self.dept = dept
@@ -180,7 +189,6 @@ class Course:
             pre = '\n  Prereqs: ' + ' AND '.join(and_list)
         return name + pre
 
-    # Messy and bad runtime, but it works. Comment out try/except to speed up at cost of accuracy (same # prereqs but not SAME prereqs will pass)
     def __eq__(self, other):
         if self.name != other.name:
             # print('name not equal')
@@ -201,7 +209,7 @@ class Course:
             return False
         return True
 
-        # https://stackoverflow.com/questions/20242479/printing-a-tree-data-structure-in-python
+    # https://stackoverflow.com/questions/20242479/printing-a-tree-data-structure-in-python
     def __repr__(self, level=0):
         ret = "\t"*level+repr(self.name)+"\n"
         for prereq_list in self.prereqs:

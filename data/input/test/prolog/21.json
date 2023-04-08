@@ -1,16 +1,16 @@
 {
         "taken": [],
         "jun": [
-                "comp2521",
                 "comp3533",
-                "comp3625"
+                "comp1234",
+                "math1234"
         ],
         "sen": [
-                "comp4522",
-                "comp4635",
-                "comp4630"
+                "gned0101",
+                "cmpo2001",
+                "marc1000"
         ],
         "start": "fall",
-        "semesters": 16,
+        "semesters": 8,
         "courses_for_semester": 5
 }

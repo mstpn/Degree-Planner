@@ -78,7 +78,7 @@ test(degree_done) :-
 :- begin_tests(options).
 
 test(junior_options) :-
-    main('../data/input/test/prolog/14.json'),!.
+    not(main('../data/input/test/prolog/14.json')).
 
 test(senior_no_junior_short) :-
     not(main('../data/input/test/prolog/15.json')).
@@ -91,6 +91,15 @@ test(all_options) :-
 
 test(all_options_2) :-
     main('../data/input/test/prolog/18.json'),!.
+
+test(invalid_junior) :-
+    not(main('../data/input/test/prolog/19.json')).
+
+test(invalid_senior) :-
+    not(main('../data/input/test/prolog/20.json')).
+
+test(invalid_junior_senior) :-
+    not(main('../data/input/test/prolog/21.json')).
 
 :- end_tests(options).
 

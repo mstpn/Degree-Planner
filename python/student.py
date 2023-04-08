@@ -1,3 +1,9 @@
+"""
+This is the file for actions related to the student object. It contains the Student class and all of its
+methods. It handles the loading of student data from a json file, and the creation of the graph nodes,
+as well as methods and data relating to a student's degree.
+"""
+
 import datetime
 import pickle
 import csv
@@ -8,6 +14,15 @@ CORE = ["PHIL1179", "MATH1200", "MATH1203", "MATH1271", "MATH2234", "COMP1631", 
 
 
 class Student:
+    """
+    This class represents a student. It contains all of the data that is relevant to a student's degree,
+    including the courses they have taken, the courses they have chosen for their degree, and the
+    cognate they have chosen.
+        These are read in from the json file that is passed in as a parameter to the constructor.
+    The student stores a copy of all the courses that it can take (course_dict) as well as the 
+    graph structure and dictionary for its specific degree (graph_dict, graph_list).
+    """
+
     def __init__(self, filename=None, **kwargs):
         if filename:
             with open(filename, 'r') as f:
@@ -33,6 +48,9 @@ class Student:
         self.course_dict = self.make_course_dict()
 
     def make_course_dict(self):
+        """
+        This function creates a dictionary of all the courses that the student can take.
+        """
         courses = [[], []]
         course_dict = [{}, {}]
         pickle_folder = 'pickles/'
@@ -47,6 +65,9 @@ class Student:
         return course_dict
 
     def change_semester(self):
+        """
+        This function changes the student's semester to the next one.
+        """
         self.semester = (self.semester + 1) % 2
 
     def __str__(self) -> str:
@@ -58,6 +79,9 @@ class Student:
         return self.__str__()
 
     def make_graph(self):
+        """
+        This function creates the graph structure of Course_Node's for the student's degree.
+        """
         reqs = self.all_required_courses()
         reqs.sort()
         pickle_path = 'pickles/all_courses_dict.pkl'
@@ -72,7 +96,7 @@ class Student:
         for node in node_list:
             temp_course = courses.get(node.name, None)
             if temp_course is None:
-                print('WHY')
+                print('Invalid Course: ', node.name, ' in make_graph')
                 continue
             pre_reqs_for_course = temp_course.prereqs
             for possible_prereqs_and in pre_reqs_for_course:
@@ -85,6 +109,10 @@ class Student:
         return node_list, node_dict
 
     def sort_all(self):
+        """
+        This function sorts the courses in the student's degree by the number of pre-requisites they have.
+        This is used to determine a basline optimal order in which the courses are attempted to be scheduled.
+        """
         course_dict = {}
         for is_pre in self.all_required:
             num_pre = 0
@@ -98,12 +126,20 @@ class Student:
         return sorted_list
 
     def compute_courses_taken(self, degree: list[Semester]):
+        """
+        This function computes the courses that the student has taken based on the degree plan.
+        Due to the backtracking involved in scheduling, this function is called after each schedule is attempted
+        instead of relying on continually setting the student's courses_taken attribute.
+        """
         courses = self.initial_courses_taken.copy()
         for semester in degree:
             courses.extend(semester.list_courses())
         return courses
 
     def all_required_courses(self):
+        """
+        This function returns a list of all the courses that the student must take to complete their degree.
+        """
         all_req_courses = []
         all_req_courses.extend(CORE)
         all_req_courses.extend(self.cognate_choice)
@@ -117,6 +153,10 @@ class Student:
         return all_req_courses
 
     def program_to_csv(self, program):
+        """
+        This function writes the student's degree plan to a csv file.
+        The csv file is saved in the data/out folder.
+        """
         csv_folder = 'data/out/'
         # file_desc = self.name + '-' + self.cognate_name + '-' + str(program.get_years()) + '_years'
         file_desc = self.name + '-' + self.cognate_name + \
@@ -145,6 +185,9 @@ class Student:
 
 
 def build_student_test():
+    """
+    This function builds a test student object.
+    """
     return Student(
         name="Soren Edwards",
         semester=F,

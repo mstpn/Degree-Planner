@@ -1,3 +1,12 @@
+"""
+This is the main file for the program. It is responsible for building the data structures and running the
+program code. It is also responsible for writing the output to a csv file.
+
+To run the program, make sure that you are in the parent directory of /python (i.e. the root project folder)
+and run the following command:
+    python3 main.py
+"""
+
 from graph import build_graph
 import student as std
 import schedule as shed

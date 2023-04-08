@@ -9,8 +9,16 @@
                 "comp2655",
                 "comp2633"
         ],
-        "jun": [],
-        "sen": [],
+        "jun": [
+                "comp2521",
+                "comp3533",
+                "comp3625"
+        ],
+        "sen": [
+                "comp4522",
+                "comp4635",
+                "comp4630"
+        ],
         "start": "fall",
         "semesters": 8,
         "courses_for_semester": 5

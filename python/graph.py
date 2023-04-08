@@ -1,3 +1,13 @@
+"""
+This file contains the code that build our basic trees and dictionaries from the web scraped data.
+The build_graph() function is the main function that should be called to build the data structures.
+    This is done in the main.py and run_tests.py files.
+        Note that it only needs to be done once, and the data structures are saved to files
+        in the data folder.
+        It is ok to leave build_graph() uncommented as the runtime is very short (1-2 seconds)
+        and it doesn't have any negative side effects.
+"""
+
 import json
 import pickle
 import csv

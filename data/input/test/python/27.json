@@ -1,0 +1,24 @@
+{
+        "name": "Soren Edwards",
+        "semester": 0,
+        "courses_taken": [],
+        "chosen_sen_options": [
+                "gned0101",
+                "cmpo2001",
+                "marc1000"
+        ],
+        "chosen_jun_options": [
+                "comp3533",
+                "comp1234",
+                "math1234"
+        ],
+        "cognate_name": "GEOG",
+        "cognate_choice": [
+                "FOO",
+                "BAR",
+                "FOOBAR",
+                "FIZZBUZZ"
+        ],
+        "years_to_grad": 4,
+        "max_courses_per_semester": 5
+}

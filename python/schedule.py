@@ -1,25 +1,18 @@
 """ 
-New scheduler algorithm.
+This file contains the code for scheduling a degree.
+The degree is a list of semesters, each of which is a list of courses.
+The degree and semesters are scheduled by performing a recursive backtracking search.
 
-Idea:
-    Optimization:
-        all_required_courses:
-            To narrow the solution space, we use the "required courses" list, and the courses taken to determine which courses are possible to take.
-            We also take the list of all required courses and map out how many times each course appears as prerequisite for other courses and sort based on that list (highest to lowest).
-        check for valid prereq:
-            would be a sanity check that determines whether we can ever schedule the remaining courses
-                this would fail if there is no way to get to the remaining courses based on what we've taken (can't fullfill any prereqs)
-
-    Search:
-        Recursive backtracking search.
-        This will be performed at both the semester and degree level
-            If we get to a situation where we can't complete the degree in the alloted time, we backtrack to the previous semeseter and try to schedule a different course.
-                So we will need to keep track of the courses that have been scheduled or attempted to be scheduled in each semester.
-        The base case is a case in which the solution configuration has been achieved
-            In our case this means that either the maximum number of courses per term has been met or no more courses can be taken
-        We start with the first course in the list of all required courses, and try to schedule it.
-            If we can't schedule it, we move on to the next course in the list.
-            If we can schedule it, we move on to the next course in the list.
+Search:
+    Recursive backtracking search.
+    This will be performed at both the semester and degree level
+        If we get to a situation where we can't complete the degree in the alloted time, we backtrack to the previous semeseter and try to schedule a different course.
+            So we will need to keep track of the courses that have been scheduled or attempted to be scheduled in each semester.
+    The base case is a case in which the solution configuration has been achieved
+        In our case this means that either the maximum number of courses per term has been met or no more courses can be taken
+    We start with the first course in the list of all required courses, and try to schedule it.
+        If we can't schedule it, we move on to the next course in the list.
+        If we can schedule it, we move on to the next course in the list.
 """
 
 import class_definitions as cd
