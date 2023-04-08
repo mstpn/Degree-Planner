@@ -1,15 +1,19 @@
 {
-    "taken": [],
+    "taken": [
+        "comp1631",
+        "comp1633"
+    ],
     "jun": [
         "comp2521",
         "comp3533",
-        "comp3625"
+        "comp3505"
     ],
     "sen": [
         "comp4522",
         "comp4635",
-        "comp4630"
+        "comp5690"
     ],
+    "start": "fall",
     "semesters": 5,
-    "courses_for_semester": 5
+    "courses_for_semester": 4
 }

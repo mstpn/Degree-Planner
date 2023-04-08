@@ -52,6 +52,7 @@ test(empty_hard) :-
 
 :- end_tests(basic_pass).
 
+
 % Tests involving previously taken courses
 :- begin_tests(previous_courses).
 
@@ -73,6 +74,25 @@ test(degree_done) :-
 
 :- end_tests(previous_courses).
 
+
+:- begin_tests(options).
+
+test(junior_options) :-
+    main('../data/input/test/prolog/14.json'),!.
+
+test(senior_no_junior_short) :-
+    not(main('../data/input/test/prolog/15.json')).
+
+test(senior_no_junior_long) :-
+    not(main('../data/input/test/prolog/16.json')).
+
+test(all_options) :-
+    main('../data/input/test/prolog/17.json'),!.
+
+test(all_options_2) :-
+    main('../data/input/test/prolog/18.json'),!.
+
+:- end_tests(options).
 
 % Tests for other edge cases
 :- begin_tests(pedantic).

@@ -1,6 +1,8 @@
 {
-        "taken": [
-        ],
+        "taken": [],
+        "jun": [],
+        "sen": [],
+        "start": "fall",
         "semesters": 32,
         "courses_for_semester": 1
 }

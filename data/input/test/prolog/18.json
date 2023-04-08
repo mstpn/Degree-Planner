@@ -13,8 +13,16 @@
                 "comp3649",
                 "math2234"
         ],
-        "jun": [],
-        "sen": [],
+        "jun": [
+                "comp3533",
+                "comp3625",
+                "comp2521"
+        ],
+        "sen": [
+                "comp4655",
+                "comp5690",
+                "comp4630"
+        ],
         "start": "fall",
         "semesters": 8,
         "courses_for_semester": 5
