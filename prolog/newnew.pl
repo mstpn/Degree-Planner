@@ -331,14 +331,14 @@ test_student_courses_per(student(_,CrsPer,_,_,_)):-
         !,write("Error: The Provided Maximum Courses Taken in a Semester is incorrrect"),nl,
         tab(4),format("Message: Course Per Semester can not be negative, IE not (~w)",[CrsPer]),nl,
         fail
+    ),
+    (
+        CrsPer =< 20,!
+        ;
+        !,write("Error: The Provided Maximum Courses Taken in a Semester is incorrrect"),nl,
+        tab(4),format("Message: Course Per Semester can not be above 5 without permission, so above 20 is an issue, IE not (~w)",[CrsPer]),nl,
+        fail
     ).
-    % (
-    %     CrsPer =< 5,!
-    %     ;
-    %     !,write("Error: The Provided Maximum Courses Taken in a Semester is incorrrect"),nl,
-    %     tab(4),format("Message: Course Per Semester can not be above 5 without permission, IE not (~w)",[CrsPer]),nl,
-    %     fail
-    % ).
 
 % TEST CODE
 % PASSING
@@ -356,14 +356,14 @@ test_student_semesters(student(Sems,_,_,_,_)):-
         !,write("Error: The Provided Maximum Semesters is incorrect"),nl,
         tab(4),format("Message: Maximum Semester Count can not be negative, IE not (~w)",[Sems]),nl,
         fail
+    ),
+    (
+        Sems =< 32,!
+        ;
+        !,write("Error: The Provided Maximum Semesters is incorrect"),nl,
+        tab(4),format("Message: Maximum Semester Count can not be above 9 regularly, so 32 is a problem as in IE not (~w)",[Sems]),nl,
+        fail
     ).
-    % (
-    %     Sems =< 9,!
-    %     ;
-    %     !,write("Error: The Provided Maximum Semesters is incorrect"),nl,
-    %     tab(4),format("Message: Maximum Semester Count can not be above 9, IE not (~w)",[Sems]),nl,
-    %     fail
-    % ).
 
 % TEST CODE
 % PASSING
