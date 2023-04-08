@@ -1,0 +1,30 @@
+FAILED 
+{
+        "taken": [
+                "comp1631",
+                "comp1633",
+                "math1200"
+        ],
+        "semesters": 5,
+        "courses_for_semester": 3
+}
+{
+        "taken": [
+                "comp1631",
+                "comp1633",
+        ],
+        "semesters": 5,
+        "courses_for_semester": 3
+}
+
+
+PASSED
+{
+        "taken": [
+                "comp1631",
+                "comp1633",
+                "math1200"
+        ],
+        "semesters": 5,
+        "courses_for_semester": 5
+}
