@@ -1,16 +1,10 @@
-C:\Users\lando\AppData\Local\Programs\stack\x86_64-windows\ghc-9.2.7\lib\x86_64-windows-ghc-9.2.7\rts-1.0.2\include\ghcversion.h:
-  hash: 29d6607e92f065af06096e2cf6677b816f36cb00b9c9cf137b6a887fe0a21ffd
-? C:\Users\lando\OneDrive\Desktop\Paradigms\Project\Code\comp3649project\test\huh\.stack-work\dist\8a54c84f\build\huh-exe\autogen\Paths_huh.hs
-: hash: f5c0a2099247d0c2331a339db4d9c9b546eb6deb8b09b28fb74894f51638abbd
-? C:\Users\lando\OneDrive\Desktop\Paradigms\Project\Code\comp3649project\test\huh\.stack-work\dist\8a54c84f\build\huh-exe\autogen\cabal_macros.h
-: hash: 9aa427b1c0c1da234fb1b5eb0b3852a953c37d8b2a8d78d35e1f9da0e574e4bb
 C:\Users\lando\OneDrive\Desktop\Paradigms\Project\Code\comp3649project\test\huh\CHANGELOG.md:
   hash: 7c0df4a11ffba43c86d4df9dc8c5487b676920fdc55d05d2f032ba7df4f4e682
 C:\Users\lando\OneDrive\Desktop\Paradigms\Project\Code\comp3649project\test\huh\README.md:
   hash: 61f033e4ebfbdfbf83ec53431b1d54d115c4e98f5b81b877032e2e5e10413f99
 C:\Users\lando\OneDrive\Desktop\Paradigms\Project\Code\comp3649project\test\huh\app\Main.hs:
-  hash: eca613d5fbc7b6d653d7361c3644012e65d44cde8db3513012c0c3b25ff43bb7
+  hash: 161d679550c83277a65547ebd6728ec3d48892e45796bd51750c2d292db7cf75
 C:\Users\lando\OneDrive\Desktop\Paradigms\Project\Code\comp3649project\test\huh\huh.cabal:
-  hash: 242787fd81593da8c3daa71271b4e961715c7d1a8aafe5084e2515e2911039ba
+  hash: 8531096cfe71d9cb7012d28435d49f673e38ab235243de999593038d8a212cca
 C:\Users\lando\OneDrive\Desktop\Paradigms\Project\Code\comp3649project\test\huh\package.yaml:
-  hash: 7438cf7edd9ee40fabedca0e4875c980fa16ec831befeff33d1bff95a3dd15f4
+  hash: 6bf28919aa7fef60046a72c62a3ebe2e28caf15bbd8707ec15576dd22793d964

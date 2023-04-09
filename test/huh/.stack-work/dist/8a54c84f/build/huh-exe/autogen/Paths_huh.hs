@@ -43,7 +43,7 @@ getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: 
 
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 bindir     = "C:\\Users\\lando\\OneDrive\\Desktop\\Paradigms\\Project\\Code\\comp3649project\\test\\huh\\.stack-work\\install\\4b4e0f76\\bin"
-libdir     = "C:\\Users\\lando\\OneDrive\\Desktop\\Paradigms\\Project\\Code\\comp3649project\\test\\huh\\.stack-work\\install\\4b4e0f76\\lib\\x86_64-windows-ghc-9.2.7\\huh-0.1.0.0-8LiJLpTItlCI9X97XMWrWb-huh-exe"
+libdir     = "C:\\Users\\lando\\OneDrive\\Desktop\\Paradigms\\Project\\Code\\comp3649project\\test\\huh\\.stack-work\\install\\4b4e0f76\\lib\\x86_64-windows-ghc-9.2.7\\huh-0.1.0.0-IFs42fPYJQC14hzlQtrRqa-huh-exe"
 dynlibdir  = "C:\\Users\\lando\\OneDrive\\Desktop\\Paradigms\\Project\\Code\\comp3649project\\test\\huh\\.stack-work\\install\\4b4e0f76\\lib\\x86_64-windows-ghc-9.2.7"
 datadir    = "C:\\Users\\lando\\OneDrive\\Desktop\\Paradigms\\Project\\Code\\comp3649project\\test\\huh\\.stack-work\\install\\4b4e0f76\\share\\x86_64-windows-ghc-9.2.7\\huh-0.1.0.0"
 libexecdir = "C:\\Users\\lando\\OneDrive\\Desktop\\Paradigms\\Project\\Code\\comp3649project\\test\\huh\\.stack-work\\install\\4b4e0f76\\libexec\\x86_64-windows-ghc-9.2.7\\huh-0.1.0.0"

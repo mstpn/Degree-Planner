@@ -50,6 +50,26 @@
   (major1) == 0 && (major2) <  11 || \
   (major1) == 0 && (major2) == 11 && (minor) <= 4)
 #endif /* MIN_VERSION_bytestring */
+/* package cassava-0.5.3.0 */
+#ifndef VERSION_cassava
+#define VERSION_cassava "0.5.3.0"
+#endif /* VERSION_cassava */
+#ifndef MIN_VERSION_cassava
+#define MIN_VERSION_cassava(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  5 || \
+  (major1) == 0 && (major2) == 5 && (minor) <= 3)
+#endif /* MIN_VERSION_cassava */
+/* package directory-1.3.6.2 */
+#ifndef VERSION_directory
+#define VERSION_directory "1.3.6.2"
+#endif /* VERSION_directory */
+#ifndef MIN_VERSION_directory
+#define MIN_VERSION_directory(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 6)
+#endif /* MIN_VERSION_directory */
 /* package huh-0.1.0.0 */
 #ifndef VERSION_huh
 #define VERSION_huh "0.1.0.0"
@@ -70,6 +90,16 @@
   (major1) == 1 && (major2) <  2 || \
   (major1) == 1 && (major2) == 2 && (minor) <= 5)
 #endif /* MIN_VERSION_text */
+/* package vector-0.12.3.1 */
+#ifndef VERSION_vector
+#define VERSION_vector "0.12.3.1"
+#endif /* VERSION_vector */
+#ifndef MIN_VERSION_vector
+#define MIN_VERSION_vector(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  12 || \
+  (major1) == 0 && (major2) == 12 && (minor) <= 3)
+#endif /* MIN_VERSION_vector */
 
 /* tool gcc-10.2.0 */
 #ifndef TOOL_VERSION_gcc
@@ -153,7 +183,7 @@
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "huh-0.1.0.0-8LiJLpTItlCI9X97XMWrWb-huh-exe"
+#define CURRENT_COMPONENT_ID "huh-0.1.0.0-IFs42fPYJQC14hzlQtrRqa-huh-exe"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"

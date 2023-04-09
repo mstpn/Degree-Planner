@@ -25,6 +25,9 @@ dependencies:
 - text
 - attoparsec
 - bytestring
+- cassava
+- vector
+- directory
 
 ghc-options:
 - -Wall

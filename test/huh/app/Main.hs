@@ -1,5 +1,8 @@
 -- Landon Odishaw-Dyck (mid-arc)
 
+
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use newtype instead of data" #-}
@@ -7,9 +10,30 @@
 {-# HLINT ignore "Move guards forward" #-}
 {-# HLINT ignore "Use null" #-}
 
+import           Data.ByteString.Lazy (ByteString)
+import qualified Data.ByteString.Lazy as BS
+import           Data.Csv
+  ( encodeDefaultOrderedByName
+  , DefaultOrdered(headerOrder)
+  , Header
+  , namedRecord
+  , ToNamedRecord(toNamedRecord)
+  , (.=) 
+  )
+
+import qualified Data.Csv as CSV
+import qualified Data.Foldable as Foldable
+import           Data.Vector (Vector)
+import qualified Data.Vector as Vector
+import           Data.Text (Text)
+import qualified Data.Text as T
+import           GHC.Generics (Generic)
+import           Control.Monad.IO.Class (liftIO)
+
+
 import Data.List (intercalate, (\\))
 import System.IO
-import Data.Aeson
+import Data.Aeson 
 import Data.Text (Text)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import GHC.Generics
@@ -23,7 +47,7 @@ import GHC.Generics
 
 -- data Course = Course { name :: String, prereqs :: [String], sessions :: [Session] }       deriving (Show)
 
-data Semester = Semester { courses :: [Course] }             deriving (Show)
+-- data Semester = Semester { courses :: [Course] }             deriving (Show)
 
 -- data Program = Program { semesters :: [Semester] } deriving (Show)
 
@@ -41,10 +65,10 @@ data Course = Course {
   sessions :: [Session]
   } deriving (Show, Generic)
 
--- data Semester = Semester { 
---   sem :: String
---   ,courses :: [Course] 
---   } deriving (Show, Generic) 
+data Semester = Semester { 
+  sem :: String
+  ,courses :: [Course] 
+  } deriving (Show, Generic) 
 
 data Program = Program {
   semesters :: [Semester]
@@ -106,7 +130,9 @@ printCourseList [] = return ()
 
 
 printSemester :: Semester -> IO ()
-printSemester (Semester list) = printCourseList list
+printSemester (Semester sem list) = do
+  print sem
+  printCourseList list
 
 printSemesterList :: [Semester] -> IO ()
 printSemesterList (x:xs) = do
@@ -240,7 +266,7 @@ does_semester_occur_in_list s x = False
 
 -- Place course at the front of the Course list of a Semester
 course_into_semester :: Course -> Semester -> Semester
-course_into_semester c (Semester cs ) = Semester (c:cs)
+course_into_semester c (Semester sem cs ) = Semester sem (c:cs)
 
 -- Place semester at the front of the semester list of a program
 semester_into_program :: Semester -> Program -> Program
@@ -248,7 +274,7 @@ semester_into_program x (Program xs) = Program (x:xs)
 
 -- Given Semester, returns the list of courses within.
 get_courses_from_semester :: Semester -> [Course]
-get_courses_from_semester (Semester l) = l
+get_courses_from_semester (Semester _ l) = l
 
 get_semesters_from_program :: Program -> [Semester]
 get_semesters_from_program (Program s) = s
@@ -359,7 +385,7 @@ schedule_recursive semestersScheduled coursesRemaining currentSem numSemCourses 
   | currentSem >= numSemCourses = []
   -- | currentSem >= numSemCourses = semestersScheduled
   | coursesRemaining == [] = semestersScheduled
-  | otherwise = schedule_recursive ((Semester{ courses = course_recursive [] semestersScheduled updatedCoursesRemaining numSemCourses maxCourses coursesOffered student}):semestersScheduled) updatedCoursesRemaining (currentSem + 1) numSemCourses maxCourses coursesFall coursesWinter student
+  | otherwise = schedule_recursive ((Semester { sem = semStr, courses = course_recursive [] semestersScheduled updatedCoursesRemaining numSemCourses maxCourses coursesOffered student}):semestersScheduled) updatedCoursesRemaining (currentSem + 1) numSemCourses maxCourses coursesFall coursesWinter student
     where
       coursesOffered = if even currentSem then coursesFall else coursesWinter
       updatedCoursesRemaining = updateRemaining semestersScheduled coursesRemaining
@@ -380,6 +406,244 @@ degree_handler numSemCourses maxCourses coursesFall coursesWinter student
   | otherwise = Program { semesters = schedule_recursive [] coursesRemaining 0 numSemCourses maxCourses coursesFall coursesWinter student}
   -- | otherwise = Program { semesters = [Semester {courses = [Course {name = "COMP5690", prereqs = ["COMP2659"], sessions = [Session {dayOfWeek = 0, start = 25, duration = 1}]}]}]}
     where coursesRemaining = required student \\ taken student
+
+
+
+-- 0,winter,phil1179,mon/16/mru,wed/16/mru,fri/16/mru,
+-- CourseInstance
+csvCourseHeader :: CSV.Header
+csvCourseHeader =
+  Vector.fromList
+    [ "Semester"
+    , "CourseName"
+    , "Day"
+    , "Start"
+    , "Duration"
+    ]
+
+instance CSV.DefaultOrdered CourseItem where
+  headerOrder _ =
+    CSV.header
+      [ "Semester"
+      , "CourseName"
+      , "Day"
+      , "Start"
+      , "Duration"
+      ]
+
+instance CSV.ToNamedRecord CourseItem where
+  toNamedRecord CourseItem{..} =
+    CSV.namedRecord
+      ["Semester" .= cSemester
+    , "CourseName" .= cCourseName
+    , "Day" .= cDay
+    , "Start" .= cStart
+    , "Duration" .= cDuration
+      ]
+
+
+-- processProgramData :: Either a b -> b
+-- processProgramData (Left _) = error "unable to parse data"
+-- processProgramData (Right x) = x
+toCourseInstance :: String -> Course -> CourseInstance
+toCourseInstance sem (Course name prereqs session) = 
+  CourseInstance {
+    sSem = sem,
+    sName = name, 
+    sPrereqs = prereqs, 
+    sSessions = session}
+
+toCourseInstances :: String -> [Course] -> [CourseInstance]
+toCourseInstances _ [] = []
+toCourseInstances sem (x:xs) =  toCourseInstance sem x :(toCourseInstances sem xs) 
+
+semesterToCourseInstances :: Semester -> [CourseInstance]
+semesterToCourseInstances (Semester sem cs) = toCourseInstances sem cs 
+
+semestersToCourseInstances :: [Semester] -> [CourseInstance]
+semestersToCourseInstances [] = []
+semestersToCourseInstances (x:xs) = semesterToCourseInstances x ++ semestersToCourseInstances xs
+
+programCourseInstance :: Program -> [CourseInstance]
+programCourseInstance (Program semesters) = semestersToCourseInstances semesters
+
+getDayFromSession :: Session -> Int
+getDayFromSession (Session day _ _) = day
+getStartFromSession :: Session -> Int
+getStartFromSession (Session _ start _) = start
+getDurationFromSession :: Session -> Int
+getDurationFromSession (Session _ _ dur) = dur
+
+generateCourseItem :: CourseInstance -> CourseItem
+generateCourseItem (CourseInstance sem name _ (x:xs)) = CourseItem
+  { cSemester = sem -- ++ (i bar)
+  , cCourseName = name
+  , cDay = getDayFromSession x
+  , cStart = getStartFromSession x
+  , cDuration = getDurationFromSession x
+  }
+
+test_program = Program {
+  semesters = [
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "FALL", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]},
+        Semester {sem = "WINTER", courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]}
+    ]
+  }
+test_semester = Semester {sem = "FALL",courses = [Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]}]}
+test_courses = [
+  Course {name = "COMP1633", prereqs = ["COMP1631"], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},
+  Course {name = "COMP1631", prereqs = [], sessions = [Session {dayOfWeek = 0, start = 8, duration = 1}]},
+  Course {name = "MATH1200", prereqs = [], sessions = [Session {dayOfWeek = 0, start = 10, duration = 1}]}] 
+
+
+generateCourseItems ::  [CourseInstance] -> Vector CourseItem
+generateCourseItems items = Vector.fromList $ generateCourseItemList items
+  where generateCourseItemList items = map generateCourseItem items
+
+encodeCourseItems :: Vector CourseItem -> ByteString
+encodeCourseItems = encodeDefaultOrderedByName . Foldable.toList
+
+writeCourseItemsToFile :: FilePath -> Vector CourseItem -> IO ()
+writeCourseItemsToFile filePath =
+  BS.writeFile filePath . encodeCourseItems
+
+
+
+
+
+
+
+csvHeader :: CSV.Header
+csvHeader =
+  Vector.fromList
+    [ "Qux"
+    , "Bar"
+    , "Foobar"
+    ]
+
+
+
+data JsonItem = JsonItem
+  { foo :: Int
+  , bar :: Text
+  } deriving (Show, Generic)
+
+--data JsonItems = JsonItems [JsonItem]
+--  deriving (Show, Generic)
+
+data CsvItem = CsvItem
+  { cItemQux :: Text
+  , cItemBar :: Text
+  , cItemFoobar :: Int
+  } deriving (Show, Generic)
+
+-- use generics
+instance FromJSON JsonItem
+instance ToJSON   JsonItem
+
+--instance FromJSON JsonItems
+--instance ToJSON   JsonItems
+
+instance CSV.DefaultOrdered CsvItem where
+  headerOrder _ =
+    CSV.header
+      [ "Qux" -- .= cItemQux
+      , "Bar" -- .= cItemBar
+      , "Foobar" -- .= cItemFoobar
+      ]
+
+instance CSV.ToNamedRecord CsvItem where
+  toNamedRecord CsvItem{..} =
+    CSV.namedRecord
+      [ "Qux" .= cItemQux
+      , "Bar" .= cItemBar
+      , "Foobar" .= cItemFoobar
+      ]
+
+-- a little error handling when processing the JSON input data
+
+
+processJsonData :: Either a b -> b
+processJsonData (Left _) = error "unable to parse data"
+processJsonData (Right x) = x
+
+generateCsvItem :: JsonItem -> CsvItem
+generateCsvItem i = CsvItem
+  { cItemQux = "Qux " -- ++ (i bar)
+  , cItemBar = bar i
+  , cItemFoobar = foo i
+  }
+
+-- IMPLEMENT
+generateCsvItems :: [JsonItem] -> Vector CsvItem
+generateCsvItems items = Vector.fromList $ generateCsvItemList items
+  where generateCsvItemList items = map generateCsvItem items
+--    where generateCsvItem item = do
+    
+
+encodeCsvItems :: Vector CsvItem -> ByteString
+encodeCsvItems = encodeDefaultOrderedByName . Foldable.toList
+
+
+
+writeCsvItemsToFile :: FilePath -> Vector CsvItem -> IO ()
+writeCsvItemsToFile filePath =
+  BS.writeFile filePath . encodeCsvItems
+
+-- read, process, and print out info from the data.json
+someFunc :: IO ()
+someFunc = do
+  -- f <- BS.readFile "data.json"
+  -- print f
+  let s = test_program
+
+  let d = programCourseInstance s
+  print d
+  let courseItems = generateCourseItems d
+  print courseItems
+  writeCourseItemsToFile "items.csv" courseItems
+
+writeProgramCSV :: Program -> FilePath -> IO ()
+writeProgramCSV program path = do
+  let d = programCourseInstance program
+  -- print d
+  let courseItems = generateCourseItems d
+  print courseItems
+  writeCourseItemsToFile path courseItems
+
+writeTestProgramsTo:: IO()
+writeTestProgramsTo = do
+  let d = test_program
+  writeProgramCSV d "output.txt"
+--let jsonData = decode f :: Maybe JsonList
+--putStrLn (encode jsonData)
+--let j = eitherDecode f
+--show $ liftIO $ Just j
+  --let j1 = JsonItem $ head j
+  --show j1
+
 
 main :: IO ()
 main = do

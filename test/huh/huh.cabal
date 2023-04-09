@@ -36,7 +36,10 @@ library
     , attoparsec
     , base >=4.7 && <5
     , bytestring
+    , cassava
+    , directory
     , text
+    , vector
   default-language: Haskell2010
 
 executable huh-exe
@@ -51,8 +54,11 @@ executable huh-exe
     , attoparsec
     , base >=4.7 && <5
     , bytestring
+    , cassava
+    , directory
     , huh
     , text
+    , vector
   default-language: Haskell2010
 
 test-suite huh-test
@@ -70,6 +76,9 @@ test-suite huh-test
     , attoparsec
     , base >=4.7 && <5
     , bytestring
+    , cassava
+    , directory
     , huh
     , text
+    , vector
   default-language: Haskell2010
