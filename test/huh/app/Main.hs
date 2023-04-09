@@ -33,7 +33,7 @@ import           Control.Monad.IO.Class (liftIO)
 
 import Data.List (intercalate, (\\))
 import System.IO
-import Data.Aeson 
+import Data.Aeson hiding ((.=))
 import Data.Text (Text)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import GHC.Generics
@@ -531,100 +531,6 @@ writeCourseItemsToFile filePath =
 
 
 
-
-
-
-
-csvHeader :: CSV.Header
-csvHeader =
-  Vector.fromList
-    [ "Qux"
-    , "Bar"
-    , "Foobar"
-    ]
-
-
-
-data JsonItem = JsonItem
-  { foo :: Int
-  , bar :: Text
-  } deriving (Show, Generic)
-
---data JsonItems = JsonItems [JsonItem]
---  deriving (Show, Generic)
-
-data CsvItem = CsvItem
-  { cItemQux :: Text
-  , cItemBar :: Text
-  , cItemFoobar :: Int
-  } deriving (Show, Generic)
-
--- use generics
-instance FromJSON JsonItem
-instance ToJSON   JsonItem
-
---instance FromJSON JsonItems
---instance ToJSON   JsonItems
-
-instance CSV.DefaultOrdered CsvItem where
-  headerOrder _ =
-    CSV.header
-      [ "Qux" -- .= cItemQux
-      , "Bar" -- .= cItemBar
-      , "Foobar" -- .= cItemFoobar
-      ]
-
-instance CSV.ToNamedRecord CsvItem where
-  toNamedRecord CsvItem{..} =
-    CSV.namedRecord
-      [ "Qux" .= cItemQux
-      , "Bar" .= cItemBar
-      , "Foobar" .= cItemFoobar
-      ]
-
--- a little error handling when processing the JSON input data
-
-
-processJsonData :: Either a b -> b
-processJsonData (Left _) = error "unable to parse data"
-processJsonData (Right x) = x
-
-generateCsvItem :: JsonItem -> CsvItem
-generateCsvItem i = CsvItem
-  { cItemQux = "Qux " -- ++ (i bar)
-  , cItemBar = bar i
-  , cItemFoobar = foo i
-  }
-
--- IMPLEMENT
-generateCsvItems :: [JsonItem] -> Vector CsvItem
-generateCsvItems items = Vector.fromList $ generateCsvItemList items
-  where generateCsvItemList items = map generateCsvItem items
---    where generateCsvItem item = do
-    
-
-encodeCsvItems :: Vector CsvItem -> ByteString
-encodeCsvItems = encodeDefaultOrderedByName . Foldable.toList
-
-
-
-writeCsvItemsToFile :: FilePath -> Vector CsvItem -> IO ()
-writeCsvItemsToFile filePath =
-  BS.writeFile filePath . encodeCsvItems
-
--- read, process, and print out info from the data.json
-someFunc :: IO ()
-someFunc = do
-  -- f <- BS.readFile "data.json"
-  -- print f
-  let s = test_program
-
-  let d = programCourseInstance s
-  print d
-  let courseItems = generateCourseItems d
-  print courseItems
-  writeCourseItemsToFile "items.csv" courseItems
-
 writeProgramCSV :: Program -> FilePath -> IO ()
 writeProgramCSV program path = do
   let d = programCourseInstance program
@@ -654,50 +560,5 @@ main = do
 
   case decode jsonAlice :: Maybe Student of
     -- Just student -> printProgramList (take 1 ( find_shortest_programs 5 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student ) )
-    Just student -> printProgram ( degree_handler 10 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student )
+    Just student -> writeProgramCSV ( degree_handler 10 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student ) "output.txt"
     Nothing -> putStrLn "Failed to parse JSON"
-
-
-
--- data Session = Session { 
---   dayOfWeek :: Int, 
---   start :: Int, 
---   duration :: Int 
---   } deriving (Show, Generic)
-
--- data Course = Course { 
---   name :: String, 
---   prereqs :: [String], 
---   sessions :: [Session] 
---   } deriving (Show, Generic)
-
--- -- data Semester = Semester { 
--- --   sem :: String
--- --   ,courses :: [Course] 
--- --   } deriving (Show, Generic) 
-
--- data Program = Program { 
---   semesters :: [Semester] 
---   } deriving (Show, Generic)
-
--- data Student = Student  { 
---   studName :: String, 
---   taken :: [String], 
---   required :: [String], 
---   coursesPerSem :: Int } deriving (Show, Generic) 
-
--- data CourseInstance = CourseInstance { 
---   sSem :: String,
---   sName :: String, 
---   sPrereqs :: [String], 
---   sSessions :: [Session] 
---   } deriving (Show, Generic)
-
--- data CourseItem = CourseItem {
---   cSemester :: String, 
---   cCourseName :: String,
---   cDay :: Int,
---   cStart :: Int,
---   cDuration :: Int
--- } deriving (Show, Generic)
-
