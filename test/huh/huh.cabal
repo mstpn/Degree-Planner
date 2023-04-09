@@ -59,6 +59,8 @@ test-suite huh-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      CourseOfferings
+      Mainworking
       Paths_huh
   hs-source-dirs:
       test
