@@ -343,19 +343,21 @@ course_recursive courses semesters (course:remaining) numSemCourses maxCourses c
     where
       c = get_currently_offered_course course coursesOffered
       n = get_name_from_course c
-      -- p = get_prereqs_from_course c
+      p = get_prereqs_from_course c
+      
       -- l = get_courses_from_semester 
       canSchedule = n /= "NA" &&
-                                  not ( list_contains_string course (taken student) ) &&        --not taken by student
-                                  -- (list_is_sublist p (taken student)) &&                  --student has prereqs (relic)   
+      --  not ( list_contains_string x (taken student) ) &&  
+                                  not ( list_contains_string course (taken student) ) && 
+                                  -- not ( list_contains_string course (get_names_from_course_list (get_courses_from_all_semesters semesters)) ) &&        --not taken by student
+                                  (list_is_sublist p (get_names_from_course_list (get_courses_from_all_semesters semesters))) &&                  --student has prereqs (relic)   
                                   not (conflict_course_1tolist c courses )                    --no conflict with existing schedule
-
 
 
 schedule_recursive :: [Semester] -> [String] -> Int -> Int -> Int -> [Course] -> [Course] -> Student -> [Semester]
 schedule_recursive semestersScheduled coursesRemaining currentSem numSemCourses maxCourses coursesFall coursesWinter student
-  -- | currentSem >= numSemCourses = []
-  | currentSem >= numSemCourses = semestersScheduled
+  | currentSem >= numSemCourses = []
+  -- | currentSem >= numSemCourses = semestersScheduled
   | coursesRemaining == [] = semestersScheduled
   | otherwise = schedule_recursive ((Semester{ courses = course_recursive [] semestersScheduled updatedCoursesRemaining numSemCourses maxCourses coursesOffered student}):semestersScheduled) updatedCoursesRemaining (currentSem + 1) numSemCourses maxCourses coursesFall coursesWinter student
     where
@@ -388,7 +390,7 @@ main = do
 
   case decode jsonAlice :: Maybe Student of
     -- Just student -> printProgramList (take 1 ( find_shortest_programs 5 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student ) )
-    Just student -> printProgram ( degree_handler 5 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student )
+    Just student -> printProgram ( degree_handler 10 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student )
     Nothing -> putStrLn "Failed to parse JSON"
 
 
