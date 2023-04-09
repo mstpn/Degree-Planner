@@ -1,7 +1,5 @@
 % Import the the main program
-:- ['newnew.pl'].
-
-
+:- ['schedule.pl'].
 % Out of bounds error testing
 % Wrapped in not since we expect the program to fail
 :- begin_tests(oob).
@@ -70,7 +68,7 @@ test(third_year_taken) :-
 
 test(degree_done) :-
     % We expect <= 0 semesters
-    not(main('../data/input/test/prolog/23.json')).
+    main('../data/input/test/prolog/23.json'),!.
 
 :- end_tests(previous_courses).
 
