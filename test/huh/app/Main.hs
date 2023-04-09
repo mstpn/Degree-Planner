@@ -29,15 +29,13 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 import           GHC.Generics (Generic)
 import           Control.Monad.IO.Class (liftIO)
-
-
 import Data.List (intercalate, (\\))
 import System.IO
 import Data.Aeson hiding ((.=))
 import Data.Text (Text)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import GHC.Generics
-
+import System.Environment
 
 -- When making program list comprehension, make a function that checks if course is already scheduled in previous semester. 
 -- Does not handle tutorials/labs or multiple sections offered per course. (change name to CRN)?
@@ -553,12 +551,12 @@ writeTestProgramsTo = do
 
 main :: IO ()
 main = do
-
+  args <- getArgs
   -- taken = (take 1 shortestPrograms)
 
-  jsonAlice <- BSL.readFile "test_json/Alice.json"
+  json <- BSL.readFile (head args)
 
-  case decode jsonAlice :: Maybe Student of
+  case decode json :: Maybe Student of
     -- Just student -> printProgramList (take 1 ( find_shortest_programs 5 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student ) )
     Just student -> writeProgramCSV ( degree_handler 10 (coursesPerSem student) coursesOfferedFall coursesOfferedWinter student ) "output.txt"
     Nothing -> putStrLn "Failed to parse JSON"
