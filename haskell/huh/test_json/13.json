@@ -1,0 +1,37 @@
+{
+  "studName": "Alice",
+  "taken": [
+    "COMP1631",
+    "MATH1200",
+    "COMP1633",
+    "PHIL1179",
+    "COMP2631",
+    "MATH1271",
+    "COMP2655",
+    "COMP2633",
+    "COMP2613",
+    "COMP2659",
+    "COMP3649",
+    "MATH2234"
+  ],
+  "required": [
+    "PHIL1179",
+    "MATH1200",
+    "MATH1203",
+    "MATH1271",
+    "MATH2234",
+    "COMP1631",
+    "COMP1633",
+    "COMP2613",
+    "COMP2631",
+    "COMP2633",
+    "COMP2655",
+    "COMP2659",
+    "COMP3309",
+    "COMP3614",
+    "COMP3649",
+    "COMP3659"
+  ],
+  "coursesPerSem": 5
+}
+
