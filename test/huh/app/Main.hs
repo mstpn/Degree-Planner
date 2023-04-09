@@ -95,6 +95,13 @@ data CourseItem = CourseItem {
 
 instance FromJSON Student
 
+
+-- --Returns a list of semesters in reveresed order
+-- reverse :: [a] -> [a]
+-- reverse (x:xs) = (reverse xs)  ++ [x]
+-- reverse x = x
+-- reverse [] = []
+
 printStudent :: Student -> IO ()
 printStudent student = do
   putStr ("Student Name: " ++ studName student)
@@ -439,10 +446,6 @@ instance CSV.ToNamedRecord CourseItem where
     , "Duration" .= cDuration
       ]
 
-
--- processProgramData :: Either a b -> b
--- processProgramData (Left _) = error "unable to parse data"
--- processProgramData (Right x) = x
 toCourseInstance :: String -> Course -> CourseInstance
 toCourseInstance sem (Course name prereqs session) = 
   CourseInstance {
@@ -534,19 +537,14 @@ writeProgramCSV program path = do
   let d = programCourseInstance program
   -- print d
   let courseItems = generateCourseItems d
-  print courseItems
-  writeCourseItemsToFile path courseItems
+  let items = Vector.reverse courseItems
+  writeCourseItemsToFile path items
 
 writeTestProgramsTo:: IO()
 writeTestProgramsTo = do
   let d = test_program
   writeProgramCSV d "output.txt"
---let jsonData = decode f :: Maybe JsonList
---putStrLn (encode jsonData)
---let j = eitherDecode f
---show $ liftIO $ Just j
-  --let j1 = JsonItem $ head j
-  --show j1
+
 
 
 main :: IO ()
