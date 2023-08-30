@@ -1,5 +1,5 @@
-# Degree Planner in 3 Phases
-MRU degree planner application. Given a student with a any number of courses taken, the application creates a degree for the student that fullfills all prerequisites required for graduation. As a study of programming paradigms, this application will be built in 3 different languages: Python (procedural), Prolog (logical), and Haskell (functional). 
+# A Degree Planner in 3 Phases
+A university degree planner application. Given a student with a any number of courses taken, the application creates a degree for the student that fullfills all prerequisites required for graduation. As a study of programming paradigms, this application will be built in 3 different languages: Python (procedural), Prolog (logical), and Haskell (functional). 
 
 ## Phase 1: Python
 ### Dependencies
